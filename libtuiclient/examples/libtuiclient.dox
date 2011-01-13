@@ -192,6 +192,4 @@
     \section tuitransfer_example Example
     Example to illustrate the use of libtuiclient library.\n
     \link tuiexample.cpp \endlink
-    \n Example to illustrate the use of libtransferwidgets library \n
-    \link tuiwidgetsexample.cpp \endlink
 */
