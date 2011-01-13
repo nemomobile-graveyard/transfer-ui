@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<testdefinition version="1.0">
+  <suite name="transfer-ui" domain="Media">
+    <set name="transfer-ui-tests" feature="Transfer UI unit tests">
+      <case name="transferdatatest" type="Functional" level="Component">
+        <description>Test the Transfer UI Data handling</description>
+
+        <step>/usr/bin/transfer-ui-tests testAddTransfer</step>
+        <step>/usr/bin/transfer-ui-tests testTransferStatePending</step>
+        <step>/usr/bin/transfer-ui-tests testProgress</step>
+        <step>/usr/bin/transfer-ui-tests testTransferStateActive</step>
+        <step>/usr/bin/transfer-ui-tests testTransferStatePause</step>                  
+
+        <step>/usr/bin/transfer-ui-tests testTransferStateResume</step>
+        <step>/usr/bin/transfer-ui-tests testTransferStateError</step>
+        <step>/usr/bin/transfer-ui-tests testSize</step>
+        <step>/usr/bin/transfer-ui-tests testCurrentIndex</step>
+        <step>/usr/bin/transfer-ui-tests testFilesCount</step>                  
+
+        <step>/usr/bin/transfer-ui-tests testCanPause</step>
+        <step>/usr/bin/transfer-ui-tests testSendNow</step>
+        <step>/usr/bin/transfer-ui-tests testName</step>
+        <step>/usr/bin/transfer-ui-tests testMessage</step>
+        <step>/usr/bin/transfer-ui-tests testThumbnail</step>                  
+
+        <step>/usr/bin/transfer-ui-tests testFileTypeIcon</step>
+        <step>/usr/bin/transfer-ui-tests testTarget</step>
+        <step>/usr/bin/transfer-ui-tests testCancelText</step>
+        <step>/usr/bin/transfer-ui-tests testTransferTypeString</step>
+
+      </case>
+      <environments>
+        <scratchbox>true</scratchbox>
+        <hardware>true</hardware>
+      </environments>
+    </set>
+  </suite>
+</testdefinition>

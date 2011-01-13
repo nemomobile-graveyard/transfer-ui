@@ -42,10 +42,6 @@ Client::Client (QObject * parent) : QObject (parent),
     QObject::connect(d_ptr, SIGNAL(repairErrorTransfer(Transfer*)),
         this,SIGNAL(repairErrorTransfer(Transfer*)));
 
-    QObject::connect(d_ptr,
-        SIGNAL(summaryReport (int, int, int, int)),
-        this,SIGNAL(summaryReport(int, int, int, int)));
-
 }
 
 Client::~Client () {
@@ -190,12 +186,6 @@ bool ClientPrivate::init () {
 
         QObject::connect(interface, SIGNAL(launched()), this,
                 SLOT(tuiLaunched()));
-
-        // Just pass these through
-        QObject::connect(interface,
-            SIGNAL(summaryReport(int, int, int, int)),
-            this,
-            SIGNAL(summaryReport(int, int, int, int)));
 
         QObject::connect(interface,SIGNAL(tuiOpened()),this,SLOT(tuiOpened()));
 
