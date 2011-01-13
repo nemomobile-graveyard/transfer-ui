@@ -1,0 +1,197 @@
+
+/*
+ * This file is part of Handset UX Transfer user interface
+ *
+ * Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
+ * Contact: Jukka Tiihonen <jukka.tiihonen@nokia.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense,     
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  
+ * IN THE SOFTWARE. 
+ */
+
+
+
+
+
+
+
+ 
+ 
+/*! \mainpage TransferUI documentation
+
+    \section tuitransfer_overview TransferUI overview
+    \anchor transfer_ui_main 
+    TransferUI is an application which allows user to view and cancel current
+    and upcoming tansfers, e.g downloads and files being shared to a service \n
+    \n
+    \image html tuimain.png
+    \n
+    \image html tuicompleted.png
+    \n
+    \image html tuidetails.png
+    \n
+    \image html tuipause.png
+    \n
+    \image html tuierror.png
+    \n
+    \image html tuierrornr.png
+    \n
+    \image html tuicompleteddetails.png
+
+    <table border="1">
+        <tr>
+            <td>Index</td>
+            <td>Description</td>
+            <td>Related APIs</td>
+        </tr>
+
+        <tr>
+            <td>1 , 9</td>
+            <td>Thumbnail of the upoaded media file or icon of the file type for
+            other than media files. </td>
+            <td>\link TransferUI::Transfer::setThumbnail \endlink \n 
+            \link TransferUI::Transfer::setFileTypeIcon \endlink </td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>Name of the service in case of uploads</td>
+            <td>\link TransferUI::Transfer::setTargetName \endlink</td>
+        </tr>
+
+        <tr>
+            <td>3</td>
+            <td>Name of the file or title text if user has added</td>
+            <td>\link TransferUI::Transfer::setName \endlink</td>
+        </tr>
+
+        <tr>
+            <td>4</td>
+            <td>Error message header text. This will be also displayed in the title
+            of the error dialog</td>
+            <td>\link TransferUI::Transfer::markFailure \endlink \n
+            \link TransferUI::Transfer::markRepairableFailure \endlink </td>
+        </tr>
+
+        <tr>
+            <td>5</td>
+            <td>Size in kilobytes, Shown if the size is known and only in landscape
+            mode </td>
+            <td> \link TransferUI::Transfer::setSize \endlink </td>
+        </tr>
+
+        <tr>
+            <td>6</td>
+            <td>Number if files sent. Shown in case there are more than one file to
+            be sent and shown only in landscape mode</td>
+            <td>\link TransferUI::Transfer::setFilesCount \endlink \n
+            \link TransferUI::Transfer::setCurrentFileIndex \endlink \n
+            \link TransferUI::Transfer::updateCurrentFileInfo \endlink \n
+            </td>
+        </tr>
+
+        <tr>
+            <td>7</td>
+            <td>Progress bar </td>
+            <td>\link TransferUI::Transfer::setProgress \endlink \n
+            \link TransferUI::Transfer::setActive \endlink
+        </td>
+        </tr>
+
+        <tr>
+            <td>8</td>
+            <td>Transfer message </td>
+            <td>\link TransferUI::Transfer::setMessage \endlink \n
+            \link TransferUI::Transfer::setPending \endlink
+            </td>
+        </tr>
+
+        <tr>
+            <td>10</td>
+            <td>Estimate how long transfer is going to take. Time estimation is not
+            shown if transfer is in pending or paused state </td>
+            <td>\link TransferUI::Transfer::setEstimate \endlink \n
+            \link TransferUI::Transfer::setPending \endlink \n
+            \link TransferUI::Transfer::markPaused \endlink
+            </td>
+        </tr>
+
+        <tr>
+            <td>11</td>
+            <td>Pressing this button pauses transfer, pause is not available for
+            uploads, for downloads it can set / unset </td>
+            <td>\link TransferUI::Transfer::setCanPause \endlink </td>
+        </tr>
+
+        <tr>
+            <td>12</td>
+            <td>Description of the error information describing the failure of the
+            transfer</td>
+            <td>\link TransferUI::Transfer::markRepairableFailure \endlink \n
+            \link TransferUI::Transfer::markFailure \endlink </td>
+        </tr>
+
+        <tr>
+            <td>13</td>
+            <td>If the error is repairable and the corresponding action is displayed</td>
+            <td>\link TransferUI::Transfer::markRepairableFailure \endlink </td>
+        </tr>
+
+        <tr>
+            <td>14</td>
+            <td>Message shown when the transfer is completed</td>
+            <td>\link TransferUI::Transfer::markDone  \endlink </td>
+        </tr>
+
+    </table> 
+
+    \section libtuiclient_section libtuiclient 
+    libtuiclient is a helper library to manage the transfers in TransferUI. 
+    libtuiclient provides necessary APIs for applications to manage the
+    transfers in TransferUI. \n libtuiclient talks to TransferUI via DBUS.
+    libtuiclient contains two main classes to manage transfers in TransferUI.
+
+
+    \subsection tuiclient_section Client
+    \link TransferUI::Client \endlink 
+    provides APIs for establishing DBUS interface to TransferUI,
+    registering a new transfer in TransferUI and removal of transfers in TransferUI.
+    \n Using TransferUI::Client APIs applications can bring TransferUI to
+    foreground, if it is running in the background , ask for summary of
+    transfers in the TransferUI for
+    the give point of time.
+
+    \subsection tuitransfer_section Transfer
+    \link TransferUI::Transfer \endlink 
+    provides APIs to manage the information of transfers in TransferUI.
+
+    Applications can either listen to TransferUI::Client or TransferUI::Transfer
+    signals for the user.
+    initiated actions.
+
+    \section tuiwidgets_section TransferWidgets
+    libtransferwidgets is a helper library to manage the details dialog. This
+    widget can be used in the client application. \n Client applications should
+    populate the details of the transfers using apis provided in the library. \n
+    \link TransferWidgets::DetailsDialog \endlink 
+
+    \section tuitransfer_example Example
+    Example to illustrate the use of libtuiclient library.\n
+    \link tuiexample.cpp \endlink
+    \n Example to illustrate the use of libtransferwidgets library \n
+    \link tuiwidgetsexample.cpp \endlink
+*/

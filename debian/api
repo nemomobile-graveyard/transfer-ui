@@ -1,0 +1,15 @@
+interface: Tranfer UI Qt Client API
+type: library 
+scope: Platform
+state: stable
+libs-pkg: transfer-ui
+dev-pkg: transfer-ui-dev
+doc: transfer-ui-doc
+
+interface: Tranfer UI DBUS API
+type: dbus
+scope: Platform
+state: stable
+libs-pkg: transfer-ui
+dev-pkg: transfer-ui-dev
+doc: transfer-ui-doc

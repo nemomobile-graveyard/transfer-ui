@@ -1,0 +1,32 @@
+Transfer UI for MeeGo Handset UX
+=============================
+
+0. About
+--------
+
+Transfer UI is an application and a library to communicate with the application
+which implement platform-wide consistent view on ongoing transfers from different
+applications.
+
+Transfer UI application is accessible over D-BUS interface to spawn UX-specific 
+transfer visualization. The actual UI implementation is separated from the rest 
+of the framework.
+
+UX-specific transfer visualization UI is implemented as a dynamically loadable module.
+The module is loaded by the UX-specific transfer-ui executable and asked to provide
+actual UI implementation. This allows to utilize transfers concept across whole platform
+while having actual UI visualization of them to follow specific requirements of 
+a platform's UX implementation (Handset, Netbook, IVI, etc).
+
+1. Licensing
+------------
+
+Following parts of Transfer UI are licensed under LGPL v2.1:
+
+- transfer communication client library in libtuiclient/
+
+Following parts of Transfer UI are licensed under MIT license:
+
+- libtuiclient examples in libtuiclient/examples/ directory
+- transfer-ui sample executable for Handset UX in transfer-ui/
+- test sample applications imitating transfers in transfer-ui-utils/

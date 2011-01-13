@@ -1,0 +1,16 @@
+###################################################################
+# libtuiclient Feature
+###################################################################
+
+!contains(DEFINES, BUILD_LIBTUICLIENT) {
+    LIBTUICLIENT_INC_DIR = /usr/include
+    LIBTUICLIENT_LIB_DIR = /usr/lib
+
+    INCLUDEPATH += $${LIBTUICLIENT_INC_DIR}
+    DEPENDPATH  += $${LIBTUICLIENT_INC_DIR}
+
+    unix: QMAKE_FLAGS += $${QMAKE_LFLAGS_RPATH}$${LIBTUICLIENT_LIB_DIR}
+    LIBS += -L$${LIBTUICLIENT_LIB_DIR}
+    qtAddLibrary(tuiclient)
+}
+

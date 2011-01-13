@@ -1,0 +1,3 @@
+usr/bin/transfer-ui
+usr/lib/libtuiclient.so.*
+usr/share/dbus-1/services/com.meego.transferui.service

@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Transfer UI
+Exec=/usr/bin/transfer-ui --showUI
+OnlyShowIn=X-MeeGo;

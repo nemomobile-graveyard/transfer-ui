@@ -1,0 +1,33 @@
+Source: transfer-ui
+Section: main
+Priority: optional
+Maintainer: Jukka Tiihonen <jukka.t.tiihonen@nokia.com>
+Build-Depends: debhelper (>= 5.0.0), libqt4-dev (>= 4.7), doxygen,
+ aegis-builder, libcontentaction-dev, pkg-config, libqmsystem2-dev
+Standards-Version: 3.8.0
+
+Package: transfer-ui
+Section: misc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Transfer UI application
+
+Package: transfer-ui-dev
+Section: libdevel
+Architecture: all
+Depends: ${misc:Depends}, transfer-ui (>= ${source:Version}),
+ transfer-ui (<< ${source:Version}.1~)
+Description: Transfer-UI development files
+
+Package: transfer-ui-dbg
+Section: devel
+Architecture: any
+Priority: extra
+Depends: ${misc:Depends}, transfer-ui (= ${binary:Version})
+Description: transfer-ui debug symbols
+
+Package: transfer-ui-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: API documentation for transfer-ui

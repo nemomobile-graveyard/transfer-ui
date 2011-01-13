@@ -1,0 +1,4 @@
+[D-BUS Service]
+Interface=com.meego.transferui
+Name=com.meego.transferui
+Exec=/usr/bin/transfer-ui

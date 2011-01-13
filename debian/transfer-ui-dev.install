@@ -1,0 +1,7 @@
+usr/include/TransferUI/*
+usr/include/*
+usr/share/qt4/mkspecs/features/libtuiclient.prf
+usr/lib/libtuiclient.so
+usr/lib/pkgconfig/*
+
+
