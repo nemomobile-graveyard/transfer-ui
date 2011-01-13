@@ -183,12 +183,6 @@
     signals for the user.
     initiated actions.
 
-    \section tuiwidgets_section TransferWidgets
-    libtransferwidgets is a helper library to manage the details dialog. This
-    widget can be used in the client application. \n Client applications should
-    populate the details of the transfers using apis provided in the library. \n
-    \link TransferWidgets::DetailsDialog \endlink 
-
     \section tuitransfer_example Example
     Example to illustrate the use of libtuiclient library.\n
     \link tuiexample.cpp \endlink
