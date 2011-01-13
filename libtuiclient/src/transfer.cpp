@@ -75,7 +75,7 @@ bool Transfer::setTargetName (const QString & name) {
 
 bool Transfer::setCurrentFileIndex (int index) {
 
-    d_ptr->data.filesCount = index;
+    d_ptr->data.currentFileIndex = index;
     addToCommit("setCurrentFileIndex", index)
 
     checkInterface()

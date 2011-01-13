@@ -1,5 +1,5 @@
 transfer-ui (0.3.1.2) unstable; urgency=low
 
-  * After tagging
+  * Fixes : NB#218474
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 03 Jan 2011 15:35:07 +0200
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 13 Jan 2011 17:57:48 +0530
