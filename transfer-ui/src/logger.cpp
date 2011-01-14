@@ -39,12 +39,7 @@
 // static initialization
 Logger * Logger::m_instance = 0;
 
-Logger::Logger (const QString & appName, const QString & name) {
-
-    QString myAppName = appName;
-    if (myAppName.isEmpty()) {
-        myAppName = QCoreApplication::applicationName();
-    }
+Logger::Logger (const QString & name) {
 
     QString myName = name;
     if (myName.isEmpty()) {
@@ -55,11 +50,12 @@ Logger::Logger (const QString & appName, const QString & name) {
     }
 
     //Build path
-    QString logPath = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    QString logPath = QDesktopServices::storageLocation (
+        QDesktopServices::DataLocation);
     
     //Make directories
     QDir dir;    
-    if (!dir.exists (logPath)) {
+    if (dir.exists (logPath) == false) {
         dir.mkpath (logPath);
         std::cout << "Path " << logPath.toStdString() << " created for the logs"
             << std::endl;        
@@ -76,8 +72,8 @@ Logger::Logger (const QString & appName, const QString & name) {
         }
     }
 
-    std::cout << myAppName.toStdString() << " logs will be written to "
-        << logPath.toStdString() << std::endl;
+    std::cout << QCoreApplication::applicationName().toStdString()
+        << " logs will be written to " << logPath.toStdString() << std::endl;
 
     // save ourself in a static variable
     Logger::m_instance = this;

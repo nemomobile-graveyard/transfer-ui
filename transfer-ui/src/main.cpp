@@ -37,9 +37,12 @@
 #include <QFile>
 #include <QDir>
 #include <QSettings>
+#include <QCoreApplication>
 
 int main(int argc, char **argv)
 {
+
+    QCoreApplication::setApplicationName (QLatin1String ("Transfer UI"));
 
     QString logFileInfo = QDir::homePath();
     logFileInfo.append(QLatin1String("/.transferui/log"));
@@ -47,7 +50,7 @@ int main(int argc, char **argv)
     Logger *logger = 0;
     if(enableLogger == true ) {
         // Let's use custom logging
-        logger = new Logger("TransferUI");
+        logger = new Logger();
     }
 
     bool showUI = false;

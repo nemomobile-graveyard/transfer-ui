@@ -1,6 +1,6 @@
-transfer-ui (0.3.2.2) unstable; urgency=low
+transfer-ui (0.3.3.1) unstable; urgency=low
 
-  * After tagging
+  * Fix log file name issues
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 14 Jan 2011 13:48:41 +0530
 
