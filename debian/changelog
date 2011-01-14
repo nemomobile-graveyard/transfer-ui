@@ -1,5 +1,5 @@
 transfer-ui (0.3.1.2) unstable; urgency=low
 
-  * Fixes : NB#218474
+  * Fixes : NB#218474 : %L1/%L2 is displayed incorrectly (%L1 = currently being uploaded,%L2 = total number of files ) after TUI Crash
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 13 Jan 2011 17:57:48 +0530
