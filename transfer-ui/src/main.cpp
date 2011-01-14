@@ -43,6 +43,7 @@ int main(int argc, char **argv)
 {
 
     QCoreApplication::setApplicationName (QLatin1String ("Transfer UI"));
+    QCoreApplication::setOrganizationName (QLatin1String ("MeeGo"));    
 
     QString logFileInfo = QDir::homePath();
     logFileInfo.append(QLatin1String("/.transferui/log"));

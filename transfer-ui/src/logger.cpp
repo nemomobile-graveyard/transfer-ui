@@ -61,7 +61,7 @@ Logger::Logger (const QString & name) {
             << std::endl;        
     }
     
-    logPath.append("/");
+    logPath.append (QDir::separator ());
     logPath.append (myName);
     logPath.append (".log");
     
