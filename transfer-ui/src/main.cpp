@@ -76,8 +76,6 @@ int main(int argc, char **argv)
     //create a service
     TUIService *tuiService = new TUIService();
 
-    //init dbus functionalities and data models
-    tuiService->init();
 
     //load the implementation plugin
     tuiService->loadImplementationPlugin();
@@ -85,6 +83,11 @@ int main(int argc, char **argv)
     //get the application from the plugin
     QApplication *app = tuiService->applicationInstance(argc,argv);
     qDebug() << __FUNCTION__ << app;
+
+    //init dbus functionalities
+    qDebug() << __FUNCTION__ << "Initialize Dbus";
+    tuiService->init();
+
     int retVal = 0;
     if(app != 0) {
         app->setQuitOnLastWindowClosed(false);

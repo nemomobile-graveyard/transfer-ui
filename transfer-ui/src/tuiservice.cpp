@@ -88,11 +88,35 @@ TUIService::TUIService(QObject *parent)
 
     TUIService::selfInstance = this;
 
+    d_ptr->proxyModel = new TUIDataModelProxy(this);
+
+    d_ptr->completedProxyModel = new TUICompletedListProxyModel(this);
+
+    // Create a client data model
+    d_ptr->clientDataModel = new TUIClientDataModel(this);
+
+
     //listen to date / time format change signal
     QmTime *qmTime = new QmTime(this);
 
     connect(qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
         SLOT(timeOrSettingsChanged (MeeGo::QmTimeWhatChanged)));
+
+    stringEnumFunctionMap.insert("setName",Name);
+    stringEnumFunctionMap.insert("setSize",Size);
+    stringEnumFunctionMap.insert("setEstimate",Estimate);
+    stringEnumFunctionMap.insert("setMessage",Message);
+    stringEnumFunctionMap.insert("setTargetName",TargetName);
+    stringEnumFunctionMap.insert("setFilesCount",FilesCount);
+    stringEnumFunctionMap.insert("setCurrentFileIndex",CurrentFileIndex);
+    stringEnumFunctionMap.insert("setThumbnailForFile",ThumbnailForFile);
+    stringEnumFunctionMap.insert("setIcon",Icon);
+    stringEnumFunctionMap.insert("setCancelButtonText",CancelButtonText);
+    stringEnumFunctionMap.insert("setCanPause",CanPause);
+    stringEnumFunctionMap.insert("setSendNow",SendNow);
+    stringEnumFunctionMap.insert("setTransferTypeString",TransferTypeString);
+	stringEnumFunctionMap.insert("setTransferImage",TransferImage);
+
 }
 
 void TUIService::loadImplementationPlugin() {
@@ -175,20 +199,6 @@ QApplication *TUIService::applicationInstance(int argc, char **argv) {
 
 bool TUIService::init() {
 
-    d_ptr->proxyModel = new TUIDataModelProxy(this);
-
-    d_ptr->completedProxyModel = new TUICompletedListProxyModel(this);
-
-    // Create a client data model
-    d_ptr->clientDataModel = new TUIClientDataModel(this);
-
-    //just started , emit stateChanged to idle
-    tuiState = Idle;
-    Q_EMIT(stateChanged("idle"));
-
-    // is the shown variable to false
-    d_ptr->isUIShown = false;
-
     //Initialize DBUS
     new TransferuiAdaptor(this);
     QDBusConnection connection = QDBusConnection::sessionBus();
@@ -201,23 +211,12 @@ bool TUIService::init() {
     connect(serviceWatcher, SIGNAL(serviceUnregistered(QString)), this,
         SLOT(serviceUnregistered(QString)));
 
+    //just started , emit stateChanged to idle
+    tuiState = Idle;
+    Q_EMIT(stateChanged("idle"));
 
-    stringEnumFunctionMap.insert("setName",Name);
-    stringEnumFunctionMap.insert("setSize",Size);
-    stringEnumFunctionMap.insert("setEstimate",Estimate);
-    stringEnumFunctionMap.insert("setMessage",Message);
-    stringEnumFunctionMap.insert("setTargetName",TargetName);
-    stringEnumFunctionMap.insert("setFilesCount",FilesCount);
-    stringEnumFunctionMap.insert("setCurrentFileIndex",CurrentFileIndex);
-    stringEnumFunctionMap.insert("setThumbnailForFile",ThumbnailForFile);
-    stringEnumFunctionMap.insert("setIcon",Icon);
-    stringEnumFunctionMap.insert("setCancelButtonText",CancelButtonText);
-    stringEnumFunctionMap.insert("setCanPause",CanPause);
-    stringEnumFunctionMap.insert("setSendNow",SendNow);
-    stringEnumFunctionMap.insert("setTransferTypeString",TransferTypeString);
-	stringEnumFunctionMap.insert("setTransferImage",TransferImage);
-
-    qDebug() << __FUNCTION__ << "Emitting launched";
+    // is the shown variable to false
+    d_ptr->isUIShown = false;
 
     return true;
 }
