@@ -859,6 +859,17 @@ TUIServicePrivate::TUIServicePrivate() : proxyModel(0) ,
     historyFilePath.append(QLatin1String("completedlist"));
     historySetting = new QSettings(historyFilePath,QSettings::IniFormat,this);
 
+    //create read thread
+    qDebug() << __FUNCTION__ << "Creating Thread";
+	readThread = new
+		TUIReadHistoryThread(historySetting);
+	
+	connect(readThread, SIGNAL(addCompletedData(const
+		TUIData*)),this, SLOT(dataReadFromDB(const TUIData*)),
+		Qt::QueuedConnection);
+	connect(readThread, SIGNAL(finished()), this, SLOT(threadCompleted()));
+	connect(readThread, SIGNAL(terminated()), this, SLOT(threadCompleted()));
+
 }
 
 TUIServicePrivate::~TUIServicePrivate() {
@@ -886,7 +897,7 @@ TUIServicePrivate::~TUIServicePrivate() {
 		if(readThread->isRunning() == true) {
 			readThread->quit();
 		}
-		readThread->deleteLater();
+		delete readThread;
 		readThread = 0;
 	}
 
@@ -1134,14 +1145,7 @@ void TUIServicePrivate::writeToHistory(const TUIData *data,
 
 void TUIServicePrivate::readHistory() {
 	readReplaceHistoryIds();
-	readThread = new
-		TUIReadHistoryThread(historySetting);
-	readThread->start();
-	connect(readThread, SIGNAL(addCompletedData(const
-		TUIData*)),this, SLOT(dataReadFromDB(const TUIData*)),
-		Qt::QueuedConnection);
-	connect(readThread, SIGNAL(finished()), this, SLOT(threadCompleted()));
-	connect(readThread, SIGNAL(terminated()), this, SLOT(threadCompleted()));
+    readThread->start();
 }
 
 void TUIServicePrivate::dataReadFromDB(const TUIData *data) {

@@ -44,6 +44,7 @@ TUICompletedListModel::TUICompletedListModel(QObject *parent)
 }
 
 TUICompletedListModel::~TUICompletedListModel() {
+    qDebug() << __FUNCTION__ << "Deleting Completed List Model";
     qDeleteAll(completedList);
 }
 

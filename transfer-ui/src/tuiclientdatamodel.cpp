@@ -43,7 +43,7 @@ TUIClientDataModel::TUIClientDataModel(QObject *parent) :QObject(parent) {
 }
 
 TUIClientDataModel::~TUIClientDataModel() {
-    qDebug() << "Deleting Client data model";
+    qDebug() << __FUNCTION__ << "Deleting Client data model";
     tuiClientDataHashList.clear();
 }
 

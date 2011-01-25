@@ -200,7 +200,7 @@ namespace TransferUI {
           any new setIcon function call or a new setThumbnailForFile function
           call will ignore this request. fileName should be tracker indexed for
           thumbnailer to fetch the thumbnail. For non tracker indexed file use
-          setImageFromFile
+          setImageFromFilePath
           \param fileName file path for which transfer-ui will fetch thumbnail
           from the thumbnailer
           \param mimeType file mime type used to fetch thumbnail from

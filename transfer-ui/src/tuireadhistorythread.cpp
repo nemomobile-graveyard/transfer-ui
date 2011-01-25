@@ -36,6 +36,7 @@ TUIReadHistoryThread::TUIReadHistoryThread(QSettings *settings)
 }
 
 TUIReadHistoryThread::~TUIReadHistoryThread() {
+    qDebug() << __FUNCTION__ ;
 }
 
 void TUIReadHistoryThread::run() {

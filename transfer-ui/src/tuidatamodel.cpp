@@ -46,6 +46,7 @@ TUIDataModel::TUIDataModel(QObject *parent) : TUIAbstractModel(parent) {
 
 TUIDataModel::~TUIDataModel() {
     dataList.clear();
+    qDebug() << __FUNCTION__ << "Deleting Data Model";
 }
 
 int TUIDataModel::rowCount(const QModelIndex &parent) const {

@@ -52,6 +52,7 @@ TUICompletedListProxyModel::TUICompletedListProxyModel(QObject *parent) :
 }
 
 TUICompletedListProxyModel::~TUICompletedListProxyModel() {
+    qDebug() << __FUNCTION__ << "Deleting Completed List Proxy Model";
 }
 
 void TUICompletedListProxyModel::addTransfer(const TUIData *data,

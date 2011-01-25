@@ -48,6 +48,7 @@ TUIDataModelProxy::~TUIDataModelProxy() {
     if(model != 0) {
         delete model;
     }
+    qDebug() << __FUNCTION__ << "Deleting Data Model Proxy";
 }
 
 TUIAbstractModel * TUIDataModelProxy::dataModel() const {

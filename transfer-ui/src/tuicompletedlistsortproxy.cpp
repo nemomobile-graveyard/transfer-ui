@@ -46,7 +46,7 @@ TUICompletedListSortProxy::TUICompletedListSortProxy(QObject *parent) :
 
 
 TUICompletedListSortProxy::~TUICompletedListSortProxy() {
-
+    qDebug() << __FUNCTION__ << "Deleting Completed List Sort Porxy";
 }
 
 bool TUICompletedListSortProxy::lessThan(const QModelIndex &left, const
