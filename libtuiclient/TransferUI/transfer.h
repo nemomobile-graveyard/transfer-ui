@@ -85,8 +85,8 @@ namespace TransferUI {
 
         /*!
           \brief Define size of transfer
-          \param bytes Size in bytes. If 0 then size if undefined. Size will not
-          be shown in the TransferUI
+          \param bytes Size in bytes. If size is set to 0, no size will be
+          displayed.
           \return true if request was send successfully
           \n \dontinclude tuiexample.cpp
           \skipline TUITestClient::updateSize()

@@ -269,9 +269,12 @@ void TUIService::resumed(const QString &id) {
             (TransferStatusActive == data->status)) {
            qDebug() << "Transfer is already in resumed state";
            return;
+        } else if(TransferStatusError == data->status) {
+            qDebug() << "Error Transfers can't be resumed";
+            return;
         }
     }
-
+    
     d_ptr->proxyModel->resumed(id);
     sendSummary();
 }
@@ -283,6 +286,9 @@ void TUIService::paused(const QString &id) {
         if(TransferStatusPaused == data->status) {
            qDebug() << "Transfer is already in paused state";
            return;
+        } else if(TransferStatusError == data->status) {
+            qDebug() << "Error Transfers can't be Paused";
+            return;
         }
     }
     d_ptr->proxyModel->paused(id);
