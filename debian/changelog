@@ -1,9 +1,9 @@
-transfer-ui (0.3.3.2) unstable; urgency=low
+transfer-ui (0.3.4.1) unstable; urgency=low
 
   * Fixes: NB#212280 - COREWEB: /usr/bin/transfer-ui 'QCoreApplication::exec main'
   * Fixes: NB#220702 - transfer-ui does access the sessionBus before the QApplication ctor finished
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 25 Jan 2011 17:26:42 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 27 Jan 2011 17:30:03 +0530
 
 transfer-ui (0.3.3.1) unstable; urgency=low
 
