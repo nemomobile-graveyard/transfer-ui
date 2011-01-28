@@ -633,10 +633,8 @@ void TUIService::showUI() {
         if((d_ptr->proxyModel->count() == 0) &&
             (d_ptr->completedProxyModel->dataModel()->rowCount() == 0)) {
                 d_ptr->interface->setNoTransfersVisibility(true);
-                Q_EMIT (tuiOpened());
         }
-
-        return;
+        Q_EMIT (tuiOpened());
     }
 
 }
