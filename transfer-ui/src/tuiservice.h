@@ -541,7 +541,7 @@ private:
 
     QDBusServiceWatcher *serviceWatcher; //!< Dbus service watcher
 
-    void emitVisibilityState(const QString& serviceName);
+    void emitVisibilityState(const QString& serviceName=QString());
 };
 
 #endif

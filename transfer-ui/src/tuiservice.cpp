@@ -836,7 +836,8 @@ void TUIService::setValues(const QString& id, const QVariantMap& keyValues) {
 
 void TUIService::visibilityChanged(bool value) {
     d_ptr->visibilityChanged(value);
-    d_ptr->isInSwitcher = !value;
+    d_ptr->isInSwitcher = !value;        
+    emitVisibilityState();
     sendSummary();
 }
 
