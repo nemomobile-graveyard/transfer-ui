@@ -605,8 +605,7 @@ void TUIService::setProgress(const QString& id, double done) {
             d_ptr->proxyModel->setProgress(id, done);
         } else {
             qDebug() << __FUNCTION__ << "Progress can be set for only"
-                "Active transfers. Changing the state to active";
-                d_ptr->proxyModel->started(id, done);
+                "Active transfers";
         }
     }
 }
