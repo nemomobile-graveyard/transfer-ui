@@ -118,11 +118,18 @@ bool Transfer::setFilesCount (int count) {
 
 
 bool Transfer::setMessage (const QString & message) {
-    d_ptr->data.message = message;
-    addToCommit("setMessage", message)
-    checkInterface()
-    d_ptr->interface->setMessage(transferId(), message);
-    return true;
+    bool retVal = false;
+    if(d_ptr->data.status == TransferStatusInactive) {
+        d_ptr->data.message = message;
+        addToCommit("setMessage", message)
+        checkInterface()
+        d_ptr->interface->setMessage(transferId(), message);
+        retVal = true;
+    } else {
+        qWarning() << __FUNCTION__ << "Message can only be set "
+                "for Inactive Transfers";
+    }
+    return retVal;
 }
 
 bool Transfer::setEstimate (int seconds) {

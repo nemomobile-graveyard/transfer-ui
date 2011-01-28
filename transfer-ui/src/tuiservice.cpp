@@ -577,8 +577,16 @@ void TUIService::setEstimate(const QString &id, int seconds) {
 
 void TUIService::setMessage(const QString &id, const QString &message) {
     qDebug() << __FUNCTION__ << id << "Message Set to " << message;
-    if(message.isEmpty() == false) {
-        d_ptr->proxyModel->setMessage(id, message);
+    const TUIData *data = d_ptr->proxyModel->tuiData(id);
+    if (data != 0) {
+        if(TransferStatusInactive == data->status) {
+            if(message.isEmpty() == false) {
+                d_ptr->proxyModel->setMessage(id, message);
+            }
+        } else {
+            qDebug() << __FUNCTION__ << "Message can only be set "
+                "for Inactive Transfers";
+        }
     }
 }
 
@@ -591,7 +599,16 @@ void TUIService::setName(const QString &id, const QString &name) {
 
 void TUIService::setProgress(const QString& id, double done) {
     qDebug() << __FUNCTION__ << id << "Progress Set to " << done;
-    d_ptr->proxyModel->setProgress(id, done);
+    const TUIData *data = d_ptr->proxyModel->tuiData(id);
+    if (data != 0) {
+        if(TransferStatusActive == data->status) {
+            d_ptr->proxyModel->setProgress(id, done);
+        } else {
+            qDebug() << __FUNCTION__ << "Progress can be set for only"
+                "Active transfers. Changing the state to active";
+                d_ptr->proxyModel->started(id, done);
+        }
+    }
 }
 
 void TUIService::setSize(const QString &id, qulonglong bytes) {
@@ -1094,7 +1111,7 @@ void TUIServicePrivate::completedElementClicked(const QModelIndex &index) {
         qDebug() << __FUNCTION__ << tuiData->resultUri;
         if (tuiData->resultUri.isEmpty() == false) {
             qDebug() << __FUNCTION__ << "Trying to launch application";
-            Action action = Action::defaultActionForScheme(tuiData->resultUri);
+            Action action = Action::defaultAction(tuiData->resultUri);
             if (action.isValid() == true) {
                 action.trigger();
             } else {

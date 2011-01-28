@@ -121,7 +121,8 @@ namespace TransferUI {
         virtual bool setCurrentFileIndex (int index);
 
         /*!
-          \brief Define current state message
+          \brief Define current state message. This function returns false if
+          the state of the transfer is not inactive.
           \param message New state message
           \return true if request was send successfully
           \n \dontinclude tuiexample.cpp
@@ -466,7 +467,7 @@ namespace TransferUI {
           \param resultUri uri of the result file. If provided, transfer-ui
           launches the application associated with the given uri. If the Uri is
           not valid, default dialog is displayed when the user taps on the
-          transfers.
+          transfers. resultUri represents an object stored in Tracker. 
 		  \return true if request was sent successfully
 		*/
 		bool markCompleted(bool showInHistory=false, 

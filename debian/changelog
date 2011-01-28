@@ -1,8 +1,8 @@
 transfer-ui (0.3.4.2) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#222125 - Progress bar doesn't show always when download is in progress
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 27 Jan 2011 17:30:44 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 28 Jan 2011 11:39:48 +0530
 
 transfer-ui (0.3.4.1) unstable; urgency=low
 
