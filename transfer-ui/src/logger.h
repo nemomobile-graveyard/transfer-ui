@@ -34,7 +34,7 @@
 #include <QStringList>
 #include <QFile>
 #include <QMutex>
-#include <QTime>
+#include <QElapsedTimer>
 
 /**
  * @brief Simple Qt logging redirector class.
@@ -105,7 +105,7 @@ private:
     QList<Qt::HANDLE> m_threads;
 
     //! timer used to get timestamps
-    QTime m_time;
+    QElapsedTimer m_time;
 };
 
 #endif // #ifndef _LOGGER_H_
