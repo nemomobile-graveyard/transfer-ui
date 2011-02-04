@@ -16,6 +16,12 @@ QMAKE_CXXFLAGS += -g
 CONFIG += debug_and_release
 QMAKE_CXXFLAGS += -O2
 
+CONFIG(profiling) {
+    message(Building with profiling)
+    QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
+    LIBS += -lgcov
+}
+
 DBUS_INTERFACES = ../transfer-ui/dbus-xml/TransferUI.xml
 
 TARGET = tuiclient

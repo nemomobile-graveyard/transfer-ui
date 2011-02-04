@@ -9,6 +9,11 @@ TARGET = transfer-ui
 TRANSLATIONS = transfer-ui.ts
 DBUS_ADAPTORS    = dbus-xml/TransferUI.xml 
 
+CONFIG(profiling) {
+    message(Building with profiling)
+    QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
+    LIBS += -lgcov
+}
 
 #enable new transfer ui changes
 DEFINES += SHOW_HISTORY

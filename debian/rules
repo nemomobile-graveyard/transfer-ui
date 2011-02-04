@@ -88,7 +88,8 @@ binary-arch: build install
 	dh_installdocs
 	dh_install --sourcedir=debian/tmp -v
 	dh_link
-	dh_strip --dbg-package=transfer-ui-dbg
+	dh_strip -ptransfer-ui --dbg-package=transfer-ui-dbg
+	dh_strip -ptransfer-ui-tests --dbg-package=transfer-ui-dbg
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs

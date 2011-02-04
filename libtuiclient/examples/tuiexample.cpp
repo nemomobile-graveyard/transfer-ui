@@ -27,7 +27,7 @@
 
 
 
-
+ /*!
  * \example tuiexample.cpp
  * This is an example of how to use the libtuiclient.
  */

@@ -31,3 +31,15 @@ Section: doc
 Architecture: all
 Depends: ${misc:Depends}
 Description: API documentation for transfer-ui
+
+
+Package: transfer-ui-tests
+Section: devel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+    transfer-ui (>= ${source:Version}), transfer-ui (<< ${source:Version}.1~), 
+    ci-testing
+XB-Maemo-CI-Packages: transfer-ui
+XB-Maemo-CI-Stage: staging, acceptance
+Description: Unit Tests for Transfer UI
+
