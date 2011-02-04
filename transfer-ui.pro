@@ -5,7 +5,9 @@ SUBDIRS += transfer-ui \
                        
 # API Documentation with Doxygen
 dox.path        = /usr/share/doc/transfer-ui
-dox.commands    = doxygen doxygen.cfg
+!contains( DEFINES, NO_DOCS ) {
+    dox.commands = doxygen doxygen.cfg
+}
 dox.depends     = libtuiclient/TransferUI
 dox.files       = doc/html/*
 
