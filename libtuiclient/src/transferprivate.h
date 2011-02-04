@@ -50,6 +50,31 @@ namespace TransferUI {
             //! client pointer which is passed as parent in the constructor
             Client * const clientPtr;
 
+
+            enum KeyEnums {
+                Progress, //!<  Progress data of the transfer
+                Bytes, //!< Size of the transfer
+                Estimate, //!< estimated completion time
+                CurrentFileIndex, //!< current transferring file index
+                TotalFiles, //!< total files in the transfer
+                CanPause, //!< can pause attribute
+                CanSendImmediatly, //!< can send immediate attribute
+                Name, //!< transfer name
+                Message, //!< transfer message
+                ErrorInfo, //!< Error Info
+                ThumbnailFile, //!< Thumbnail info
+                Icon, //!< transfer icon
+                ImagePath, //!< image file path
+                Target, //!<  transfer target
+                CancelButtonText, //!< cancel button text
+                TransferTitle, //!< transfer title as in details view.
+                Status //!< transfer status.
+            };
+            //! String map for keys and enum values
+            QMap<QString, KeyEnums> stringEnumKeyMap;
+
+            void populateInternalData(const QVariantMap& dataMap);
+
         public Q_SLOTS:
 
             /*!

@@ -859,6 +859,61 @@ void TUIService::timeOrSettingsChanged (MeeGo::QmTimeWhatChanged what) {
     d_ptr->completedProxyModel->dateSettingChanged();
 }
 
+QVariantMap TUIService::retrieveData(const QString &id) {
+    qDebug() << __FUNCTION__ << id;
+    QVariantMap keyValues;
+    const TUIData *data = d_ptr->proxyModel->tuiData(id);
+    if (data != 0) {
+        QStringList errorInfo;
+
+        //common attributes
+        keyValues.insert("bytes",QVariant(data->bytes));
+        keyValues.insert("currentFileIndex",QVariant(data->currentFileIndex));
+        keyValues.insert("totalFiles",QVariant(data->filesCount));
+        keyValues.insert("canPause",QVariant(data->canPause));
+        keyValues.insert("canSendImmediatly",QVariant(data->canSendImdtly));
+
+        keyValues.insert("name",QVariant(data->name));
+        
+        if((data->thumbnailFile.isEmpty() == false) 
+            && (data->thumbnailMimeType.isEmpty() == false)) {
+            QStringList thumbnailInfo;
+            thumbnailInfo << data->thumbnailFile << data->thumbnailMimeType;
+            keyValues.insert("thumbnailfile",QVariant(thumbnailInfo));
+        }
+
+        if((data->thumbnailMimeType.isEmpty() == true) 
+            && (data->fileTypeIcon.isEmpty() == false)) {
+            keyValues.insert("imagePath",QVariant(data->thumbnailFile));    
+        }
+
+        keyValues.insert("icon",QVariant(data->fileTypeIcon));
+        keyValues.insert("target",QVariant(data->targetName));
+        keyValues.insert("cancelButtonText",QVariant(data->cancelButtonText));
+        keyValues.insert("transferTitle",QVariant(data->transferTitle));
+
+        //status 
+        keyValues.insert("transferStatus",QVariant(data->status));
+
+        if((TransferStatusActive == data->status) || 
+            (TransferStatusResume == data->status)) {
+            keyValues.insert("estimate",QVariant(data->estimateTime));
+            keyValues.insert("progress",QVariant(data->progressData));
+        } else if(TransferStatusError == data->status) {
+            errorInfo << data->headerMsg << data->detailMsg;
+            if(data->canRepair == true) {
+                errorInfo << data->actionName;
+            }
+        } else if(TransferStatusInactive == data->status) {
+            keyValues.insert("message",QVariant(data->message));
+        }
+        keyValues.insert("errorInfo",QVariant(errorInfo));
+
+    }
+    qDebug() << __FUNCTION__ << keyValues.count();
+    return keyValues;    
+}
+
 #ifdef _UNIT_TESTING_
 TUIDataModelProxy *TUIService::model() const {
     return d_ptr->proxyModel;
@@ -1064,7 +1119,7 @@ void TUIServicePrivate::showCustomDialog(const TUIData *data,
 	QDBusInterface iface(serviceName, "/",
 		"", QDBusConnection::sessionBus());
 	if (iface.isValid()) {
-		iface.call(QLatin1String("showDetailsDialog"),
+		iface.asyncCall(QLatin1String("showDetailsDialog"),
 		QVariant(proxyModel->transferId(data)));
 	} else {
 		qDebug() << __FUNCTION__ << iface.lastError ();

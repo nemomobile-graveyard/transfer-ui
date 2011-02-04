@@ -163,6 +163,16 @@ namespace TransferUI {
         */
         bool isTUIVisible() const;
 
+        /*!
+            \brief return a pointer to transfer for the requested transfer id.
+			Client owns the transfer, and the transfer should be removed when
+			the transfer is completed or cancelled.
+            \param transferId transfer identifier.
+            \return pointer to transfer, if the given transferId is not present
+            in the client , a null pointer is returned.
+        */
+        const Transfer* requestTransfer(const QString& transferId);
+
     Q_SIGNALS:
 
         /*!

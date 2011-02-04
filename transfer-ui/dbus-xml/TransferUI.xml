@@ -643,6 +643,48 @@
         </method>
 
 
+       <!--
+           Method retrieveData
+           Method get data of a given transfer at the given point of time.
+           Data is represented in key value pair. This data is used in
+           libtuiclient.
+           These are key supported 
+           "progress" - progress data of the transfer
+           "bytes" - size of the transfer
+           "estimate" - estimated completion time
+           "currentFileIndex" - current transferring file index
+           "totalFiles" - total files in the transfer
+           "canPause" - can pause attribute
+           "canSendImmediatly" - can send immediate attribute
+           "name" - transfer name
+           "message" - transfer message
+           "errorInfo" - QStringList of error information. First string
+           represents error header message, second string represents error
+           details and the last one represents action string. 
+           "thumbnailfile" QStringList of thumbnail information. Fisrt string
+           represents the path of the thumbnail file and the second string
+           represents the mime type of the file.
+           "icon" transfer icon
+           "imagePath" image file path , from which image is displayed in the
+           transfer-ui.
+           "target" transfer target
+           "cancelButtonText" cancel button text
+           "transferTitle" transfer title as in details view.
+           "transferStatus" transfer status.
+           Note: if the transfer id is not present or the transfer state is
+           completed, an empty QVariantMap is returned.
+           Parameters:
+            IN:
+               id: Transfer UI id of the transfer
+            OUT:
+               keyValues: QVariantMap of attribute and value
+        -->
+        <method name="retrieveData">
+            <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+            <arg name="id" type="s" direction="in"/>
+            <arg name="keyValues" type="a{sv}" direction="out"/>
+        </method>
+
         <!--
         <Method clearCompletedTransfers
         Method clear completed transfers, this method is called from events

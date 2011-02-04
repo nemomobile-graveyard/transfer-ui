@@ -37,13 +37,15 @@ HEADERS += TransferUI/client.h \
            transienttransfer.h \
            TransferUI/export.h \
 		   TransferUI/showdetailsinterface.h \
-           TransferUI/ShowDetailsInterface
+           TransferUI/ShowDetailsInterface  \
+           internaltransfer.h
 
 SOURCES += client.cpp \
            persistenttransfer.cpp \
            transfer.cpp \
            transienttransfer.cpp    \
-           tuistructures.cpp
+           tuistructures.cpp    \
+           internaltransfer.cpp
 
 # Install binary application
 target.path = /usr/lib

@@ -20,6 +20,7 @@
 
 #include "TransferUI/transfer.h"
 #include "transferprivate.h"
+#include "transferenums.h"
 #include <QDebug>
 #include <QTime>
 
@@ -495,10 +496,133 @@ bool Transfer::commit() {
     return d_ptr->commit();
 }
 
+
+bool Transfer::refreshData() const {
+    checkInterface()
+    bool retVal = false;
+    QDBusReply<QVariantMap> reply =
+            d_ptr->interface->retrieveData (d_ptr->id);
+    if(reply.isValid() == true) {
+        QVariantMap resultMap = reply.value();
+        if(resultMap.isEmpty() == false) {
+                d_ptr->populateInternalData(resultMap);
+            retVal = true;
+        }
+    }
+    return retVal;
+}
+
+const QString Transfer::name() const {
+    return d_ptr->data.name;
+}
+
+const QString Transfer::message() const {
+    return d_ptr->data.message;
+}
+
+const QString Transfer::target() const {
+    return d_ptr->data.targetName;
+}
+
+const QString Transfer::cancelText() const {
+    return d_ptr->data.cancelButtonText;
+}
+
+const QString Transfer::transferTypeString() const {
+    return d_ptr->data.transferTitle;
+}
+
+void Transfer::errorInfo(QString& errorHeader, QString& errorDetails, QString&
+    actionName) const {
+    errorHeader = d_ptr->data.headerMsg;
+    errorDetails = d_ptr->data.detailMsg;
+    if(d_ptr->data.canRepair == true) {
+        actionName = d_ptr->data.actionName;
+    }
+}
+
+void Transfer::thumbnailFile(QString& thumbnailFile, QString& mimeType) const {
+    thumbnailFile = d_ptr->data.thumbnailFile;
+    mimeType = d_ptr->data.thumbnailMimeType;
+}
+
+const QString Transfer::icon() const {
+    return d_ptr->data.fileTypeIcon;
+}
+
+const QString Transfer::imagePath() const {
+    QString imageFile;
+    if(d_ptr->data.thumbnailMimeType.isEmpty() == true) {
+        imageFile = d_ptr->data.thumbnailFile;
+    }
+    return imageFile;
+}
+
+bool Transfer::canPause() const {
+    return d_ptr->data.canPause;
+}
+
+bool Transfer::canSendImdtly() const {
+    return d_ptr->data.canSendImdtly;
+}
+
+qlonglong Transfer::progress() const {
+    qlonglong progress = 0.0;
+    if((TransferStatusActive == d_ptr->data.status) 
+        || (TransferStatusResume == d_ptr->data.status)) {
+        progress = d_ptr->data.progressData;
+    }
+    return progress;
+}
+
+int Transfer::estimatedTime() const {
+    int estimate = 0;
+    if((TransferStatusActive == d_ptr->data.status) 
+        || (TransferStatusResume == d_ptr->data.status)) {
+        estimate = d_ptr->data.estimateTime;
+    }
+    return estimate;
+
+}
+
+int Transfer::totalFiles() const {
+    return d_ptr->data.filesCount;
+}
+
+int Transfer::currentFileIndex() const {
+    return d_ptr->data.currentFileIndex;
+}
+
+double Transfer::bytes() const {
+    return d_ptr->data.bytes;
+}
+
+TransferStatus Transfer::status() const {
+    return d_ptr->data.status;
+}
+
+
 // --- Private class functions -----------------------------------------------
 TransferPrivate::TransferPrivate (Client *client) : interface(0) ,
     clientPtr(client) , flagWaitForCommit(false) {
 
+    stringEnumKeyMap.insert("progress",Progress);
+    stringEnumKeyMap.insert("bytes",Bytes);
+    stringEnumKeyMap.insert("estimate",Estimate);
+    stringEnumKeyMap.insert("currentFileIndex",CurrentFileIndex);
+    stringEnumKeyMap.insert("totalFiles",TotalFiles);
+    stringEnumKeyMap.insert("canPause",CanPause);
+    stringEnumKeyMap.insert("canSendImmediatly",CanSendImmediatly);
+    stringEnumKeyMap.insert("name",Name);
+    stringEnumKeyMap.insert("message",Message);
+    stringEnumKeyMap.insert("errorInfo",ErrorInfo);
+    stringEnumKeyMap.insert("thumbnailfile",ThumbnailFile);
+    stringEnumKeyMap.insert("icon",Icon);
+    stringEnumKeyMap.insert("imagePath",ImagePath);
+	stringEnumKeyMap.insert("target",Target);
+    stringEnumKeyMap.insert("cancelButtonText",CancelButtonText);
+    stringEnumKeyMap.insert("transferTitle",TransferTitle);
+	stringEnumKeyMap.insert("transferStatus",Status);
 }
 
 
@@ -573,4 +697,85 @@ void TransferPrivate::addFunctionToCommit(const QString& functionKeyName, QVaria
 
 bool TransferPrivate::isWaitForCommitSet() const {
     return flagWaitForCommit;
+}
+
+void TransferPrivate::populateInternalData(const QVariantMap& dataMap) {
+    QMap<QString, QVariant>::const_iterator iter;
+    for (iter = dataMap.constBegin(); iter != dataMap.constEnd(); iter++) {
+        if(stringEnumKeyMap.contains(iter.key())) {
+            switch(stringEnumKeyMap[iter.key()]) {
+                case Progress:
+                    data.progressData = iter.value().toDouble();
+                break;
+                case Bytes:
+                    data.bytes = iter.value().toLongLong();
+                break;
+                case Estimate:
+                    data.estimateTime = iter.value().toInt();
+                break;
+                case CurrentFileIndex:
+                    data.currentFileIndex = iter.value().toInt();
+                break;
+                case TotalFiles:
+                    data.filesCount = iter.value().toInt();
+                break;
+                case CanPause:
+                    data.canPause = iter.value().toBool();
+                break;
+                case CanSendImmediatly:
+                    data.canSendImdtly = iter.value().toBool();
+                break;
+                case Name:
+                    data.name = iter.value().toString();
+                break;
+                case Message:
+                    data.message = iter.value().toString();
+                break;
+                case ErrorInfo:
+                {
+                    QStringList errorInfo = iter.value().toStringList();
+                    if(errorInfo.isEmpty() == false) {
+                        data.headerMsg = errorInfo[0];
+                        data.detailMsg = errorInfo[1];
+                        if(errorInfo.count() == 3) {
+                            data.actionName = errorInfo[2];
+                            data.canRepair = true;
+                        }
+                    }
+                }
+                break;
+                case ThumbnailFile:
+                {
+                    QStringList thumbnailInfo = iter.value().toStringList();
+                    data.thumbnailFile = thumbnailInfo[0];
+                    data.thumbnailMimeType = thumbnailInfo[1];
+                    data.fileTypeIcon.clear();
+                }
+                break;
+                case Icon:
+                    data.fileTypeIcon = iter.value().toString();
+                break;
+                case ImagePath:
+                {
+                    data.thumbnailFile = iter.value().toString();
+                    data.thumbnailMimeType.clear();
+                }
+                break;
+                case Target:
+                    data.targetName = iter.value().toString();
+                break;
+                case CancelButtonText:
+                    data.cancelButtonText = iter.value().toString();
+                break;
+                case TransferTitle:
+                    data.transferTitle = iter.value().toString();
+                break;
+                case Status:
+                    data.status = (TransferStatus)iter.value().toInt();
+                break;
+            }
+        } else {
+           qDebug() << __FUNCTION__ << "Key Not Found" << iter.key();
+        }
+    }
 }

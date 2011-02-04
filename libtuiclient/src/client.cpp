@@ -23,8 +23,10 @@
 #include "TransferUI/transfer.h"
 #include "persistenttransfer.h"
 #include "transienttransfer.h"
+#include "internaltransfer.h"
 #include "transferui_interface.h"
 #include "transferenums.h"
+#include <QVariantMap>
 
 using namespace TransferUI;
 
@@ -153,6 +155,38 @@ double Client::progressValueDelta() const {
 
 bool Client::isTUIVisible() const {
     return d_ptr->tuiOpen;
+}
+
+const Transfer* Client::requestTransfer(const QString& transferId) {
+    Transfer *transfer = 0;
+    if (d_ptr->interface == 0) {
+        qCritical() << "Client not initialized";
+    } else {
+        if(d_ptr->transfers.contains(transferId) == true) {
+            transfer = d_ptr->transfers.value(transferId);
+        } else {
+            QDBusReply<QVariantMap> reply =
+                    d_ptr->interface->retrieveData (transferId);
+            if(reply.isValid() == true) {
+                QVariantMap resultMap = reply.value();
+                if(resultMap.isEmpty() == false) {
+                    transfer = new InternalTransfer(d_ptr->interface, transferId,
+                        resultMap, this);
+                    if (transfer != 0) {
+                        d_ptr->transfers.insert("transferId",transfer);
+                        connect(d_ptr,SIGNAL(sendLastProgress()),transfer,
+                            SLOT(sendLastProgress()));
+
+                    } else {
+                        qCritical() << "Failed to create transfer";
+                    }
+                }
+            } else {
+                qDebug() << __FUNCTION__ << "Invalid Reply" << reply.error();
+            }
+        }
+    }
+    return transfer;
 }
 
 // -- Private class functions ------------------------------------------------

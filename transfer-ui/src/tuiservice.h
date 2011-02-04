@@ -414,6 +414,13 @@ public Q_SLOTS: // METHODS
 
     void timeOrSettingsChanged (MeeGo::QmTimeWhatChanged what);
 
+    /*!
+        \brief send the data for the given transfer.
+        \return transfer data. If the id is not present in transfer-ui an empty
+        QVariantMap is returned.
+    */
+    QVariantMap retrieveData(const QString &id);
+
 Q_SIGNALS: // SIGNALS
 
     /*!

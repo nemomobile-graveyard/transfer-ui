@@ -24,6 +24,7 @@
 #include <QObject>
 #include "export.h"
 #include "TransferUI/client.h"
+#include "transferenums.h"
 
 namespace TransferUI {
     class TransferPrivate;
@@ -521,6 +522,141 @@ namespace TransferUI {
           \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool markCancelFailed(const QString& message);
+        
+        /*!
+            \brief refresh data for the transfer. This function retrieves the data
+            from the transfer-ui and updates the internal data strucutre of the
+            client library. Data provided from the transfer-ui will be the data
+            present in transfer-ui at that given point of time.
+            \return true if the request was successful else false
+        */
+        virtual bool refreshData() const;
+
+        /**************************** Get Functions ***************************/
+
+        /*!
+            \brief get the transfer name for the transfer
+            \return transfer name
+        */
+        virtual const QString name() const;
+
+        /*!
+            \brief get the message for the transfer. 
+            \return transfer message. If the state of the transfer is not
+            pending, then an empty string is returned.
+        */
+        virtual const QString message() const;
+
+        /*!
+            \brief get the target for the transfer.
+            \return transfer target. If the target is not set, empty string is
+            returned.
+        */
+        virtual const QString target() const;
+
+        /*!
+            \brief get cancel text. This text will be displayed in the details
+            view of the transfer.
+            \return cancel text.
+        */
+        virtual const QString cancelText() const;
+
+        /*!
+            \brief get transfer type string. This text will be displayed as the
+            title in the details view.
+            \return transfer type string
+        */
+        virtual const QString transferTypeString() const;
+
+        /*!
+            \brief get the error information. If the state of the transfer other
+            than error, all the parameters will be set to an empty string.
+            \param errorHeader, out parameter. This will be set with the error
+            header.
+            \param errorDetails, out parameter. This will be set with the error
+            details.
+            \param actionName, out parameter. This will be set if the error is
+            repairable error or an empty string will be set.
+        */
+        virtual void errorInfo(QString& errorHeader, QString&
+            errorDetails, QString& actionName) const;
+
+        /*!
+            \brief get thumbnail info for the transfer.
+            \param thumbnailFile, out parameter. This will set with the
+            thumbnail file path , if thumbnail file path is empty, an empty
+            string is set. If the thumbnail file path is empty, even the
+            mimeType parameter is also set with an empty string.
+            \param mimeType, out parameter. This will be set with the mime type
+            for the thumbnail file. 
+        */
+        virtual void thumbnailFile(QString& thumbnailFile, QString& mimeType)
+            const;
+
+        /*!
+            \brief get transfer icon if provided. If not provided an empty
+            string is returned. 
+            \return icon id, which is present in the theme.
+        */
+        virtual const QString icon() const;
+
+        /*!
+            \brief get the image path for the which an image is displayed in
+            transfer-ui.
+            \return image path if provided, else an empty string.
+        */
+        virtual const QString imagePath() const;
+
+        /*!
+            \brief check if the transfer's pause property is set 
+            \return true if the transfer is pausable else false.
+        */
+        virtual bool canPause() const;
+
+        /*!
+            \brief check if the transfer's send immediatly property is set.
+            \return true if the transfer can be sent immediatly else false.
+        */
+        virtual bool canSendImdtly() const;
+        
+        /*!
+            \brief get the progress value of the transfer. If the transfer is
+            not in active state, 0 is returned.
+            \return progress data.
+        */
+        virtual qlonglong progress() const;
+
+        /*!
+            \brief get the estimated time for completion of the transfer. If the
+            transfer is not in active state, 0 is returned.
+            \return estimated time.
+            
+        */
+        virtual int estimatedTime() const;
+
+        /*!
+            \brief get the total files in the transfer.
+            \return total files
+        */
+        virtual int totalFiles() const;
+
+        /*!
+            \brief get the current file index in the transfer.
+            \return current file index.
+        */
+        virtual int currentFileIndex() const;
+
+        /*!
+            \brief get the size of the transfer.
+            \return size
+        */
+        virtual double bytes() const;
+
+        /*!
+            \brief get the status of the transfer.
+            \return status.
+        */
+        virtual TransferStatus status() const;
         
         
     public Q_SLOTS:
