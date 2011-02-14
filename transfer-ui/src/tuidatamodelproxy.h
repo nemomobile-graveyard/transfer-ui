@@ -66,7 +66,6 @@ public:
     */
     void removeTransfer(const QString& id);
 
-
     /*!
         display transfers
     */
@@ -227,6 +226,30 @@ public:
     */
     void getTransfersCount(int& activeCount, int& inactiveCount,
         int& errorCount);
+
+    /*!
+        get active inactive error and completed transfers count
+    */
+    void getTransfersCount(int& activeCount, int& inactiveCount, int&
+        errorCount, int& completedCount);
+
+	/*!
+		clear completed Transfers
+	*/
+    void clearCompletedTransfers();
+
+	/*!
+		Add a new transfer to the data model. 
+		Transfer is read from the completed internal database
+	*/
+
+    void addTransfer(const QString& id, const TUIData *data);
+
+	
+	/*! 
+		Date settings changed update the model
+	*/
+    void dateSettingsChanged();
 
     /*!
         get total transfer count including cancel state

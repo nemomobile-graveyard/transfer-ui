@@ -90,7 +90,7 @@ public:
     */
     void refreshUIList();
 
-    void thumbnailReady(const QModelIndex& index, const QImage* image);
+    void clearCompletedMessages();
 
 private:
     QList<TUIData*> dataList; //!< List of client data

@@ -32,11 +32,13 @@
 
 #ifndef _TUI_READ_HISTORY_THREAD_H_
 #define _TUI_READ_HISTORY_THREAD_H_
+
+#include "TransferUI/TUIStructures"
+
 #include <QThread>
 #include <QSettings>
 
-#include "tuicompletedlistproxymodel.h"
-#include "tuistructures.h"
+using namespace TransferUI;
 
 /*!
     \class TUIReadHistoryThread
@@ -48,6 +50,7 @@ class TUIReadHistoryThread : public QThread
 	Q_OBJECT
 public:
 	TUIReadHistoryThread(QSettings *settings);
+
 	virtual ~TUIReadHistoryThread();
      //! \reimp
 	void run();
@@ -58,7 +61,8 @@ Q_SIGNALS:
         sucessfully.
         \param data data for the completed transfer.
     */
-	void addCompletedData(const TUIData *data);
+    void addCompletedData(const QString& id, const TUIData *data);
+
 private:
     /*!
         \brief method to read replace history

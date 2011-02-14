@@ -74,8 +74,9 @@ void TUIDataModelProxy::registerTransfer(const QString& id, TransferType type,
         tuiData->message = QString();
         tuiData->method = type;
         tuiData->thumbnailMimeType = "";
-        tuiData->fileTypeIcon = "icon-m-content-not-loaded";
+        tuiData->fileTypeIcon.clear();
 		tuiData->clientId = clientId;
+        tuiData->startTime = QDateTime::currentDateTime();
         QVariant variantData = qVariantFromValue(tuiData);
         QMap<int,QVariant> rolesVariant;
         rolesVariant.insert(Qt::EditRole, variantData);
@@ -424,6 +425,81 @@ void TUIDataModelProxy::getTransfersCount(int& activeCount ,
         ++iter;
     }
 }
+
+void TUIDataModelProxy::getTransfersCount(int& activeCount, int& inactiveCount,
+    int& errorCount, int& completedCount) {
+    activeCount = 0;
+    inactiveCount = 0;
+    errorCount = 0;
+    completedCount = 0;
+    TransferStatus status;
+    QMap<QString, const TUIData*>::const_iterator iter
+                = tuiDataMap.constBegin();
+    while (iter != tuiDataMap.constEnd()) {
+
+        status = iter.value()->status;
+        //error count
+        if(TransferStatusError==status) {
+            ++errorCount;
+        } else if((TransferStatusInactive==status) //inactive count
+            ||(TransferStatusPaused==status)) {
+            ++inactiveCount;
+        } else if((TransferStatusActive==status) //active count
+            || (TransferStatusResume==status)) {
+            ++activeCount;
+        } else if(TransferStatusDone==status) {
+            ++completedCount;            
+        }
+        ++iter;
+    }    
+}
+
+void TUIDataModelProxy::clearCompletedTransfers() {
+    QMap<QString, const TUIData*>::const_iterator iter
+                = tuiDataMap.constBegin();
+    TransferStatus status;
+    while (iter != tuiDataMap.constEnd()) {    
+        status = iter.value()->status;
+        if(TransferStatusDone==status) {
+            removeTransfer(iter.key());          
+        }
+        ++iter;
+    }
+}
+
+void TUIDataModelProxy::addTransfer(const QString& id, const TUIData *data) {
+    int rowNo = model->rowCount(QModelIndex());
+    model->insertRows(rowNo,1);
+    QModelIndex index = model->index(rowNo,Init);
+    QMap<int, QVariant> mapVariant = model->itemData(index);
+    QVariant variantData = mapVariant.value(Qt::EditRole);
+    TUIData *tuiData = variantData.value<TUIData*>();
+    if(tuiData != 0) {
+        tuiData->name = data->name;
+        tuiData->targetName = data->targetName;
+        tuiData->bytes = data->bytes;
+        tuiData->status = TransferStatusDone;
+        tuiData->message = QString();
+        tuiData->method = data->method;
+        tuiData->thumbnailFile = data->thumbnailFile;
+        tuiData->thumbnailMimeType = data->thumbnailMimeType;
+        tuiData->completedTime = data->completedTime;
+        tuiData->fileTypeIcon = data->fileTypeIcon;
+        tuiData->resultUri = data->resultUri;
+        QVariant variantData = qVariantFromValue(tuiData);
+        QMap<int,QVariant> rolesVariant;
+        rolesVariant.insert(Qt::EditRole, variantData);
+        model->setItemData(index,rolesVariant);
+        tuiDataMap.insert(id, tuiData);
+    }
+    delete data;
+    
+}
+
+void TUIDataModelProxy::dateSettingsChanged() {
+    model->clearCompletedMessages();
+}
+
 
 int TUIDataModelProxy::count() const {
     return tuiDataMap.count();

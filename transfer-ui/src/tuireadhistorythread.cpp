@@ -101,15 +101,18 @@ void TUIReadHistoryThread::readHistoryFromDB(int arrayIndex) {
 	data->method = (TransferType)historySettings->value("type").toInt();
 	data->filesCount = historySettings->value("count").toInt();
 	data->completedTime = historySettings->value("time").toDateTime();
+    data->startTime = historySettings->value("starttime").toDateTime();
 	data->thumbnailFile = historySettings->value("thumbnailfile").toString();
 	data->thumbnailMimeType = historySettings->value("mimetype").toString();
 	data->fileTypeIcon = historySettings->value("iconId").toString();
     data->resultUri = historySettings->value("resulturi").toString();
-    qDebug() << __FUNCTION__ << data->resultUri;
+    qDebug() << __FUNCTION__ << data->resultUri << data->thumbnailFile;
 	QString imageFile;
     if((data->thumbnailMimeType.isEmpty() == true)
 		&& (data->fileTypeIcon.isEmpty() == true)) {
     	data->thumbnailFile = historySettings->value("imagePath").toString();
     }
-    Q_EMIT(addCompletedData(data));
+    QString id = historySettings->value("transferid").toString();
+    qDebug() << __FUNCTION__ << "Emitting data ";
+    Q_EMIT(addCompletedData(id, data));
 }

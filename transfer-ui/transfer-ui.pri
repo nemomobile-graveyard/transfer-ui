@@ -20,11 +20,8 @@ HEADERS +=  transferenums.h         \
             tuiclientdatamodel.h   \
             logger.h                \
             tuidatamodelproxy.h     \
-            tuicompletedlistmodel.h \
-            tuicompletedlistproxymodel.h    \
-            tuicompletedlistsortproxy.h \
             tuiabstractmodel.h	\
-			tuireadhistorythread.h
+			tuireadhistorythread.h  
 
 
 SOURCES +=  tuiservice.cpp       \
@@ -32,10 +29,7 @@ SOURCES +=  tuiservice.cpp       \
             tuiclientdatamodel.cpp  \
             logger.cpp               \
             tuidatamodelproxy.cpp \
-            tuicompletedlistmodel.cpp \
-            tuicompletedlistproxymodel.cpp    \
-            tuicompletedlistsortproxy.cpp   \
             tuiabstractmodel.cpp	\
 			tuireadhistorythread.cpp \
-            tuistructures.cpp
+            tuistructures.cpp   
 

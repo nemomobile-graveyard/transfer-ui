@@ -84,6 +84,10 @@ bool TUIDataModel::setData(const QModelIndex &index,
                     data->fileTypeIcon = value.toString();
                     data->thumbnailFile.clear();
                     data->thumbnailMimeType.clear();
+                    if(data->transferImage != 0) {
+                        delete data->transferImage;
+                    }
+                    data->transferImage = 0;
                 }
             break;
             case Size:
@@ -95,6 +99,10 @@ bool TUIDataModel::setData(const QModelIndex &index,
                     data->thumbnailFile = param.at(0);
                     data->thumbnailMimeType = param.at(1);
                     data->fileTypeIcon.clear();
+                    if(data->transferImage != 0) {
+                        delete data->transferImage;
+                    }
+                    data->transferImage = 0;
                 }
             break;
             case CanPause:
@@ -164,6 +172,10 @@ bool TUIDataModel::removeRows(int position, int rows, const QModelIndex &index) 
     beginRemoveRows(index, position, position+rows-1);
     for (int row=0; row < rows; ++row) {
         TUIData *data = dataList.value(position);
+        if (data->transferImage != 0) {
+            delete data->transferImage;
+            data->transferImage = 0;
+        }
         delete data;
         dataList.removeAt(position);
 
@@ -236,8 +248,17 @@ int TUIDataModel::columnCount(const QModelIndex &parent) const {
     return 1;
 }
 
-void TUIDataModel::thumbnailReady(const QModelIndex& modelIndex, const QImage* image) {
-    Q_UNUSED(image);
-    QModelIndex thumbnailIndex = index (modelIndex.row(), TransferImage);
-    Q_EMIT(dataChanged(thumbnailIndex, thumbnailIndex));
+void TUIDataModel::clearCompletedMessages() {
+    QList<TUIData*>::const_iterator iter;
+    for (iter = dataList.constBegin(); 
+        iter != dataList.constEnd(); ++iter) {
+        TUIData *tuiData = (*iter);
+        if(TransferStatusDone == tuiData->status) {
+            tuiData->message.clear();
+            int rowNo = dataList.indexOf(tuiData);
+            QModelIndex changedIndex = index(rowNo,0);
+            Q_EMIT(dataChanged(changedIndex, changedIndex));
+        }
+    }
 }
+

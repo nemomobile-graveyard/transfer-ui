@@ -81,6 +81,7 @@ namespace TransferUI {
 	    QString clientId; //!< clinet interface information for custom dialogs
         QString resultUri; //!< Uri to launch application of the completed transfers
         QDateTime completedTime; //!< completed time of the transfer
+        QDateTime startTime; //!< time when transfer started
         QImage *transferImage; //!< transfer image
     };
 

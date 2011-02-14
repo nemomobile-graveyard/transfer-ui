@@ -37,7 +37,6 @@
 #include "tuidatamodel.h"
 #include "tuiclientdatamodel.h"
 #include "tuidatamodelproxy.h"
-#include "tuicompletedlistproxymodel.h"
 #include "tuireadhistorythread.h"
 #include "TransferUI/transferuiimplementationinterface.h"
 #include "TransferUI/tuistructures.h"
@@ -66,9 +65,6 @@ public:
 
     TUIDataModelProxy *proxyModel; //!< proxy data model
 
-    QMap<QString,MNotification*> notifyList; //!< Notification list
-
-    TUICompletedListProxyModel *completedProxyModel; //!< Completed list proxy
 
     QSettings *historySetting; //!< setting to write history data
 
@@ -82,11 +78,6 @@ public:
     TUIClientDataModel *clientDataModel;
 
     bool isInSwitcher; //!< variable to track if the application is switcher
-
-    //! this variable keeps track of the completed transfers count in background
-    // mode. History is read only when the ui is visible, hence this variable is
-    // used.
-    int invisibleCompletedCount;
 
 public:
     TUIServicePrivate();
@@ -121,11 +112,12 @@ public:
         serviceName);
 
 
-    void writeToHistory(const TUIData *data, bool showInHistory,
+    void writeToHistory(const QString& id, const TUIData *data, bool showInHistory,
 		const QString& replaceId="");
 
     void readHistory();
 
+    void writeHistoryData(const TUIData *data);
 Q_SIGNALS:
     /*
         Signals
@@ -165,7 +157,7 @@ public Q_SLOTS:
     /*!
         \brief read completed data from the data base.
     */
-	void dataReadFromDB(const TUIData *data);
+	void dataReadFromDB(const QString& id, const TUIData *data);
 
     /*!
         \brief show custom dialog. This function checks if the transfer is
@@ -183,23 +175,18 @@ public Q_SLOTS:
     */
     void elementClicked(const QModelIndex &index);
 
-    /*!
-        \brief user clicked the completed transfer element
-        \param index index of the transfer
-    */
-    void completedElementClicked(const QModelIndex &index);
-
 private:
     /*!
         \brief write replace history transfers to the data base
     */
-	void writeReplaceHistoryDB(const TUIData *data, const QString& replaceId);
+	void writeReplaceHistoryDB(const QString& id, const TUIData *data, 
+        const QString& replaceId);
 
     /*!
         \brief write history to the data base
     */
 
-	void writeHistoryDB(const TUIData *data);
+	void writeHistoryDB(const QString& id, const TUIData *data);
 
     /*!
         \brief read replace history ids from the data base

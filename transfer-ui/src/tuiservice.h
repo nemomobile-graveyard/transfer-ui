@@ -48,7 +48,6 @@ class QDBusServiceWatcher;
 #ifdef _UNIT_TESTING_
 #include <QAbstractItemModel>
 #include "tuidatamodelproxy.h"
-#include "tuicompletedlistproxymodel.h"
 #endif
 //local class
 class TUIServicePrivate;

@@ -66,17 +66,6 @@ public:
     */
     virtual void showDetails (const QModelIndex& index) = 0;
 
-    /*!
-        \brief show completed details of the transfer
-        \param index model index of the item.
-    */
-    virtual void showCompletedDetails (const QModelIndex& index) = 0;
-
-    /*!
-        \brief show error details for the transfer
-        \param index model index of the item.
-    */
-    virtual void showErrorDetails (const QModelIndex& index) = 0;
 
     /*!
         \brief set history visibility. This function hides / displays the
@@ -85,32 +74,12 @@ public:
     */
     virtual void setHistoryVisibility(bool value) = 0;
 
-    /*!
-        \brief set active transfers visiblity. This function hides / displays
-        the active transfers list.
-        \param value, set visible if the value is true, else false
-    */
-    virtual void setActiveTransfersVisibility(bool value) = 0;
 
     /*!
         \brief show No Active or Completed Transfers.
         \param value, set visible if the value is true, else false
     */
     virtual void setNoTransfersVisibility(bool value) = 0;
-
-    /*!
-        \brief set completed data model. Data model emits dataChanged signal
-        when there is any data changed, UI should listen to dataChanged signal
-        for UI changes.
-        \brief completedModel completed data model.
-    */
-    virtual void setCompletedDataModel(QAbstractItemModel *completedModel) = 0;
-
-    /*!
-        \brief set completed sort data model.
-        \param completedSortModel sort model.
-    */
-    virtual void setCompletedSortModel(QAbstractItemModel *completedSortModel) = 0;
 
     /*!
         \brief set data model for the tui main list view. dataChanged signal
@@ -130,13 +99,6 @@ public:
     virtual void displayBanner(TransferUI::BannerEvent event,
         const QString& message=QString()) = 0;
 
-    /*!
-        \brief display system notifications.
-        \param id transfer identifier
-        \param message notification message
-    */
-    virtual void displaySystemNotification(const QModelIndex& index,
-        const QString& id, const QString& message) = 0;
 
     /*!
         \brief returns the application instance from the plugin
@@ -175,12 +137,6 @@ protected:
         \param data TUI data of the transfer.
     */
     virtual void elementClicked(const QModelIndex& index) = 0;
-
-    /*!
-        \brief signal emitted when a completed transfer is clicked.
-        \param data TUI data of the transfer.
-    */
-    virtual void completedElementClicked(const QModelIndex& index) = 0;
 
     /*!
         \brief signal emitted when the visibility of the ui changes.
