@@ -1,8 +1,8 @@
-transfer-ui (0.3.6.2) unstable; urgency=low
+transfer-ui (0.3.7.1) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#227535 - <MemLeak> TUIDataModel class is leaking memory, as observed in transfer-ui-tests
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 09 Feb 2011 10:32:31 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 15 Feb 2011 11:09:28 +0530
 
 transfer-ui (0.3.6.1) unstable; urgency=low
 

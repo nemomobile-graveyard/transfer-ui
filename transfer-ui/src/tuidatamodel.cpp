@@ -45,6 +45,7 @@ TUIDataModel::TUIDataModel(QObject *parent) : TUIAbstractModel(parent) {
 }
 
 TUIDataModel::~TUIDataModel() {
+    qDeleteAll(dataList);
     dataList.clear();
     qDebug() << __FUNCTION__ << "Deleting Data Model";
 }
