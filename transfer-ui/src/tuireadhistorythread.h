@@ -61,7 +61,7 @@ Q_SIGNALS:
         sucessfully.
         \param data data for the completed transfer.
     */
-    void addCompletedData(const QString& id, const TUIData *data);
+    void addCompletedData(const QString& id, TUIData *data);
 
 private:
     /*!

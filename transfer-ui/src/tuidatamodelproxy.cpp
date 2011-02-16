@@ -71,9 +71,9 @@ void TUIDataModelProxy::registerTransfer(const QString& id, TransferType type,
         tuiData->targetName = target;
         tuiData->bytes = bytes;
         tuiData->status = TransferStatusInactive;
-        tuiData->message = QString();
+        tuiData->message.clear();
         tuiData->method = type;
-        tuiData->thumbnailMimeType = "";
+        tuiData->thumbnailMimeType.clear();
         tuiData->fileTypeIcon.clear();
 		tuiData->clientId = clientId;
         tuiData->startTime = QDateTime::currentDateTime();
@@ -467,7 +467,7 @@ void TUIDataModelProxy::clearCompletedTransfers() {
     }
 }
 
-void TUIDataModelProxy::addTransfer(const QString& id, const TUIData *data) {
+void TUIDataModelProxy::addTransfer(const QString& id, TUIData *data) {
     int rowNo = model->rowCount(QModelIndex());
     model->insertRows(rowNo,1);
     QModelIndex index = model->index(rowNo,Init);

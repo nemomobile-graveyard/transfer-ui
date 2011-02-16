@@ -157,7 +157,7 @@ public Q_SLOTS:
     /*!
         \brief read completed data from the data base.
     */
-	void dataReadFromDB(const QString& id, const TUIData *data);
+	void dataReadFromDB(const QString& id, TUIData *data);
 
     /*!
         \brief show custom dialog. This function checks if the transfer is

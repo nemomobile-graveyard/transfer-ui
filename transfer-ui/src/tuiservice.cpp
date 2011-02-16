@@ -920,9 +920,8 @@ TUIServicePrivate::TUIServicePrivate() : proxyModel(0) ,
 		TUIReadHistoryThread(historySetting);
 
 
-	connect(readThread, SIGNAL(addCompletedData(const QString&, const
-		TUIData*)),this, SLOT(dataReadFromDB(const QString&, const TUIData*)),
-		Qt::QueuedConnection);    
+	connect(readThread, SIGNAL(addCompletedData(const QString&, TUIData*)),this,
+    	SLOT(dataReadFromDB(const QString&, TUIData*)), Qt::QueuedConnection);    
 
 	connect(readThread, SIGNAL(finished()), this, SLOT(threadCompleted()));
 	connect(readThread, SIGNAL(terminated()), this, SLOT(threadCompleted()));
@@ -1168,7 +1167,7 @@ void TUIServicePrivate::readHistory() {
     readThread->start();
 }
 
-void TUIServicePrivate::dataReadFromDB(const QString& id, const TUIData *data) {
+void TUIServicePrivate::dataReadFromDB(const QString& id, TUIData *data) {
     proxyModel->addTransfer(id, data);
 }
 

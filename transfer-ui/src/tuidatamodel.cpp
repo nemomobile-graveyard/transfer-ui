@@ -86,8 +86,8 @@ bool TUIDataModel::setData(const QModelIndex &index,
                     data->thumbnailMimeType.clear();
                     if(data->transferImage != 0) {
                         delete data->transferImage;
+                        data->transferImage = 0;
                     }
-                    data->transferImage = 0;
                 }
             break;
             case Size:
@@ -101,8 +101,9 @@ bool TUIDataModel::setData(const QModelIndex &index,
                     data->fileTypeIcon.clear();
                     if(data->transferImage != 0) {
                         delete data->transferImage;
+                        data->transferImage = 0;
+
                     }
-                    data->transferImage = 0;
                 }
             break;
             case CanPause:

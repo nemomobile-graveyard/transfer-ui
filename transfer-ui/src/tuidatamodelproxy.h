@@ -55,7 +55,13 @@ public:
     TUIAbstractModel * dataModel() const;
 
     /*!
-        \brief A new transfer
+        \brief A new transfer to the model
+        \param id transfer identifier
+        \param type transfer type
+        \param title transfer title
+        \param clientId client identifier, by default it is empty
+        \param target transfer target, by default it is empty
+        \param bytes total size of the transfer, by default it is 0
     */
     void registerTransfer(const QString& id, TransferType type,
         const QString& title, const QString& clientId = QString(), const
@@ -240,10 +246,12 @@ public:
 
 	/*!
 		Add a new transfer to the data model. 
-		Transfer is read from the completed internal database
+		Transfer is read from the completed internal database. 
+        \param id transfer iddentifier
+        \param data TUIData
 	*/
 
-    void addTransfer(const QString& id, const TUIData *data);
+    void addTransfer(const QString& id, TUIData *data);
 
 	
 	/*! 
@@ -252,10 +260,15 @@ public:
     void dateSettingsChanged();
 
     /*!
-        get total transfer count including cancel state
+        \brief get total transfer count including cancel state
+        \return total count of the transfers.
     */
     int count() const;
 
+    /*!
+        \brief return modelIndex for the given transfer id
+        \param id transfer id for the given transfer
+    */
     QModelIndex modelIndex(const QString& id) const;
 
 private:
@@ -269,7 +282,9 @@ private:
     TUIData* data(const QModelIndex& index);
 
     /*!
-        set given data for the give model index
+        \brief set given data for the give model index
+        \param index QModelIndex of the transfer
+        \param data Transfer data
     */
     void setModelData(const QModelIndex& index, TUIData* data);
 };
