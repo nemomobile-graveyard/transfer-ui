@@ -565,7 +565,9 @@ namespace TransferUI {
 
         /*!
           \brief Signal emited when user has asked transfer to be
-          started/continued/repaired
+          started. In case of failed transfer repairError signal is used
+          instead of this.
+          \sa repairError
         */
         void start ();
 
@@ -575,7 +577,9 @@ namespace TransferUI {
         void pause ();
 
         /*!
-          \brief Signal emited when user has asked the error to repaired
+          \brief Signal emited when user has asked to retry or to fix the failed
+                 transfer
+          \sa start
         */
         void repairError();
         
