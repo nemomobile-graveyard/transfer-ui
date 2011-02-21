@@ -1,6 +1,6 @@
-transfer-ui (0.3.7.2) unstable; urgency=low
+transfer-ui (0.3.8.1) unstable; urgency=low
 
-  * New version after tagging
+  * Fixes: NB#228914 - transfer-ui provides dev package with missing dependencies
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 15 Feb 2011 14:05:30 +0530
 

@@ -16,7 +16,7 @@ Package: transfer-ui-dev
 Section: libdevel
 Architecture: all
 Depends: ${misc:Depends}, transfer-ui (>= ${source:Version}),
- transfer-ui (<< ${source:Version}.1~)
+ transfer-ui (<< ${source:Version}.1~), libqt4-dev
 Description: Transfer-UI development files
 
 Package: transfer-ui-dbg
