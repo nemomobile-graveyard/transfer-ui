@@ -33,6 +33,8 @@
 #ifndef _TRANSFER_ENUMS_H_
 #define _TRANSFER_ENUMS_H_
 
+#include <QObject>
+
 namespace TransferUI {
 
     /*!
@@ -116,6 +118,64 @@ namespace TransferUI {
         TransferAlreadyCompleted, //!< Transfer completed
         ClientEvent, //!< Generic event for which clients provides the message
         TotalBannerEvent
+    };
+
+    /*!
+        \enum TransferDataRole
+        \brief enumeration to represent the data roles in the tui data model.
+        This Roles will be used to get /set data from / to the model.
+    */
+    enum TransferDataRole {
+        //! progress data of the transfer, progress data is of type double
+        ProgressRole = Qt::UserRole + 1, 
+        //! size of the transfer, size is of type qlonglong
+        SizeRole,
+        //! estimate of the transfer, estimate is of type int
+        EstimateRole,
+        //! current file index of the transfer, file index is of type int
+        CurrentFileIndexRole,
+        //! total files in the transfer, total files is of type int
+        TotalFileCountRole,
+        //! current status of the transfer, status is of type int
+        StatusRole,
+        //! check if the error transfer is repariable, this is of type bool
+        CanRepairRole,
+        //! check if transfer can pause, this is of type bool
+        CanPauseRole,
+        //! check if transfer can be sent immdiately, this is of type bool
+        CanSendImdltRole,
+        //! should transfer be shown in the history, this is of type bool
+        ShowInHistoryRole,
+        //! name of the transfer, name is of type QString
+        NameRole,
+        //! message of the transfer, if any, message is of type QString
+        MessageRole,
+        //! transfer error status. error is of QStringList, first String in the
+        //list represents Error Header, second represents Error Detailsa and the
+        //last represents action name ,if the error is repairable.
+        ErrorRole,
+        //! thumbnail information of the transfer. thumbnail is of QStringList,
+        //first provides the thumbnail file uri and the next provides the
+        //mimetype.
+        ThumbnailRole,
+        //! file icon information of the transfer, file icon is of type QString
+        FileIconRole,
+        //! target of the transfer, target is of type QString
+        TargetRole,
+        //! customized cancel text, if provided. cancel text is of type QString
+        CancelTextRole,
+        //! customized transfer title, if provided. transfer title is of type
+        //QString
+        TransferTitleRole,
+        //! image for the give transfer, image is of type QImage pointer
+        ImageRole,
+        //! start time of the transfer, time is of type QDateTime
+        StartTimeRole,
+        //! completed time of the transfer, time is of type QDateTime
+        CompletedTimeRole,
+        //! transfer method, method is of type int
+        MethodRole,
+        TotalDataRoles
     };
 }
 #endif

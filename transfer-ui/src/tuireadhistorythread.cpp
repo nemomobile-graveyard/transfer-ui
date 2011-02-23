@@ -1,4 +1,4 @@
-#include "tuireadhistorythread.h"
+
 /*
  * This file is part of Handset UX Transfer user interface
  *
@@ -28,11 +28,15 @@
 
 
 
-
+#include "tuireadhistorythread.h"
 #include "tuistructures.h"
+#include "tuiserviceprivate.h"
+
+#include <QDebug>
 
 TUIReadHistoryThread::TUIReadHistoryThread(QSettings *settings)
 	: historySettings (settings) {
+    qRegisterMetaType<QSharedPointer<TUIData> >("TUIDataStructurePointer");
 }
 
 TUIReadHistoryThread::~TUIReadHistoryThread() {
@@ -114,5 +118,5 @@ void TUIReadHistoryThread::readHistoryFromDB(int arrayIndex) {
     }
     QString id = historySettings->value("transferid").toString();
     qDebug() << __FUNCTION__ << "Emitting data ";
-    Q_EMIT(addCompletedData(id, data));
+    Q_EMIT(addCompletedData(id, QSharedPointer<TUIData>(data)));
 }

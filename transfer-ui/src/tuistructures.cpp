@@ -1,4 +1,3 @@
-#include "tuistructures.h"
 /*
  * This file is part of Handset UX Transfer user interface
  *
@@ -29,6 +28,8 @@
 
 
 
+#include "tuistructures.h"
+#include <QDebug>
 
 using namespace TransferUI;
 

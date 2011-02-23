@@ -39,7 +39,6 @@
 #include "tuiclientdatamodel.h"
 #include "tuidatamodelproxy.h"
 #include "tuireadhistorythread.h"
-
 #include "TransferUI/transferuiimplementationinterface.h"
 
 //Qt headers
@@ -96,6 +95,7 @@ TUIService::TUIService(QObject *parent)
 
     d_ptr->proxyModel = new TUIDataModelProxy(this);
 
+
     // Create a client data model
     d_ptr->clientDataModel = new TUIClientDataModel(this);
 
@@ -120,6 +120,8 @@ TUIService::TUIService(QObject *parent)
     stringEnumFunctionMap.insert("setSendNow",SendNow);
     stringEnumFunctionMap.insert("setTransferTypeString",TransferTypeString);
 	stringEnumFunctionMap.insert("setTransferImage",TransferImage);
+
+    qRegisterMetaType<QSharedPointer<TUIData> >();
 
 }
 
@@ -156,9 +158,6 @@ void TUIService::loadImplementationPlugin() {
 
             connect(plugin,SIGNAL(elementClicked(QModelIndex)),
                 d_ptr, SLOT(elementClicked(QModelIndex)));
-
-            connect(plugin,SIGNAL(completedElementClicked(QModelIndex)),
-                d_ptr, SLOT(completedElementClicked(QModelIndex)));
 
             connect(plugin,SIGNAL(clearCompletedList()),this,
                 SLOT(clearCompletedTransfers()));
@@ -903,7 +902,7 @@ TUIDataModelProxy *TUIService::model() const {
 
 /******************************************************************************/
 
-TUIServicePrivate::TUIServicePrivate() : proxyModel(0) ,
+TUIServicePrivate::TUIServicePrivate() : proxyModel(0),
     historySetting(0), readThread(0), interface(0) {
 
     clientDataModel = 0;
@@ -920,8 +919,8 @@ TUIServicePrivate::TUIServicePrivate() : proxyModel(0) ,
 		TUIReadHistoryThread(historySetting);
 
 
-	connect(readThread, SIGNAL(addCompletedData(const QString&, TUIData*)),this,
-    	SLOT(dataReadFromDB(const QString&, TUIData*)), Qt::QueuedConnection);    
+	connect(readThread, SIGNAL(addCompletedData(QString, QSharedPointer<TUIData>)),this,
+    	SLOT(dataReadFromDB(QString, QSharedPointer<TUIData>)),Qt::QueuedConnection);    
 
 	connect(readThread, SIGNAL(finished()), this, SLOT(threadCompleted()));
 	connect(readThread, SIGNAL(terminated()), this, SLOT(threadCompleted()));
@@ -1142,9 +1141,9 @@ void TUIServicePrivate::clearCompletedList() {
 
 void TUIServicePrivate::threadCompleted() {
 
-    if(proxyModel->dataModel()->rowCount() > 0) {
+    if(proxyModel->completedCount() > 0) {
         if(isUIShown == true) {
-            interface->setNoTransfersVisibility(false);
+            interface->setHistoryVisibility(true);
         }
     }
 
@@ -1167,7 +1166,7 @@ void TUIServicePrivate::readHistory() {
     readThread->start();
 }
 
-void TUIServicePrivate::dataReadFromDB(const QString& id, TUIData *data) {
+void TUIServicePrivate::dataReadFromDB(const QString& id, QSharedPointer<TUIData> data) {
     proxyModel->addTransfer(id, data);
 }
 

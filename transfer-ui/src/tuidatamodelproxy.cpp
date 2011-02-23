@@ -39,6 +39,7 @@
 #include <QObject>
 #include <QStringList>
 #include <QDateTime>
+#include <QDebug>
 
 TUIDataModelProxy::TUIDataModelProxy(QObject *parent) : QObject(parent) {
     model = new TUIDataModel(this);
@@ -58,7 +59,6 @@ TUIAbstractModel * TUIDataModelProxy::dataModel() const {
 void TUIDataModelProxy::registerTransfer(const QString& id, TransferType type,
     const QString& title, const QString& clientId, const QString& target, double
     bytes) {
-	qDebug() << __FUNCTION__ << clientId;
     int rowNo = model->rowCount(QModelIndex());
     model->insertRows(rowNo,1);
     QModelIndex index = model->index(rowNo,Init);
@@ -66,7 +66,6 @@ void TUIDataModelProxy::registerTransfer(const QString& id, TransferType type,
     QVariant data = mapVariant.value(Qt::EditRole);
     TUIData *tuiData = data.value<TUIData*>();
     if(tuiData != 0) {
-
         tuiData->name = title;
         tuiData->targetName = target;
         tuiData->bytes = bytes;
@@ -454,6 +453,21 @@ void TUIDataModelProxy::getTransfersCount(int& activeCount, int& inactiveCount,
     }    
 }
 
+int TUIDataModelProxy::completedCount() const {
+    int completedTransfersCount = 0;
+    TransferStatus status;
+    QMap<QString, const TUIData*>::const_iterator iter
+                = tuiDataMap.constBegin();
+    while (iter != tuiDataMap.constEnd()) {
+        status = iter.value()->status;
+        if(TransferStatusDone==status) {
+            ++completedTransfersCount;            
+        }
+        ++iter;
+    }
+    return completedTransfersCount;
+}
+
 void TUIDataModelProxy::clearCompletedTransfers() {
     QMap<QString, const TUIData*>::const_iterator iter
                 = tuiDataMap.constBegin();
@@ -467,7 +481,7 @@ void TUIDataModelProxy::clearCompletedTransfers() {
     }
 }
 
-void TUIDataModelProxy::addTransfer(const QString& id, TUIData *data) {
+void TUIDataModelProxy::addTransfer(const QString& id, QSharedPointer<TUIData> data) {
     int rowNo = model->rowCount(QModelIndex());
     model->insertRows(rowNo,1);
     QModelIndex index = model->index(rowNo,Init);
@@ -486,14 +500,14 @@ void TUIDataModelProxy::addTransfer(const QString& id, TUIData *data) {
         tuiData->completedTime = data->completedTime;
         tuiData->fileTypeIcon = data->fileTypeIcon;
         tuiData->resultUri = data->resultUri;
+        tuiData->startTime = data->startTime;
         QVariant variantData = qVariantFromValue(tuiData);
         QMap<int,QVariant> rolesVariant;
         rolesVariant.insert(Qt::EditRole, variantData);
         model->setItemData(index,rolesVariant);
         tuiDataMap.insert(id, tuiData);
     }
-    delete data;
-    
+    data.clear();
 }
 
 void TUIDataModelProxy::dateSettingsChanged() {

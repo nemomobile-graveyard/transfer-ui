@@ -29,7 +29,6 @@
 
 
 
-
 #include "tuidatamodel.h"
 #include "transferenums.h"
 
@@ -38,7 +37,7 @@
 
 #include <QImage>
 #include <QFileInfo>
-
+#include <QDebug>
 
 TUIDataModel::TUIDataModel(QObject *parent) : TUIAbstractModel(parent) {
     dataList.clear();
@@ -55,22 +54,106 @@ int TUIDataModel::rowCount(const QModelIndex &parent) const {
 }
 
 QVariant TUIDataModel::data(const QModelIndex &index, int role) const {
-    Q_UNUSED(role)
+    QVariant retVar;
     TUIData *data = static_cast<TUIData*>(index.internalPointer());
-    qDebug() << __FUNCTION__ << "Returning data" << data;
-    return qVariantFromValue(data);
+    if(data != 0) {
+        
+        switch(role) {
+            case TransferUI::ProgressRole:
+                retVar = qVariantFromValue(data->progressData);
+            break;
+            case TransferUI::SizeRole:
+                retVar = qVariantFromValue(data->bytes);
+            break;
+            case TransferUI::EstimateRole:
+                retVar = qVariantFromValue(data->estimateTime);
+            break;
+            case TransferUI::CurrentFileIndexRole:
+                retVar = qVariantFromValue(data->currentFileIndex);
+            break;
+            case TransferUI::TotalFileCountRole:
+                retVar = qVariantFromValue((int)data->filesCount);
+            break;
+            case TransferUI::StatusRole:
+                retVar = qVariantFromValue((int)data->status);
+            break;
+            case TransferUI::MethodRole:
+                retVar = qVariantFromValue((int)data->method);
+            break;
+            case TransferUI::CanRepairRole:
+                retVar = qVariantFromValue(data->canRepair);
+            break;
+            case TransferUI::CanPauseRole:
+                retVar = qVariantFromValue(data->canPause);
+            break;
+            case TransferUI::CanSendImdltRole: 
+                retVar = qVariantFromValue(data->canSendImdtly);
+            break;
+            case TransferUI::ShowInHistoryRole:
+                retVar = qVariantFromValue(data->showInHistory);
+            break;
+            case TransferUI::NameRole:
+                retVar = qVariantFromValue(data->name);
+            break;
+            case TransferUI::MessageRole:
+                retVar = qVariantFromValue(data->message);
+            break;
+            case TransferUI::ErrorRole:
+                {
+                    QStringList errorDetails;
+                    errorDetails << data->headerMsg << data->detailMsg;
+                    if(data->canRepair == true) {
+                        errorDetails << data->actionName;
+                    }
+                    retVar = qVariantFromValue(errorDetails);
+                }
+            break;
+            case TransferUI::ThumbnailRole:
+                {
+                    QStringList thumbnailDetails;
+                    thumbnailDetails << data->thumbnailFile;
+                    thumbnailDetails << data->thumbnailMimeType;
+                    retVar = qVariantFromValue(thumbnailDetails);
+                }
+            break;
+            case TransferUI::FileIconRole:
+                retVar = qVariantFromValue(data->fileTypeIcon);
+            break;
+            case TransferUI::TargetRole: 
+                retVar = qVariantFromValue(data->targetName);
+            break;
+            case TransferUI::CancelTextRole:
+                retVar = qVariantFromValue(data->cancelButtonText);
+            break;
+            case TransferUI::TransferTitleRole:
+                retVar = qVariantFromValue(data->transferTitle);
+            break;
+            case TransferUI::ImageRole:
+                retVar = qVariantFromValue(data->transferImage);
+            break;
+            case TransferUI::StartTimeRole:
+                retVar = qVariantFromValue(data->startTime);
+            break;
+            case TransferUI::CompletedTimeRole:
+                retVar = qVariantFromValue(data->completedTime);
+            break;
+            default:
+                retVar = qVariantFromValue(data);
+        }
+    }
+    return retVar;
 }
+
 
 bool TUIDataModel::setData(const QModelIndex &index,
     const QVariant &value, int role) {
-
     Q_UNUSED(role)
     bool retVal = false;
     if (index.isValid() == true) {
 
         TUIData *data = static_cast<TUIData*>(index.internalPointer());
+
         int row = dataList.indexOf(data);
-        qDebug() << __FUNCTION__ << "Index of data in the list" << row;
 
         switch (index.column()){
             case Name:
@@ -188,16 +271,123 @@ bool TUIDataModel::removeRows(int position, int rows, const QModelIndex &index) 
 bool TUIDataModel::setItemData ( const QModelIndex & index,
     const QMap<int, QVariant> & roles ) {
     bool retVal = false;
+    bool replaceData = true;
     if (index.isValid() == true) {
+
         TUIData *dataOriginal = static_cast<TUIData*>(index.internalPointer());
         int row = dataList.indexOf(dataOriginal);
-        qDebug() << __FUNCTION__ << "Index of data in the list" << row;
-        QVariant dataVariant = roles.value(Qt::EditRole);
-        TUIData *data = dataVariant.value<TUIData *>();
-        dataList.replace(row, data);
-        Q_EMIT(dataChanged(index, index));
+        QMap<int, QVariant>::const_iterator iter;
+        for (iter = roles.constBegin(); iter != roles.constEnd(); ++iter) {
+            switch(iter.key()) {
+                case TransferUI::ProgressRole:
+                    dataOriginal->progressData = iter.value().toDouble();
+                break;
+                case TransferUI::SizeRole:
+                    dataOriginal->bytes = iter.value().toLongLong();
+                break;
+                case TransferUI::EstimateRole:
+                    dataOriginal->estimateTime = iter.value().toInt();
+                break;
+                case TransferUI::CurrentFileIndexRole:
+                    dataOriginal->currentFileIndex = iter.value().toInt();
+                break;
+                case TransferUI::TotalFileCountRole:
+                    dataOriginal->filesCount = iter.value().toInt();
+                break;
+                case TransferUI::StatusRole:
+                    dataOriginal->status = TransferStatus(iter.value().toInt());
+                break;
+                case TransferUI::MethodRole:
+                    dataOriginal->method = TransferType(iter.value().toInt());
+                break;
+                case TransferUI::CanRepairRole:
+                    dataOriginal->canRepair = iter.value().toBool();
+                break;
+                case TransferUI::CanPauseRole:
+                    dataOriginal->canPause = iter.value().toBool();
+                break;
+                case TransferUI::CanSendImdltRole: 
+                    dataOriginal->canSendImdtly = iter.value().toBool();
+                break;
+                case TransferUI::ShowInHistoryRole:
+                    dataOriginal->showInHistory = iter.value().toBool();
+                break;
+                case TransferUI::NameRole:
+                    dataOriginal->name = iter.value().toString();
+                break;
+                case TransferUI::MessageRole:
+                    dataOriginal->message = iter.value().toString();
+                break;
+                case TransferUI::ErrorRole:
+                    {
+                        QStringList errorDetails = iter.value().toStringList();
+                        dataOriginal->headerMsg = errorDetails[0];
+                        dataOriginal->detailMsg = errorDetails[1];
+                        if(errorDetails.count() > 2) {
+                            dataOriginal->actionName = errorDetails[2];
+                            dataOriginal->canRepair = true;
+                        } else {
+                            dataOriginal->canRepair = false;
+                        }
+                    }
+                break;
+                case TransferUI::ThumbnailRole:
+                    {
+                        QStringList thumbnailDetails = 
+                            iter.value().toStringList();
+                        dataOriginal->thumbnailFile = thumbnailDetails[0];
+                        dataOriginal->thumbnailMimeType = thumbnailDetails[1];
+                        dataOriginal->fileTypeIcon.clear();
+                        if(dataOriginal->transferImage != 0) {
+                            delete dataOriginal->transferImage;
+                            dataOriginal->transferImage = 0;
+                        }
+                    }
+                break;
+                case TransferUI::FileIconRole:
+                    dataOriginal->fileTypeIcon = iter.value().toString();
+                break;
+                case TransferUI::TargetRole: 
+                    dataOriginal->targetName = iter.value().toString();
+                break;
+                case TransferUI::CancelTextRole:
+                    dataOriginal->cancelButtonText = iter.value().toString();
+                break;
+                case TransferUI::TransferTitleRole:
+                    dataOriginal->transferTitle = iter.value().toString();
+                break;
+                case TransferUI::ImageRole:
+                    {
+						if(dataOriginal->transferImage != 0) {
+							delete dataOriginal->transferImage;
+							dataOriginal->transferImage = 0;
+						}
+                        dataOriginal->transferImage = 
+                            iter.value().value<QImage*>();
+                        dataOriginal->fileTypeIcon.clear();
+                    }
+                break;
+                case TransferUI::StartTimeRole:
+                    dataOriginal->startTime = iter.value().toDateTime();
+                break;
+                case TransferUI::CompletedTimeRole:
+                    dataOriginal->completedTime = iter.value().toDateTime();
+                break;
+                default:
+                    qDebug() << iter.key() << "Updating for default Role";
+                    QVariant dataVariant = roles.value(Qt::EditRole);
+                    TUIData *data = dataVariant.value<TUIData *>();
+                    replaceData = false;
+                    dataList.replace(row, data);
+            }
+        }
+        if(replaceData == true) {
+            dataList.replace(row, dataOriginal);
+        }
         retVal = true;
+        Q_EMIT(dataChanged(index, index));
     }
+
     return retVal;
 }
 
@@ -206,10 +396,94 @@ QMap<int, QVariant> TUIDataModel::itemData ( const QModelIndex & index ) const {
     void *internalPointerData = index.internalPointer();
     
     TUIData *data = static_cast<TUIData*>(internalPointerData);
-    qDebug() << __FUNCTION__ << "Internal Pointer data" << internalPointerData <<
-        "tui data" << data;
+
     if(data != 0) {
-        varMap.insert(Qt::EditRole ,qVariantFromValue(data));
+        
+        varMap.insert(TransferUI::ProgressRole,
+            qVariantFromValue(data->progressData));
+
+        varMap.insert(TransferUI::SizeRole, 
+            qVariantFromValue(data->bytes));
+
+        varMap.insert(TransferUI::EstimateRole,
+            qVariantFromValue(data->estimateTime));
+
+        varMap.insert(TransferUI::CurrentFileIndexRole,
+            qVariantFromValue(data->currentFileIndex));
+
+        varMap.insert(TransferUI::TotalFileCountRole,
+            qVariantFromValue(data->filesCount));
+
+        varMap.insert(TransferUI::StatusRole,
+            qVariantFromValue((int)data->status));
+
+        varMap.insert(TransferUI::CanRepairRole,
+            qVariantFromValue(data->canRepair));
+
+        varMap.insert(TransferUI::CanPauseRole,
+            qVariantFromValue(data->canPause));
+
+        varMap.insert(TransferUI::CanSendImdltRole,
+            qVariantFromValue(data->canSendImdtly));
+
+        varMap.insert(TransferUI::ShowInHistoryRole,
+            qVariantFromValue(data->showInHistory));
+
+        varMap.insert(TransferUI::NameRole,
+            qVariantFromValue(data->name));
+
+        if(data->message.isEmpty() == false) {
+            varMap.insert(TransferUI::MessageRole,
+                qVariantFromValue(data->message));
+        }
+
+        if(data->targetName.isEmpty() == false) {
+            varMap.insert(TransferUI::TargetRole,
+                qVariantFromValue(data->targetName));
+        }
+
+        if(data->cancelButtonText.isEmpty() == false) {
+            varMap.insert(TransferUI::CancelTextRole,
+                qVariantFromValue(data->cancelButtonText));
+        }
+    
+        if(data->transferTitle.isEmpty() == false) {
+            varMap.insert(TransferUI::TransferTitleRole,
+                qVariantFromValue(data->transferTitle));
+        }
+        
+        if(data->transferImage != 0) {
+            varMap.insert(TransferUI::ImageRole, 
+                qVariantFromValue(data->transferImage));
+        } else if(data->thumbnailMimeType.isEmpty() == false) {
+            QStringList thumbnailDetails;
+            thumbnailDetails << data->thumbnailMimeType << data->thumbnailFile;
+            varMap.insert(TransferUI::ThumbnailRole, 
+                qVariantFromValue(thumbnailDetails));
+        } else {
+            varMap.insert(TransferUI::FileIconRole,
+                qVariantFromValue(data->fileTypeIcon));
+        }
+        if(TransferUI::TransferStatusError == data->status) {
+            QStringList errorDetails;
+            errorDetails << data->headerMsg << data->detailMsg;
+            if(data->canRepair == true) {
+                errorDetails << data->actionName;
+            }
+            varMap.insert(TransferUI::ErrorRole ,
+                qVariantFromValue(errorDetails));
+        }
+
+        varMap.insert(TransferUI::StartTimeRole,
+            qVariantFromValue(data->startTime));
+
+        varMap.insert(TransferUI::CompletedTimeRole,
+            qVariantFromValue(data->completedTime));
+
+        varMap.insert(TransferUI::MethodRole,
+            qVariantFromValue((int)data->method));
+        
+        varMap.insert(Qt::EditRole, qVariantFromValue(data));
     }
     return varMap;
 }
@@ -246,7 +520,10 @@ QModelIndex TUIDataModel::parent(const QModelIndex &child) const {
 
 int TUIDataModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
-    return 1;
+//    if QSortFilterProxyModel is used as filter / sort prxy model,
+//    QSortFilterProxyModel checks for the column count and asserts if the column
+//    is more than total column count.
+    return TotalColumns;
 }
 
 void TUIDataModel::clearCompletedMessages() {

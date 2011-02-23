@@ -239,6 +239,11 @@ public:
     void getTransfersCount(int& activeCount, int& inactiveCount, int&
         errorCount, int& completedCount);
 
+    /*!
+        get the total completed transfers count
+    */
+    int completedCount() const;
+
 	/*!
 		clear completed Transfers
 	*/
@@ -248,10 +253,10 @@ public:
 		Add a new transfer to the data model. 
 		Transfer is read from the completed internal database. 
         \param id transfer iddentifier
-        \param data TUIData
+        \param data TUIData. Shared Pointer data
 	*/
 
-    void addTransfer(const QString& id, TUIData *data);
+    void addTransfer(const QString& id, QSharedPointer<TUIData>);
 
 	
 	/*! 

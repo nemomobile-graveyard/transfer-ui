@@ -39,7 +39,7 @@
 #include "tuidatamodelproxy.h"
 #include "tuireadhistorythread.h"
 #include "TransferUI/transferuiimplementationinterface.h"
-#include "TransferUI/tuistructures.h"
+#include "tuistructures.h"
 
 //Qt headers
 #include <QObject>
@@ -64,7 +64,6 @@ public:
     bool isUIShown; //!< variable to track UI
 
     TUIDataModelProxy *proxyModel; //!< proxy data model
-
 
     QSettings *historySetting; //!< setting to write history data
 
@@ -157,7 +156,7 @@ public Q_SLOTS:
     /*!
         \brief read completed data from the data base.
     */
-	void dataReadFromDB(const QString& id, TUIData *data);
+	void dataReadFromDB(const QString& id, QSharedPointer<TUIData>);
 
     /*!
         \brief show custom dialog. This function checks if the transfer is
@@ -198,4 +197,6 @@ private:
     */
 	void writeReplaceHistoryIds(const QString& replaceId, int index);
 };
+
+Q_DECLARE_METATYPE(QSharedPointer<TUIData>)
 #endif

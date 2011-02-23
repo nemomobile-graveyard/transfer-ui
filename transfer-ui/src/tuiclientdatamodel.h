@@ -39,6 +39,8 @@
 #include <QObject>
 #include <QHash>
 #include <QListIterator>
+#include <QDebug>
+#include <QStringList>
 
 using namespace TransferUI;
 

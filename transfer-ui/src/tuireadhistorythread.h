@@ -33,7 +33,7 @@
 #ifndef _TUI_READ_HISTORY_THREAD_H_
 #define _TUI_READ_HISTORY_THREAD_H_
 
-#include "TransferUI/TUIStructures"
+#include "tuistructures.h"
 
 #include <QThread>
 #include <QSettings>
@@ -61,7 +61,7 @@ Q_SIGNALS:
         sucessfully.
         \param data data for the completed transfer.
     */
-    void addCompletedData(const QString& id, TUIData *data);
+    void addCompletedData(const QString& id, QSharedPointer<TUIData>);
 
 private:
     /*!

@@ -35,8 +35,17 @@
 
 #include "tuistructures.h"
 #include "tuiabstractmodel.h"
+#include "transferenums.h"
+
+#include <QImage>
+
+//if QSortFilterProxyModel is used as filter / sort prxy model,
+//QSortFilterProxyModel checks for the column count and asserts if the column is
+//more than total column count.
+static const int TotalColumns = TotalStateChanges;
 
 using namespace TransferUI;
+
 /*!
     \class TUIDataModel
     \brief This class provides a data model for Transfer UI.
@@ -96,4 +105,6 @@ private:
     QList<TUIData*> dataList; //!< List of client data
 };
 Q_DECLARE_METATYPE(TUIData *)
+//This is required for the QImage pointer
+Q_DECLARE_METATYPE(QImage *)
 #endif

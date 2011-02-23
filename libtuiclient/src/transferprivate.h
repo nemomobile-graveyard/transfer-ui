@@ -32,6 +32,7 @@ class QTime;
 namespace TransferUI {
     //Forward decl
     class Client;
+
     class TransferPrivate : public QObject
     {
         Q_OBJECT
