@@ -1,3 +1,9 @@
+transfer-ui (0.3.8.3) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 24 Feb 2011 17:19:57 +0530
+
 transfer-ui (0.3.8.2) unstable; urgency=low
 
   * Transfer UI changes to have single model for transfers
