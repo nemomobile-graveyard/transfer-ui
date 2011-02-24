@@ -38,9 +38,7 @@
 #include "transferenums.h"
 #include "tuiclientdatamodel.h"
 #include "tuidatamodelproxy.h"
-#include "tuicompletedlistproxymodel.h"
 #include "tuireadhistorythread.h"
-
 #include "TransferUI/transferuiimplementationinterface.h"
 
 //Qt headers
@@ -68,7 +66,14 @@ using namespace TransferUI;
 using namespace MeeGo;
 TUIService *TUIService::selfInstance = 0;
 
-//standard headers
+
+#define CHECKDONESTATUS(status) \
+if(TransferStatusDone == status) { \
+    qDebug() << "Transfer is already set to completed state." <<    \
+     "No State changes are permitted"; \
+    return;                         \
+}
+
 
 TUIService::TUIService(QObject *parent)
     :QObject(parent),d_ptr(new TUIServicePrivate) {
@@ -90,7 +95,6 @@ TUIService::TUIService(QObject *parent)
 
     d_ptr->proxyModel = new TUIDataModelProxy(this);
 
-    d_ptr->completedProxyModel = new TUICompletedListProxyModel(this);
 
     // Create a client data model
     d_ptr->clientDataModel = new TUIClientDataModel(this);
@@ -117,6 +121,8 @@ TUIService::TUIService(QObject *parent)
     stringEnumFunctionMap.insert("setTransferTypeString",TransferTypeString);
 	stringEnumFunctionMap.insert("setTransferImage",TransferImage);
 
+    qRegisterMetaType<QSharedPointer<TUIData> >();
+
 }
 
 void TUIService::loadImplementationPlugin() {
@@ -134,9 +140,6 @@ void TUIService::loadImplementationPlugin() {
         if (d_ptr->interface != 0) {
 
             d_ptr->interface->setDataModel(d_ptr->proxyModel->dataModel());
-            d_ptr->interface->setCompletedSortModel(
-                d_ptr->completedProxyModel->dataModel());
-
 
             connect(plugin,SIGNAL(visibilityChanged(bool)), this,
                 SLOT(visibilityChanged(bool)));
@@ -156,17 +159,11 @@ void TUIService::loadImplementationPlugin() {
             connect(plugin,SIGNAL(elementClicked(QModelIndex)),
                 d_ptr, SLOT(elementClicked(QModelIndex)));
 
-            connect(plugin,SIGNAL(completedElementClicked(QModelIndex)),
-                d_ptr, SLOT(completedElementClicked(QModelIndex)));
-
             connect(plugin,SIGNAL(clearCompletedList()),this,
                 SLOT(clearCompletedTransfers()));
 
             connect(plugin,SIGNAL(movedToSwitcher(bool)),
                 this,SLOT(movedToSwitcher(bool)));
-
-            connect(d_ptr->completedProxyModel,SIGNAL(modelEmpty(bool)),
-        		d_ptr,SLOT(histroyModelEmpty(bool)));
 
         }
     } else {
@@ -218,6 +215,8 @@ bool TUIService::init() {
     // is the shown variable to false
     d_ptr->isUIShown = false;
 
+    d_ptr->readHistory();
+
     return true;
 }
 
@@ -229,6 +228,9 @@ void TUIService::cancelled(const QString &id) {
     qDebug() << __FUNCTION__ << id;
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
+
+        CHECKDONESTATUS (data->status)
+
         if(TransferStatusCancel == data->status) {
             if(data->currentFileIndex > 1) {
                 d_ptr->notifyPartialDoneTransfers();
@@ -265,6 +267,9 @@ void TUIService::resumed(const QString &id) {
     qDebug() << "TUIService --> transfer resumed for the id" << id;
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
+
+        CHECKDONESTATUS (data->status)
+
         if((TransferStatusResume == data->status) ||
             (TransferStatusActive == data->status)) {
            qDebug() << "Transfer is already in resumed state";
@@ -283,6 +288,9 @@ void TUIService::paused(const QString &id) {
     qDebug() << "TUIService --> transfer is paused" << id;
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
+
+        CHECKDONESTATUS (data->status)
+
         if(TransferStatusPaused == data->status) {
            qDebug() << "Transfer is already in paused state";
            return;
@@ -316,6 +324,9 @@ void TUIService::done(const QString &id) {
 void TUIService::done(const QString& id, const QString& msg) {
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
+
+        CHECKDONESTATUS (data->status)
+
         if(TransferStatusCancel == data->status) {
             d_ptr->displayInfoBanner(ParitalDoneTransfer);
         }
@@ -346,6 +357,8 @@ void TUIService::markCompleted(const QString& id, bool showInHistory, const QStr
 	const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
 
+        CHECKDONESTATUS (data->status)
+
 	    if(TransferStatusCancel == data->status) {
             d_ptr->displayInfoBanner(TransferAlreadyCompleted);
         }
@@ -353,16 +366,11 @@ void TUIService::markCompleted(const QString& id, bool showInHistory, const QStr
         d_ptr->proxyModel->done(id,resultUri);
 
 	    if (showInHistory == true) {
-		    d_ptr->writeToHistory(data, showInHistory, replaceId);
-            
+		    d_ptr->writeToHistory(id, data, showInHistory, replaceId);
+            qDebug() << __FUNCTION__ << "Completed Date" << data->completedTime;
 		    if(d_ptr->isUIShown == true) {
                 qDebug() << __FUNCTION__ << "Adding transfer";
-			    d_ptr->completedProxyModel->addTransfer(data);
-                d_ptr->invisibleCompletedCount = 
-                    d_ptr->completedProxyModel->dataModel()->rowCount();
-		    } else {
-                d_ptr->invisibleCompletedCount++;
-            }
+		    } 
 	    }
 
 	    //remove the transfer from the client data model
@@ -373,8 +381,6 @@ void TUIService::markCompleted(const QString& id, bool showInHistory, const QStr
 	        d_ptr->clientDataModel->removeTransfer(serviceName, id);
 	        checkServiceRegister(serviceName);
 	    }
-
-        d_ptr->proxyModel->removeTransfer(id);
 	    //update the summary
         sendSummary();
 	}
@@ -390,6 +396,9 @@ void TUIService::pending(const QString &id, const QString &message) {
     qDebug() << __FUNCTION__ << "Transfer set to pending " << message;
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
+
+        CHECKDONESTATUS (data->status)
+
         if (TransferStatusInactive == data->status) {
             qDebug() << "Transfer is already in pending state";
             d_ptr->proxyModel->setMessage(id, message);
@@ -451,7 +460,7 @@ QString TUIService::registerTransientTransfer(const QString& name, int type ,
 
     if(d_ptr->interface != 0) {
         if(d_ptr->isUIShown == true) {
-            d_ptr->interface->setActiveTransfersVisibility(true);
+            d_ptr->interface->setNoTransfersVisibility(false);
         }
     }
     qDebug() << __FUNCTION__ << id;
@@ -473,14 +482,16 @@ TUIService::sendSummary() {
     int activeCount = 0;
     int inactiveCount = 0;
     int errorCount = 0;
-    //int completedCount = d_ptr->completedProxyModel->dataModel()->rowCount();
-    int completedCount = d_ptr->invisibleCompletedCount;
-    qDebug() << __FUNCTION__ << completedCount;
 
+    int completedCount = 0;
 
     //get transfers count
-    d_ptr->proxyModel->getTransfersCount(activeCount,inactiveCount,errorCount);
+    d_ptr->proxyModel->getTransfersCount(activeCount, inactiveCount, errorCount,
+        completedCount);
+
     Q_EMIT(summaryReport(errorCount,activeCount,inactiveCount,completedCount));
+
+    qDebug() << __FUNCTION__ << completedCount;
 
     //emit state changed signal if the TUI state is changed.
     //if there are more than one error transfers , set the state to fail
@@ -512,7 +523,10 @@ TUIService::sendSummary() {
     int totalTransfer = activeCount + inactiveCount + errorCount;
     qDebug() << "Total Transfers" << totalTransfer << d_ptr->isUIShown;
 
-    
+    if(completedCount > 0) {
+        d_ptr->interface->setHistoryVisibility(true);
+    }
+
     if(totalTransfer==0) {
         Q_EMIT(stateChanged("idle")); //fail safe
         if(d_ptr->isUIShown == false) {
@@ -527,8 +541,10 @@ TUIService::sendSummary() {
             }
         } else {
             if(d_ptr->interface != 0) {
-                if( d_ptr->isUIShown == true) {
-                    d_ptr->interface->setActiveTransfersVisibility(false);
+                if(d_ptr->isUIShown == true) {
+                    if(completedCount == 0) {
+                        d_ptr->interface->setNoTransfersVisibility(true);
+                    } 
                 }
             }
             if(d_ptr->isInSwitcher == true) {
@@ -550,6 +566,11 @@ void TUIService::setRepairableError(const QString &id, const QString &headerMsg,
     qDebug() << __FUNCTION__ <<id << headerMsg <<
         detailMsg << actionName;
 
+    const TUIData *data = d_ptr->proxyModel->tuiData(id);
+    if (data != 0) {
+        CHECKDONESTATUS (data->status)
+    }
+
     d_ptr->proxyModel->markError(id, headerMsg, detailMsg, true, actionName);
     sendSummary();
 
@@ -559,6 +580,11 @@ void TUIService::setNonRepairableError(const QString &id, const QString
     &headerMsg, const QString &detailMsg) {
     qDebug() << __FUNCTION__ << id << headerMsg <<
         detailMsg;
+
+    const TUIData *data = d_ptr->proxyModel->tuiData(id);
+    if (data != 0) {
+        CHECKDONESTATUS (data->status)
+    }
 
     d_ptr->proxyModel->markError(id, headerMsg, detailMsg, false, "");
     sendSummary();
@@ -601,6 +627,9 @@ void TUIService::setProgress(const QString& id, double done) {
     qDebug() << __FUNCTION__ << id << "Progress Set to " << done;
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
+
+        CHECKDONESTATUS (data->status)
+
         if(TransferStatusActive == data->status) {
             d_ptr->proxyModel->setProgress(id, done);
         } else {
@@ -630,9 +659,8 @@ void TUIService::showUI() {
     //check if plugin is already loaded
     if(d_ptr->interface != 0) {
         d_ptr->interface->loadUI();
-        if((d_ptr->proxyModel->count() == 0) &&
-            (d_ptr->completedProxyModel->dataModel()->rowCount() == 0)) {
-                d_ptr->interface->setNoTransfersVisibility(true);
+        if(d_ptr->proxyModel->count() == 0) {
+            d_ptr->interface->setNoTransfersVisibility(true);
         }
         Q_EMIT (tuiOpened());
     }
@@ -643,6 +671,9 @@ void TUIService::started(const QString &id, double done) {
     qDebug() << __FUNCTION__ << id << "State changed with progress " << done;
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
+
+        CHECKDONESTATUS (data->status)
+
         if (TransferStatusActive == data->status) {
             qDebug() << "Transfer is already in active state";
             d_ptr->proxyModel->setProgress(id, done);
@@ -660,7 +691,7 @@ void TUIService::showErrorDetails(const QString &id) {
             //raise the TUI window and show the notification
             showUI();
         }
-        d_ptr->interface->showErrorDetails(d_ptr->proxyModel->modelIndex(id));
+        d_ptr->interface->showDetails(d_ptr->proxyModel->modelIndex(id));
     }
 }
 
@@ -718,10 +749,14 @@ void TUIService::serviceUnregistered(const QString& clientServiceName) {
 
             transferId = iter.next();
             if(d_ptr->proxyModel->transferPresent(transferId)) {
-
-                qDebug () << "Found unattended transfer " << transferId;
-                d_ptr->proxyModel->cleanUpTransfer(transferId);
-                d_ptr->proxyModel->removeTransfer(transferId);
+                const TUIData *data = d_ptr->proxyModel->tuiData(transferId);
+                if (data != 0) {
+                    if (TransferStatusDone != data->status) {
+                        qDebug () << "Found unattended transfer " << transferId;
+                        d_ptr->proxyModel->cleanUpTransfer(transferId);
+                        d_ptr->proxyModel->removeTransfer(transferId);
+                    }
+                }                
             }
         }
     }
@@ -856,7 +891,7 @@ void TUIService::clearCompletedTransfers() {
 
 void TUIService::timeOrSettingsChanged (MeeGo::QmTimeWhatChanged what) {
     Q_UNUSED(what)
-    d_ptr->completedProxyModel->dateSettingChanged();
+    d_ptr->proxyModel->dateSettingsChanged();
 }
 
 #ifdef _UNIT_TESTING_
@@ -867,9 +902,8 @@ TUIDataModelProxy *TUIService::model() const {
 
 /******************************************************************************/
 
-TUIServicePrivate::TUIServicePrivate() : proxyModel(0) ,
-    completedProxyModel(0), historySetting(0), readThread(0),
-    interface(0), invisibleCompletedCount(0) {
+TUIServicePrivate::TUIServicePrivate() : proxyModel(0),
+    historySetting(0), readThread(0), interface(0) {
 
     clientDataModel = 0;
 
@@ -883,10 +917,11 @@ TUIServicePrivate::TUIServicePrivate() : proxyModel(0) ,
     qDebug() << __FUNCTION__ << "Creating Thread";
 	readThread = new
 		TUIReadHistoryThread(historySetting);
-	
-	connect(readThread, SIGNAL(addCompletedData(const
-		TUIData*)),this, SLOT(dataReadFromDB(const TUIData*)),
-		Qt::QueuedConnection);
+
+
+	connect(readThread, SIGNAL(addCompletedData(QString, QSharedPointer<TUIData>)),this,
+    	SLOT(dataReadFromDB(QString, QSharedPointer<TUIData>)),Qt::QueuedConnection);    
+
 	connect(readThread, SIGNAL(finished()), this, SLOT(threadCompleted()));
 	connect(readThread, SIGNAL(terminated()), this, SLOT(threadCompleted()));
 
@@ -905,12 +940,6 @@ TUIServicePrivate::~TUIServicePrivate() {
         delete clientDataModel;
     }
     clientDataModel = 0;
-
-    if(completedProxyModel!=0) {
-        //clear datamodel
-        delete completedProxyModel;
-    }
-    completedProxyModel = 0;
 
 
 	if(readThread != 0) {
@@ -936,17 +965,10 @@ void TUIServicePrivate::visibilityChanged(bool value) {
     qDebug() << __FUNCTION__ << value;
     isUIShown = value;
     if(value == true) {
-        proxyModel->displayTransfers();
         if(proxyModel->count() > 0) {
-            interface->setActiveTransfersVisibility(true);
+            interface->setNoTransfersVisibility(false);
         }
-        readHistory();
-    } else {
-        completedProxyModel->clearTransfers();
-	    if(readThread->isRunning() == true) {
-		    readThread->quit();
-	    }
-    }
+    } 
 }
 
 void TUIServicePrivate::histroyModelEmpty(bool value) {
@@ -1076,53 +1098,28 @@ void TUIServicePrivate::elementClicked(const QModelIndex &index) {
     QVariant data = index.data();
     TUIData *tuiData = data.value<TUIData*>();
     if(tuiData != 0) {
-        if(TransferStatusError == tuiData->status) {
-                interface->showErrorDetails(index);
+        if (tuiData->clientId.isEmpty() == false) {
+            qDebug() << __FUNCTION__ << "Check for service Name";
+		    QString attributeFilePath;
+		    attributeFilePath.append(
+			    QLatin1String("/usr/share/transfer-ui/clients/"));
+		    attributeFilePath.append(tuiData->clientId);
+		    QSettings settings(attributeFilePath,
+			    QSettings::IniFormat);
+		    settings.sync();
+		    if(settings.contains(QLatin1String("DetailsDBusInterface"))) {
+			    QString serviceName = settings.value(
+				    QLatin1String("DetailsDBusInterface")).toString();
+			    showCustomDialog(tuiData, serviceName);
+		    } else {
+			    interface->showDetails(index);
+		    }
         } else {
-            if (tuiData->clientId.isEmpty() == false) {
-                qDebug() << __FUNCTION__ << "Check for service Name";
-			    QString attributeFilePath;
-			    attributeFilePath.append(
-				    QLatin1String("/usr/share/transfer-ui/clients/"));
-			    attributeFilePath.append(tuiData->clientId);
-			    QSettings settings(attributeFilePath,
-				    QSettings::IniFormat);
-			    settings.sync();
-			    if(settings.contains(QLatin1String("DetailsDBusInterface"))) {
-				    QString serviceName = settings.value(
-					    QLatin1String("DetailsDBusInterface")).toString();
-				    showCustomDialog(tuiData, serviceName);
-			    } else {
-				    interface->showDetails(index);
-			    }
-            } else {
-                interface->showDetails(index);
-            }
+            interface->showDetails(index);
         }
     }
 }
 
-void TUIServicePrivate::completedElementClicked(const QModelIndex &index) {
-    QVariant data = index.data();
-    TUIData *tuiData = data.value<TUIData*>();
-    if(tuiData != 0) {
-        qDebug() << __FUNCTION__ << tuiData->resultUri;
-        if (tuiData->resultUri.isEmpty() == false) {
-            qDebug() << __FUNCTION__ << "Trying to launch application";
-            Action action = Action::defaultAction(tuiData->resultUri);
-            if (action.isValid() == true) {
-                action.trigger();
-            } else {
-                qDebug() << __FUNCTION__ << "Failed to launch application" <<
-                    "Displaying standard dialog";
-                interface->showCompletedDetails(index);
-            }
-        } else {
-            qDebug() << __FUNCTION__ << "Result Uri is Empty";
-            interface->showCompletedDetails(index);
-        }
-    }
-}
 
 void TUIServicePrivate::clearCompletedList() {
     if(readThread != 0) {
@@ -1130,7 +1127,9 @@ void TUIServicePrivate::clearCompletedList() {
 			readThread->quit();
 		}
     }
-    completedProxyModel->clearTransfers();
+    proxyModel->clearCompletedTransfers();
+    interface->setHistoryVisibility(false);
+
     historySetting->clear();
     historySetting->sync();
     if(isUIShown == true) {
@@ -1138,13 +1137,11 @@ void TUIServicePrivate::clearCompletedList() {
             interface->setNoTransfersVisibility(true);
         }
     }
-    invisibleCompletedCount = completedProxyModel->dataModel()->rowCount();
 }
 
 void TUIServicePrivate::threadCompleted() {
 
-	qDebug() << __FUNCTION__;
-    if(completedProxyModel->dataModel()->rowCount() > 0) {
+    if(proxyModel->completedCount() > 0) {
         if(isUIShown == true) {
             interface->setHistoryVisibility(true);
         }
@@ -1153,24 +1150,24 @@ void TUIServicePrivate::threadCompleted() {
 }
 
 
-void TUIServicePrivate::writeToHistory(const TUIData *data,
+void TUIServicePrivate::writeToHistory(const QString& id, const TUIData *data,
      bool showInHistory, const QString& replaceId) {
 	if ((showInHistory == true) && (replaceId.isEmpty()==true)) {
-		writeHistoryDB(data);
+		writeHistoryDB(id, data);
 	} else {
-		writeReplaceHistoryDB(data, replaceId);
+		writeReplaceHistoryDB(id, data, replaceId);
 	}
 
 }
 
 void TUIServicePrivate::readHistory() {
 	readReplaceHistoryIds();
+    qDebug() << __FUNCTION__ << "Starting the thread";
     readThread->start();
 }
 
-void TUIServicePrivate::dataReadFromDB(const TUIData *data) {
-	completedProxyModel->addTransfer(data,true);
-    invisibleCompletedCount = completedProxyModel->dataModel()->rowCount();
+void TUIServicePrivate::dataReadFromDB(const QString& id, QSharedPointer<TUIData> data) {
+    proxyModel->addTransfer(id, data);
 }
 
 void TUIServicePrivate::readReplaceHistoryIds() {
@@ -1191,8 +1188,8 @@ void TUIServicePrivate::readReplaceHistoryIds() {
 	settings.endArray();
 }
 
-void TUIServicePrivate::writeReplaceHistoryDB(const TUIData *data,
-	const QString& replaceId) {
+void TUIServicePrivate::writeReplaceHistoryDB(const QString& id, const TUIData
+    *data, const QString& replaceId) {
 	int arrayIndex = 0;
 	if (replaceHistoryList.contains(replaceId) == false) {
 		historySetting->beginGroup("Indexes");
@@ -1211,14 +1208,23 @@ void TUIServicePrivate::writeReplaceHistoryDB(const TUIData *data,
 	}
     historySetting->beginWriteArray("ReplaceTransfers");
     historySetting->setArrayIndex(arrayIndex);
+    historySetting->setValue("transferid", id);
+    historySetting->setValue("replaceId", replaceId);
+    writeHistoryData(data);
+    historySetting->endArray();
+    historySetting->sync();
+}
+
+void TUIServicePrivate::writeHistoryData(const TUIData *data) {
     historySetting->setValue("name", data->name);
     historySetting->setValue("size", data->bytes);
-	historySetting->setValue("replaceId", replaceId);
+
     if(data->targetName.isEmpty() == false) {
         historySetting->setValue("target", data->targetName);
     }
     historySetting->setValue("type", data->method);
     historySetting->setValue("count", data->filesCount );
+    historySetting->setValue("starttime",data->startTime);
     historySetting->setValue("time", data->completedTime );
     if(data->thumbnailMimeType.isEmpty() == false) {
         historySetting->setValue("thumbnailfile", data->thumbnailFile );
@@ -1232,13 +1238,10 @@ void TUIServicePrivate::writeReplaceHistoryDB(const TUIData *data,
         	historySetting->setValue("iconId", data->fileTypeIcon);
 		}
     }
-    qDebug() << __FUNCTION__ << data->resultUri;
     historySetting->setValue("resulturi", data->resultUri);
-    historySetting->endArray();
-    historySetting->sync();
 }
 
-void TUIServicePrivate::writeHistoryDB(const TUIData *data) {
+void TUIServicePrivate::writeHistoryDB(const QString& id, const TUIData *data) {
 	int arrayIndex = 0;
 	historySetting->beginGroup("Indexes");
 	arrayIndex = historySetting->value("History").toInt();
@@ -1246,30 +1249,8 @@ void TUIServicePrivate::writeHistoryDB(const TUIData *data) {
 
     historySetting->beginWriteArray("Transfers");
     historySetting->setArrayIndex(arrayIndex);
-    historySetting->setValue("name", data->name);
-    historySetting->setValue("size", data->bytes);
-
-    if(data->targetName.isEmpty() == false) {
-        historySetting->setValue("target", data->targetName);
-    }
-    historySetting->setValue("type", data->method);
-    historySetting->setValue("count", data->filesCount );
-    historySetting->setValue("time", data->completedTime );
-	qDebug() << __FUNCTION__ << data->completedTime;
-    if(data->thumbnailMimeType.isEmpty() == false) {
-        historySetting->setValue("thumbnailfile", data->thumbnailFile );
-        historySetting->setValue("mimetype", data->thumbnailMimeType);
-    } else {
-		if (data->fileTypeIcon.isEmpty() == true) {
-            if(data->thumbnailFile.isEmpty() == false) {
-    			historySetting->setValue("imagePath", data->thumbnailFile);
-            }
-		} else {
-        	historySetting->setValue("iconId", data->fileTypeIcon);
-		}
-    }
-    historySetting->setValue("resulturi", data->resultUri);
-    qDebug() << __FUNCTION__ << data->resultUri;
+    historySetting->setValue("transferid", id);
+    writeHistoryData(data);
     historySetting->endArray();
 	++arrayIndex;
 	historySetting->beginGroup("Indexes");

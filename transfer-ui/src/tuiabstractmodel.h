@@ -44,9 +44,6 @@ public:
 
     virtual ~TUIAbstractModel();
 
-    virtual void thumbnailReady(const QModelIndex& index,
-        const QImage* image) = 0;
-
     //! \reimp
     int columnCount(const QModelIndex &parent) const = 0;
     QModelIndex parent(const QModelIndex &child) const = 0;

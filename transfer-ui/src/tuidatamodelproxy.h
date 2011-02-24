@@ -55,7 +55,13 @@ public:
     TUIAbstractModel * dataModel() const;
 
     /*!
-        \brief A new transfer
+        \brief A new transfer to the model
+        \param id transfer identifier
+        \param type transfer type
+        \param title transfer title
+        \param clientId client identifier, by default it is empty
+        \param target transfer target, by default it is empty
+        \param bytes total size of the transfer, by default it is 0
     */
     void registerTransfer(const QString& id, TransferType type,
         const QString& title, const QString& clientId = QString(), const
@@ -65,7 +71,6 @@ public:
         remove the transfer from the model
     */
     void removeTransfer(const QString& id);
-
 
     /*!
         display transfers
@@ -229,10 +234,46 @@ public:
         int& errorCount);
 
     /*!
-        get total transfer count including cancel state
+        get active inactive error and completed transfers count
+    */
+    void getTransfersCount(int& activeCount, int& inactiveCount, int&
+        errorCount, int& completedCount);
+
+    /*!
+        get the total completed transfers count
+    */
+    int completedCount() const;
+
+	/*!
+		clear completed Transfers
+	*/
+    void clearCompletedTransfers();
+
+	/*!
+		Add a new transfer to the data model. 
+		Transfer is read from the completed internal database. 
+        \param id transfer iddentifier
+        \param data TUIData. Shared Pointer data
+	*/
+
+    void addTransfer(const QString& id, QSharedPointer<TUIData>);
+
+	
+	/*! 
+		Date settings changed update the model
+	*/
+    void dateSettingsChanged();
+
+    /*!
+        \brief get total transfer count including cancel state
+        \return total count of the transfers.
     */
     int count() const;
 
+    /*!
+        \brief return modelIndex for the given transfer id
+        \param id transfer id for the given transfer
+    */
     QModelIndex modelIndex(const QString& id) const;
 
 private:
@@ -246,7 +287,9 @@ private:
     TUIData* data(const QModelIndex& index);
 
     /*!
-        set given data for the give model index
+        \brief set given data for the give model index
+        \param index QModelIndex of the transfer
+        \param data Transfer data
     */
     void setModelData(const QModelIndex& index, TUIData* data);
 };

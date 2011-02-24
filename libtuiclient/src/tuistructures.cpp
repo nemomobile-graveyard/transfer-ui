@@ -1,4 +1,4 @@
-#include "tuistructures.h"
+
 /*
  * transfer-ui -- Handset UX Transfer user interface
  * Copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -18,14 +18,16 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "tuistructures.h"
+#include <QDebug>
+
 using namespace TransferUI;
 
 TUIData::TUIData(): progressData(0), bytes(0), estimateTime(0),
            currentFileIndex(0), filesCount(1),
            status(TransferStatusInactive),
            method(TransferTypeUpload), canPause(0),
-           canRepair(0),canSendImdtly(0) , showInHistory(false), 
-           completedTime() , transferImage(0) {
+           canRepair(0),canSendImdtly(0) , showInHistory(false) {
 }
 
 TUIData::~TUIData() {

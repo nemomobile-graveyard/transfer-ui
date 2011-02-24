@@ -1,4 +1,3 @@
-#include "tuistructures.h"
 /*
  * This file is part of Handset UX Transfer user interface
  *
@@ -29,6 +28,8 @@
 
 
 
+#include "tuistructures.h"
+#include <QDebug>
 
 using namespace TransferUI;
 
@@ -37,7 +38,7 @@ TUIData::TUIData(): progressData(0), bytes(0), estimateTime(0),
            status(TransferStatusInactive),
            method(TransferTypeUpload), canPause(0),
            canRepair(0),canSendImdtly(0) , showInHistory(false),
-           completedTime() , transferImage(0) {
+           completedTime() , startTime(), transferImage(0) {
 }
 
 TUIData::~TUIData() {
