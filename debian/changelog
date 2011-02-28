@@ -1,3 +1,9 @@
+transfer-ui (0.3.9.2) unstable; urgency=low
+
+  * New version after tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 28 Feb 2011 20:10:00 +0530
+
 transfer-ui (0.3.9.1) unstable; urgency=low
 
   * Fixes: NB#230790 - TransferUI : TUI crash (TUIDataModel::setItemData ) observed while cancelling the ongoing transfer when there is an pending transfer in queue.
