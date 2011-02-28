@@ -1122,6 +1122,7 @@ void TUIServicePrivate::elementClicked(const QModelIndex &index) {
 
 
 void TUIServicePrivate::clearCompletedList() {
+    qDebug() << __FUNCTION__ << "Clearing Completed List";
     if(readThread != 0) {
         if(readThread->isRunning() == true) {
 			readThread->quit();

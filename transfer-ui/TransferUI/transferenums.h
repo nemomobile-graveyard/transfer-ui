@@ -87,6 +87,7 @@ namespace TransferUI {
         CancelText, //!< Transfer Cancel text
         TransferTitle, //!< Transfer title
         TransferImage, //!< Transfer Image
+        NewTransferAdded, //! < A new Tranfer is added
         TotalAttribute
     };
 

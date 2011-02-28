@@ -82,6 +82,8 @@ void TUIDataModelProxy::registerTransfer(const QString& id, TransferType type,
         model->setItemData(index,rolesVariant);
         tuiDataMap.insert(id, tuiData);
     }
+    QModelIndex newTransferAddedIndex = model->index(rowNo,NewTransferAdded);
+    model->setData(newTransferAddedIndex,QVariant());
 }
 
 void TUIDataModelProxy::removeTransfer(const QString& id) {
@@ -511,6 +513,8 @@ void TUIDataModelProxy::addTransfer(const QString& id, QSharedPointer<TUIData> d
         tuiDataMap.insert(id, tuiData);
     }
     data.clear();
+    QModelIndex newTransferAddedIndex = model->index(rowNo,NewTransferAdded);
+    model->setData(newTransferAddedIndex,QVariant());
 }
 
 void TUIDataModelProxy::dateSettingsChanged() {

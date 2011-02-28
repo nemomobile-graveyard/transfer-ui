@@ -393,9 +393,8 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
             dataList.replace(row, dataOriginal);
         }
         retVal = true;
-        Q_EMIT(dataChanged(index, index));
     }
-
+    Q_EMIT(dataChanged(index, index));
     return retVal;
 }
 
