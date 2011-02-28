@@ -1133,8 +1133,10 @@ void TUIServicePrivate::clearCompletedList() {
     historySetting->clear();
     historySetting->sync();
     if(isUIShown == true) {
-        if(proxyModel->count() <= 0) {
+        if(proxyModel->count() < 0) {
             interface->setNoTransfersVisibility(true);
+        } else {
+            interface->setNoTransfersVisibility(false);
         }
     }
 }
@@ -1144,6 +1146,7 @@ void TUIServicePrivate::threadCompleted() {
     if(proxyModel->completedCount() > 0) {
         if(isUIShown == true) {
             interface->setHistoryVisibility(true);
+            interface->setNoTransfersVisibility(false);
         }
     }
 

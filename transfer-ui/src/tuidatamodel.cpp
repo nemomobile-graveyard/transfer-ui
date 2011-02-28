@@ -153,7 +153,10 @@ bool TUIDataModel::setData(const QModelIndex &index,
     if (index.isValid() == true) {
 
         TUIData *data = static_cast<TUIData*>(index.internalPointer());
-
+        if(data == 0) {
+            qDebug() << __FUNCTION__ << "InternalPointer returned 0";
+            return false;
+        }
         int row = dataList.indexOf(data);
 
         switch (index.column()){
@@ -263,7 +266,7 @@ bool TUIDataModel::removeRows(int position, int rows, const QModelIndex &index) 
         }
         delete data;
         dataList.removeAt(position);
-
+        data = 0;
     }
     endRemoveRows();
     return true;
@@ -276,6 +279,10 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
     if (index.isValid() == true) {
 
         TUIData *dataOriginal = static_cast<TUIData*>(index.internalPointer());
+        if(dataOriginal == 0) {
+            qDebug() << __FUNCTION__ << "InternalPointer returned 0";
+            return false;
+        }
         int row = dataList.indexOf(dataOriginal);
         QMap<int, QVariant>::const_iterator iter;
         for (iter = roles.constBegin(); iter != roles.constEnd(); ++iter) {

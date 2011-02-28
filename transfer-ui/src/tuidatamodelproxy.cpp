@@ -252,6 +252,7 @@ void TUIDataModelProxy::started(const QString &id, double done) {
         if(tuiData != 0) {
             tuiData->status = TransferStatusActive;
             tuiData->progressData = done;
+            tuiData->message.clear();
             setModelData(index, tuiData);
         }
     }
@@ -289,6 +290,7 @@ void TUIDataModelProxy::resumed(const QString &id) {
         TUIData *tuiData = data(index);
         if(tuiData != 0) {
             tuiData->status = TransferStatusResume;
+            tuiData->message.clear();
             setModelData(index, tuiData);
         }
     }
@@ -306,6 +308,7 @@ void TUIDataModelProxy::markError(const QString &id, const QString &headerMsg,
             tuiData->detailMsg = detailMsg;
             tuiData->actionName = actionName;
             tuiData->canRepair = canRepair;
+            tuiData->message.clear();
             setModelData(index, tuiData);
         }
     }
