@@ -158,6 +158,10 @@ bool TUIDataModel::setData(const QModelIndex &index,
             return false;
         }
         int row = dataList.indexOf(data);
+        if(row < 0) {
+            qDebug() << __FUNCTION__ << "Data not found in the list";
+            return false;
+        }
 
         switch (index.column()){
             case Name:
@@ -185,7 +189,6 @@ bool TUIDataModel::setData(const QModelIndex &index,
                     QStringList param = value.toStringList();
                     data->thumbnailFile = param.at(0);
                     data->thumbnailMimeType = param.at(1);
-                    data->fileTypeIcon.clear();
                     if(data->transferImage != 0) {
                         delete data->transferImage;
                         data->transferImage = 0;
@@ -231,7 +234,6 @@ bool TUIDataModel::setData(const QModelIndex &index,
 
 						data->transferImage = new QImage(fileName);
 						data->thumbnailMimeType.clear();
-						data->fileTypeIcon.clear();
 						data->thumbnailFile = fileName;
 					}
 				}
@@ -284,6 +286,10 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
             return false;
         }
         int row = dataList.indexOf(dataOriginal);
+        if(row < 0) {
+            qDebug() << __FUNCTION__ << "Data not found in the list";
+            return false;
+        }
         QMap<int, QVariant>::const_iterator iter;
         for (iter = roles.constBegin(); iter != roles.constEnd(); ++iter) {
             switch(iter.key()) {
@@ -372,7 +378,8 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
 						}
                         dataOriginal->transferImage = 
                             iter.value().value<QImage*>();
-                        dataOriginal->fileTypeIcon.clear();
+                        qDebug() << __FUNCTION__ << "Updating Image " <<
+                            dataOriginal->transferImage << "For Index" << index;
                     }
                 break;
                 case TransferUI::StartTimeRole:
@@ -393,8 +400,8 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
             dataList.replace(row, dataOriginal);
         }
         retVal = true;
+        Q_EMIT(dataChanged(index, index));
     }
-    Q_EMIT(dataChanged(index, index));
     return retVal;
 }
 
