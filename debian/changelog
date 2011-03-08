@@ -1,8 +1,14 @@
-transfer-ui (0.3.10.1) unstable; urgency=low
+transfer-ui (0.3.9.3) unstable; urgency=low
 
-  * Fixes: NB#233744 - Transfer API does not allow empty (= default) text for pending state
+  * After tagging
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 08 Mar 2011 12:37:35 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 03 Mar 2011 16:07:42 +0530
+
+transfer-ui (0.3.9.2) unstable; urgency=low
+
+  * Added a check for tuidata present in the list
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 03 Mar 2011 16:06:49 +0530
 
 transfer-ui (0.3.9.1) unstable; urgency=low
 
