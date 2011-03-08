@@ -61,6 +61,7 @@ namespace TransferUI {
         TransferStatusResume, //!< The transfer is Resumed
         //! The transfer is cancelled by the user, yet to get ack from the client
         TransferStatusCancel,
+        TransferStatusCanceled, //!< Transfer is actually canceled
         TransferStatusError //!< Error State
     };
 

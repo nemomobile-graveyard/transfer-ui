@@ -363,15 +363,14 @@ void TUIService::markCompleted(const QString& id, bool showInHistory, const QStr
             d_ptr->displayInfoBanner(TransferAlreadyCompleted);
         }
 
-        d_ptr->proxyModel->done(id,resultUri);
-
 	    if (showInHistory == true) {
+            d_ptr->proxyModel->done(id,resultUri);
 		    d_ptr->writeToHistory(id, data, showInHistory, replaceId);
-            qDebug() << __FUNCTION__ << "Completed Date" << data->completedTime;
-		    if(d_ptr->isUIShown == true) {
-                qDebug() << __FUNCTION__ << "Adding transfer";
-		    } 
-	    }
+            qDebug() << __FUNCTION__ << "Completed Date" << data->completedTime; 
+	    } else {
+            d_ptr->proxyModel->cleanUpTransfer(id);
+            d_ptr->proxyModel->removeTransfer(id);
+        }
 
 	    //remove the transfer from the client data model
 	    //check if the method call is from from the dbus
@@ -404,10 +403,8 @@ void TUIService::pending(const QString &id, const QString &message) {
             d_ptr->proxyModel->setMessage(id, message);
         }
     }
+    d_ptr->proxyModel->pending(id, message);
 
-    if(message.isEmpty() == false) {
-        d_ptr->proxyModel->pending(id, message);
-    }
     sendSummary();
 }
 
@@ -1086,8 +1083,17 @@ void TUIServicePrivate::showCustomDialog(const TUIData *data,
 	QDBusInterface iface(serviceName, "/",
 		"", QDBusConnection::sessionBus());
 	if (iface.isValid()) {
-		iface.call(QLatin1String("showDetailsDialog"),
-		QVariant(proxyModel->transferId(data)));
+
+        QDBusPendingCall asyncCall =
+            iface.asyncCall(QLatin1String("showDetailsDialog"),
+            QVariant(proxyModel->transferId(data)));
+
+         QDBusPendingCallWatcher *watcher = 
+            new QDBusPendingCallWatcher(asyncCall, this);
+
+         connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this,
+             SLOT(customDialogCallFinished(QDBusPendingCallWatcher*)));	
+
 	} else {
 		qDebug() << __FUNCTION__ << iface.lastError ();
 	}
@@ -1280,4 +1286,14 @@ void TUIServicePrivate::writeReplaceHistoryIds(const QString& replaceId,
 	settings.setValue("index", index);
 	settings.endArray();
 	settings.sync();
+}
+
+void TUIServicePrivate::customDialogCallFinished(QDBusPendingCallWatcher *call) {
+    qDebug() << __FUNCTION__ ;
+    QDBusPendingReply<void> reply = *call;
+    if (reply.isError()) {
+        qWarning() << __FUNCTION__ << "Custom Dialog invocation failed" <<
+            reply.error().message();
+    }
+    call->deleteLater();    
 }

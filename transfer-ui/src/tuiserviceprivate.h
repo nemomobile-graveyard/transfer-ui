@@ -44,6 +44,7 @@
 //Qt headers
 #include <QObject>
 #include <QSettings>
+#include <QDBusPendingCallWatcher>
 
 class MLabel;
 class MNotification;
@@ -173,6 +174,11 @@ public Q_SLOTS:
         \param index index of the transfer
     */
     void elementClicked(const QModelIndex &index);
+
+    /*!
+        \brief custom dialog invocation status handler
+    */
+    void customDialogCallFinished(QDBusPendingCallWatcher *call);
 
 private:
     /*!

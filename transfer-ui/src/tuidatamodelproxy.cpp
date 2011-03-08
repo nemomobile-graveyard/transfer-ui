@@ -322,7 +322,7 @@ void TUIDataModelProxy::cancelled(const QString &id) {
         QModelIndex index = model->index(rowNo,Canceled);
         TUIData *tuiData = data(index);
         if(tuiData != 0) {
-            tuiData->status = TransferStatusDone;
+            tuiData->status = TransferStatusCanceled;
             setModelData(index, tuiData);
         }
     }
