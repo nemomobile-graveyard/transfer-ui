@@ -349,9 +349,13 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
                     {
                         QStringList thumbnailDetails = 
                             iter.value().toStringList();
-                        dataOriginal->thumbnailFile = thumbnailDetails[0];
-                        dataOriginal->thumbnailMimeType = thumbnailDetails[1];
-                        dataOriginal->fileTypeIcon.clear();
+                        if(thumbnailDetails.isEmpty() == false) {
+                            dataOriginal->thumbnailFile = thumbnailDetails[0];
+                            dataOriginal->thumbnailMimeType = thumbnailDetails[1];
+                        } else {
+                            dataOriginal->thumbnailFile.clear();
+                            dataOriginal->thumbnailMimeType.clear();
+                        }
                         if(dataOriginal->transferImage != 0) {
                             delete dataOriginal->transferImage;
                             dataOriginal->transferImage = 0;
