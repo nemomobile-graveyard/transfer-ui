@@ -105,7 +105,7 @@ public:
         \param argc
         \param argv
     */
-    virtual QApplication* applicationInstance(int argc, char **argv) = 0;
+    virtual QApplication* applicationInstance(int &argc, char **argv) = 0;
 
 protected:
     /*!

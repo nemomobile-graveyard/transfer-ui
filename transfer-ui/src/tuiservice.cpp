@@ -182,7 +182,7 @@ TUIService::~TUIService() {
     selfInstance = 0;
 }
 
-QApplication *TUIService::applicationInstance(int argc, char **argv) {
+QApplication *TUIService::applicationInstance(int &argc, char **argv) {
     QApplication *app = 0;
     if(d_ptr->interface != 0) {
         app = d_ptr->interface->applicationInstance(argc,argv);
@@ -190,7 +190,6 @@ QApplication *TUIService::applicationInstance(int argc, char **argv) {
     } else {
         qDebug() << "Interface is not ready";
     }
-    Q_EMIT(launched());
     return app;
 }
 
@@ -216,7 +215,7 @@ bool TUIService::init() {
     d_ptr->isUIShown = false;
 
     d_ptr->readHistory();
-
+    Q_EMIT(launched());
     return true;
 }
 

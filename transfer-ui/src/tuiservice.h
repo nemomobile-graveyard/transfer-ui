@@ -87,7 +87,7 @@ public:
 
     static TUIService *instance();
 
-    QApplication *applicationInstance(int argc, char **argv);
+    QApplication *applicationInstance(int &argc, char **argv);
 
     void loadImplementationPlugin();
 
