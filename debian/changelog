@@ -1,6 +1,7 @@
 transfer-ui (0.3.10.2) unstable; urgency=low
 
   * Changed argc to reference variable in interface and service class
+  * Fixes: NB#235325 - Tranfer UI Qt Client API has incorrect scope in API file
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 09 Mar 2011 15:51:56 +0530
 
