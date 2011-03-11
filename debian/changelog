@@ -1,3 +1,9 @@
+transfer-ui (0.3.11.1) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 11 Mar 2011 15:33:39 +0200
+
 transfer-ui (0.3.10.2) unstable; urgency=low
 
   * Changed argc to reference variable in interface and service class
