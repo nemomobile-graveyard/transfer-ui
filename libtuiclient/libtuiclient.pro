@@ -1,5 +1,5 @@
 CONFIG += qt debug dbusinterfaces
-#QT -= gui
+QT -= gui
 QT += dbus
 TEMPLATE = lib
 
