@@ -602,9 +602,7 @@ void TUIService::setMessage(const QString &id, const QString &message) {
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
         if(TransferStatusInactive == data->status) {
-            if(message.isEmpty() == false) {
-                d_ptr->proxyModel->setMessage(id, message);
-            }
+            d_ptr->proxyModel->setMessage(id, message);
         } else {
             qDebug() << __FUNCTION__ << "Message can only be set "
                 "for Inactive Transfers";
