@@ -1115,11 +1115,19 @@ void TUIServicePrivate::elementClicked(const QModelIndex &index) {
 				    QLatin1String("DetailsDBusInterface")).toString();
 			    showCustomDialog(tuiData, serviceName);
 		    } else {
-			    interface->showDetails(index);
+                if(TransferStatusDone == tuiData->status) {
+                    completedItemClicked(index);
+                } else {
+			        interface->showDetails(index);
+                }
 		    }
         } else {
-            interface->showDetails(index);
-        }
+                if(TransferStatusDone == tuiData->status) {
+                    completedItemClicked(index);
+                } else {
+			        interface->showDetails(index);
+                }
+	    }
     }
 }
 
@@ -1293,4 +1301,26 @@ void TUIServicePrivate::customDialogCallFinished(QDBusPendingCallWatcher *call) 
             reply.error().message();
     }
     call->deleteLater();    
+}
+
+void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
+    QVariant data = index.data();
+    TUIData *tuiData = data.value<TUIData*>();
+    if(tuiData != 0) {
+        qDebug() << __FUNCTION__ << tuiData->resultUri;
+        if (tuiData->resultUri.isEmpty() == false) {
+            qDebug() << __FUNCTION__ << "Trying to launch application";
+            Action action = Action::defaultActionForScheme(tuiData->resultUri);
+            if (action.isValid() == true) {
+                action.trigger();
+            } else {
+                qDebug() << __FUNCTION__ << "Failed to launch application" <<
+                    "Displaying standard dialog";
+                interface->showDetails(index);
+            }
+        } else {
+            qDebug() << __FUNCTION__ << "Result Uri is Empty";
+            interface->showDetails(index);
+        }
+    }    
 }

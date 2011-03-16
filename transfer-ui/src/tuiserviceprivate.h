@@ -202,6 +202,11 @@ private:
         \brief write replace history ids to the data base
     */
 	void writeReplaceHistoryIds(const QString& replaceId, int index);
+
+    /*!
+        \brief handle completed item click
+    */
+    void completedItemClicked(const QModelIndex& index);
 };
 
 Q_DECLARE_METATYPE(QSharedPointer<TUIData>)
