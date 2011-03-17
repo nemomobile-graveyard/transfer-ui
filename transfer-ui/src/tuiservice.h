@@ -411,7 +411,7 @@ public Q_SLOTS: // METHODS
 
     void clearCompletedTransfers();
 
-    void timeOrSettingsChanged (MeeGo::QmTimeWhatChanged what);
+    void timeOrSettingsChanged (MeeGo::QmTime::WhatChanged what);
 
 Q_SIGNALS: // SIGNALS
 

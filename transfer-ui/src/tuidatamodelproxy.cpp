@@ -291,7 +291,7 @@ void TUIDataModelProxy::resumed(const QString &id) {
         QModelIndex index = model->index(rowNo,Resumed);
         TUIData *tuiData = data(index);
         if(tuiData != 0) {
-            tuiData->status = TransferStatusResume;
+            tuiData->status = TransferStatusActive;
             tuiData->message.clear();
             setModelData(index, tuiData);
         }

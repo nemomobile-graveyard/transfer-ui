@@ -103,8 +103,8 @@ TUIService::TUIService(QObject *parent)
     //listen to date / time format change signal
     QmTime *qmTime = new QmTime(this);
 
-    connect(qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
-        SLOT(timeOrSettingsChanged (MeeGo::QmTimeWhatChanged)));
+    connect(qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
+        SLOT(timeOrSettingsChanged (MeeGo::QmTime::WhatChanged)));
 
     stringEnumFunctionMap.insert("setName",Name);
     stringEnumFunctionMap.insert("setSize",Size);
@@ -883,7 +883,7 @@ void TUIService::clearCompletedTransfers() {
     sendSummary();
 }
 
-void TUIService::timeOrSettingsChanged (MeeGo::QmTimeWhatChanged what) {
+void TUIService::timeOrSettingsChanged (MeeGo::QmTime::WhatChanged what) {
     Q_UNUSED(what)
     d_ptr->proxyModel->dateSettingsChanged();
 }
@@ -1311,7 +1311,7 @@ void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
         qDebug() << __FUNCTION__ << tuiData->resultUri;
         if (tuiData->resultUri.isEmpty() == false) {
             qDebug() << __FUNCTION__ << "Trying to launch application";
-            Action action = Action::defaultActionForScheme(tuiData->resultUri);
+            Action action = Action::defaultAction(tuiData->resultUri);
             if (action.isValid() == true) {
                 action.trigger();
             } else {

@@ -1,8 +1,9 @@
 transfer-ui (0.3.11.1) unstable; urgency=low
 
   * Allow client to set empty message in setMessage API
+  * Fixes: NB#237509 - Deprecated enum MeeGo::QmTimeWhatChanged is used (by transfer-ui)
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 15 Mar 2011 16:55:50 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 17 Mar 2011 15:05:18 +0530
 
 transfer-ui (0.3.10.2) unstable; urgency=low
 
