@@ -110,13 +110,11 @@ void TUIReadHistoryThread::readHistoryFromDB(int arrayIndex) {
 	data->thumbnailMimeType = historySettings->value("mimetype").toString();
 	data->fileTypeIcon = historySettings->value("iconId").toString();
     data->resultUri = historySettings->value("resulturi").toString();
-    qDebug() << __FUNCTION__ << data->resultUri << data->thumbnailFile;
 	QString imageFile;
     if((data->thumbnailMimeType.isEmpty() == true)
 		&& (data->fileTypeIcon.isEmpty() == true)) {
     	data->thumbnailFile = historySettings->value("imagePath").toString();
     }
     QString id = historySettings->value("transferid").toString();
-    qDebug() << __FUNCTION__ << "Emitting data ";
     Q_EMIT(addCompletedData(id, QSharedPointer<TUIData>(data)));
 }

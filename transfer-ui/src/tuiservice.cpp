@@ -1241,6 +1241,9 @@ void TUIServicePrivate::writeHistoryData(const TUIData *data) {
     historySetting->setValue("count", data->filesCount );
     historySetting->setValue("starttime",data->startTime);
     historySetting->setValue("time", data->completedTime );
+    if(data->fileTypeIcon.isEmpty() == false) {
+        historySetting->setValue("iconId", data->fileTypeIcon);
+    }
     if(data->thumbnailMimeType.isEmpty() == false) {
         historySetting->setValue("thumbnailfile", data->thumbnailFile );
         historySetting->setValue("mimetype", data->thumbnailMimeType);
@@ -1249,8 +1252,6 @@ void TUIServicePrivate::writeHistoryData(const TUIData *data) {
             if(data->thumbnailFile.isEmpty() == false) {
     			historySetting->setValue("imagePath", data->thumbnailFile);
             }
-		} else {
-        	historySetting->setValue("iconId", data->fileTypeIcon);
 		}
     }
     historySetting->setValue("resulturi", data->resultUri);
