@@ -1079,21 +1079,16 @@ void TUIServicePrivate::showCustomDialog(const TUIData *data,
 	qDebug() << __FUNCTION__ << serviceName;
 	QDBusInterface iface(serviceName, "/",
 		"", QDBusConnection::sessionBus());
-	if (iface.isValid()) {
+    QDBusPendingCall asyncCall =
+        iface.asyncCall(QLatin1String("showDetailsDialog"),
+        QVariant(proxyModel->transferId(data)));
 
-        QDBusPendingCall asyncCall =
-            iface.asyncCall(QLatin1String("showDetailsDialog"),
-            QVariant(proxyModel->transferId(data)));
+     QDBusPendingCallWatcher *watcher = 
+        new QDBusPendingCallWatcher(asyncCall, this);
 
-         QDBusPendingCallWatcher *watcher = 
-            new QDBusPendingCallWatcher(asyncCall, this);
+     connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this,
+         SLOT(customDialogCallFinished(QDBusPendingCallWatcher*)));	
 
-         connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this,
-             SLOT(customDialogCallFinished(QDBusPendingCallWatcher*)));	
-
-	} else {
-		qDebug() << __FUNCTION__ << iface.lastError ();
-	}
 }
 
 void TUIServicePrivate::elementClicked(const QModelIndex &index) {
