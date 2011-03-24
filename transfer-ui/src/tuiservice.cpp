@@ -60,6 +60,7 @@
 
 #include <contentaction/contentaction.h>
 #include <qmsystem2/qmtime.h>
+#include <qmsystem2/qmsystemstate.h>
 
 using namespace ContentAction;
 using namespace TransferUI;
@@ -105,6 +106,13 @@ TUIService::TUIService(QObject *parent)
 
     connect(qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
         SLOT(timeOrSettingsChanged (MeeGo::QmTime::WhatChanged)));
+
+    //listen to shutdown signal, gracefully exit tui
+    QmSystemState *qmState = new QmSystemState(this);
+    connect(qmState, 
+        SIGNAL(systemStateChanged(	MeeGo::QmSystemState::StateIndication)),
+        SLOT(systemStateChanged(MeeGo::QmSystemState::StateIndication)));
+
 
     stringEnumFunctionMap.insert("setName",Name);
     stringEnumFunctionMap.insert("setSize",Size);
@@ -888,6 +896,13 @@ void TUIService::timeOrSettingsChanged (MeeGo::QmTime::WhatChanged what) {
     d_ptr->proxyModel->dateSettingsChanged();
 }
 
+void TUIService::systemStateChanged (MeeGo::QmSystemState::StateIndication 	what) {
+    if(MeeGo::QmSystemState::Shutdown == what) {
+        qDebug() << __FUNCTION__ << "Device State" << what << "Shutdown transferui";
+        QCoreApplication::exit();
+    }
+}
+
 #ifdef _UNIT_TESTING_
 TUIDataModelProxy *TUIService::model() const {
     return d_ptr->proxyModel;
@@ -1156,7 +1171,7 @@ void TUIServicePrivate::threadCompleted() {
             interface->setNoTransfersVisibility(false);
         }
     }
-
+    TUIService::instance()->sendSummary();
 }
 
 

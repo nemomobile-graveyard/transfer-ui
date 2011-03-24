@@ -44,6 +44,7 @@ class QDBusServiceWatcher;
 #include <QApplication>
 
 #include <qmsystem2/qmtime.h>
+#include <qmsystem2/qmsystemstate.h>
 
 #ifdef _UNIT_TESTING_
 #include <QAbstractItemModel>
@@ -408,10 +409,21 @@ public Q_SLOTS: // METHODS
     /*!
         \brief clear all the transfers from the completed list and database.
     */
-
     void clearCompletedTransfers();
 
+    /*!
+        \brief listen to time - date settings changed. If the format of the date
+        is changed update the model
+        \parm what what changed
+    */
     void timeOrSettingsChanged (MeeGo::QmTime::WhatChanged what);
+
+    /*!
+        \brief listen to system state change signal. If the system is in shut
+        down state, gracefully shutdown the application
+        \param what what changed
+    */
+    void systemStateChanged (MeeGo::QmSystemState::StateIndication what);
 
 Q_SIGNALS: // SIGNALS
 
