@@ -8,7 +8,7 @@ doc: transfer-ui-doc
 
 interface: Tranfer UI DBUS API
 type: dbus
-scope: Nokia MeeGo
+scope: Platform
 state: stable
 libs-pkg: transfer-ui
 dev-pkg: transfer-ui-dev
