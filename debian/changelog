@@ -4,6 +4,7 @@ transfer-ui (0.3.13.1) unstable; urgency=low
   * Fixes: NB#239226 - Tranfer UI DBUS API has incorrect scope in API file
   * Fixes: NB#239255 - Random TransferUI (raise abort) crash observed
   * Fixes: NB#240417 - Copyright tag not defined in transfer-ui
+  * Fixes: NB#240421 - The API documentation main page is empty in transfer-ui
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 24 Mar 2011 12:31:44 +0530
 

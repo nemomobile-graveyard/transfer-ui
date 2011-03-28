@@ -120,7 +120,7 @@ namespace TransferUI {
           \param type transfer type , \ref TransferType enum
 		  \param clientId client id of the client. This parameter is used get
 		  special attributes for the client. clients should install config file
-		  into /usr/share/transfer-ui/clients/<clientid> path. transfer-ui reads
+		  into /usr/share/transfer-ui/clients/&lt;clientid&gt; path. transfer-ui reads
 		  the attributes from the given path. At present "DetailsDBusInterface" is
 		  supported by transfer-ui which displays custom details dialog when
 		  user clicks on the transfer.
@@ -238,6 +238,8 @@ namespace TransferUI {
           \param failed number of failed transfers
           \param active number of active transfers
           \param pending number of pending transfers
+          \param completed number of completed transfers currently presented by
+                           Transfer UI
         */
         void summaryReport (int failed, int active, int pending, int completed);
 

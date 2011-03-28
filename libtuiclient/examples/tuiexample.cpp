@@ -23,19 +23,18 @@
  * IN THE SOFTWARE. 
  */
 
-
-
-
-
  /*!
  * \example tuiexample.cpp
  * This is an example of how to use the libtuiclient.
  */
 
- 
 #include <TransferUI/Client>
 #include <TransferUI/Transfer>
 
+/*
+ \class TUITestClient
+ \brief Example application class communicating with TUI
+*\
 class TUITestClient : public QObject
 {
     Q_OBJECT

@@ -90,7 +90,6 @@ namespace TransferUI {
           \n \dontinclude tuiexample.cpp
           \skipline TUITestClient::updateTargetName()
           \until }
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setTargetName (const QString & name);
 
@@ -102,7 +101,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateFilesCount()
           \until }
           \sa setCurrentFileIndex updateCurrentFileInfo
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setFilesCount (int count);
 
@@ -114,7 +112,6 @@ namespace TransferUI {
           \n \dontinclude tuiexample.cpp
           \skipline TUITestClient::updateSize()
           \until }
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setSize (quint64 bytes);
 
@@ -127,7 +124,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateProgress()
           \until }
           \sa setActive updateStatus
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setProgress (float done);
 
@@ -139,7 +135,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateCurrentFileIndex()
           \until }
           \sa updateCurrentFileInfo setFilesCount
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setCurrentFileIndex (int index);
 
@@ -151,7 +146,6 @@ namespace TransferUI {
           \n \dontinclude tuiexample.cpp
           \skipline TUITestClient::updateMessage()
           \until }
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setMessage (const QString & message);
 
@@ -164,7 +158,6 @@ namespace TransferUI {
           \n \dontinclude tuiexample.cpp
           \skipline TUITestClient::updateEstimate()
           \until }
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setEstimate (int seconds);
 
@@ -178,7 +171,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateStatus()
           \until }
           \sa setEstimate setProgress
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool updateStatus (float done, int seconds);
 
@@ -194,7 +186,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateCanPause()
           \until }
           \sa Client::pauseTransfer markPaused
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setCanPause (bool canPause);
 
@@ -206,7 +197,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateTransferName()
           \until }
           \sa updateCurrentFileInfo
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setName (const QString & name);
 
@@ -234,7 +224,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateThumbnail()
           \until }
           \sa setIcon
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setThumbnailForFile(const QString& fileName, const QString&
             mimeType);
@@ -247,8 +236,7 @@ namespace TransferUI {
           \return true if request was send successfully
           \n \dontinclude tuiexample.cpp
           \skipline TUITestClient::updateFileTypeIcon()
-          \until }
-          \n \ref transfer_ui_main "Overview of TransferUI"          
+          \until }        
         */
         virtual bool setIcon(const QString& iconId);
         
@@ -260,7 +248,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateFileTypeIcon()
           \until }
           \sa setThumbnail
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setCancelButtonText(const QString& text);
         
@@ -286,7 +273,7 @@ namespace TransferUI {
 
 		/*!
 		  \brief set transfer image from the give filename path.
-          \param fileNamePath absolute path of the file name from which Image
+          \param filePath absolute path of the file name from which Image
           will be loaded
 		*/
         bool setImageFromFilePath(const QString& filePath);
@@ -399,7 +386,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateStatusPending()
           \until }
           \sa setActive setMessage
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setPending (const QString & reason);
 
@@ -411,7 +397,6 @@ namespace TransferUI {
           \skipline TUITestClient::updateStatusActive()
           \until }
           \sa setPending setProgress
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool setActive (float done = 0.0);
 
@@ -425,7 +410,6 @@ namespace TransferUI {
           \skipline TUITestClient::transferCancelled(
           \until }
           \sa markCancelFailed Client::cancelTransfer
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool markCancelled ();
 
@@ -439,7 +423,6 @@ namespace TransferUI {
           \skipline TUITestClient::transferPaused(
           \until }
           \sa Client::pauseTransfer markResumed
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool markPaused();
 
@@ -453,7 +436,6 @@ namespace TransferUI {
           \skipline TUITestClient::transferResumed(
           \until }
           \sa Client::startTransfer markPaused
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool markResumed();
 
@@ -465,7 +447,6 @@ namespace TransferUI {
           \n \dontinclude tuiexample.cpp
           \skipline TUITestClient::transferDone(
           \until }
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
 
 		virtual bool markDone (const QString & message = "");
@@ -508,7 +489,6 @@ namespace TransferUI {
           \skipline TUITestClient::transferError(
           \until }
           \sa markRepairableFailure
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool markFailure (const QString & headerMessage,
                 const QString & description);
@@ -525,7 +505,6 @@ namespace TransferUI {
           \skipline TUITestClient::transferError(
           \until }
           \sa Client::repairErrorTransfer markFailure
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool markRepairableFailure (const QString& headerMessage,
                     const QString& description, const QString& actionName);
@@ -541,7 +520,6 @@ namespace TransferUI {
           \skipline TUITestClient::transferCancelled(
           \until }
           \sa markCancelled Client::cancelTransfer
-          \n \ref transfer_ui_main "Overview of TransferUI"
         */
         virtual bool markCancelFailed(const QString& message);
         
