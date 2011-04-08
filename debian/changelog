@@ -1,8 +1,8 @@
-transfer-ui (0.3.13.2) unstable; urgency=low
+transfer-ui (0.3.14.1) unstable; urgency=low
 
-  * After tagging
+  *  Fixes: NB#240417 - Copyright tag not defined in transfer-ui
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 29 Mar 2011 14:57:14 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 08 Apr 2011 10:49:53 +0300
 
 transfer-ui (0.3.13.1) unstable; urgency=low
 
