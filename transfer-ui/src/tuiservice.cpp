@@ -1264,7 +1264,7 @@ void TUIServicePrivate::writeHistoryData(const TUIData *data) {
             }
 		}
     }
-    historySetting->setValue("resulturi", data->resultUri);
+    historySetting->setValue("resulturi", QString(QUrl::toPercentEncoding(data->resultUri.toUtf8())));
 }
 
 void TUIServicePrivate::writeHistoryDB(const QString& id, const TUIData *data) {
@@ -1321,9 +1321,35 @@ void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
         qDebug() << __FUNCTION__ << tuiData->resultUri;
         if (tuiData->resultUri.isEmpty() == false) {
             qDebug() << __FUNCTION__ << "Trying to launch application";
-            Action action = Action::defaultAction(tuiData->resultUri);
+            Action action;
+            QUrl resultUrl(QUrl::fromEncoded    
+                    (tuiData->resultUri.toUtf8()).toString());
+            qDebug() << __FUNCTION__ << resultUrl << resultUrl.scheme();
+            // Handle fileuri
+            if (resultUrl.scheme() == QLatin1String("file")) {
+                qDebug() << __FUNCTION__ << "Given result is of type file";
+                action = Action::defaultActionForFile(resultUrl.toString());
+            } else if (resultUrl.scheme() == QLatin1String("urn")) {
+                 //Handle tracker uri
+                qDebug() << __FUNCTION__ 
+                    << "Given result is of type tracker object" << resultUrl;
+                action = Action::defaultAction(resultUrl.toString());
+            } else if (resultUrl.scheme().isEmpty() == false) { 
+                // Handle Other type scheme
+                qDebug() << __FUNCTION__ << "Handle scheme data";
+                action = Action::defaultActionForScheme(resultUrl.toString());
+            } else if (resultUrl.isRelative() == true) {
+                if (QFile::exists(tuiData->resultUri) == true) {
+                    qDebug() << __FUNCTION__ << "Handle local file" 
+                        << "set file scheme";
+                    resultUrl.setScheme(QLatin1String("file"));
+                    action = Action::defaultActionForFile(resultUrl.toString());
+                }
+            }
+
+            
             if (action.isValid() == true) {
-                action.trigger();
+                action.triggerAndWait();
             } else {
                 qDebug() << __FUNCTION__ << "Failed to launch application" <<
                     "Displaying standard dialog";

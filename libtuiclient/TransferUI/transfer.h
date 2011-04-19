@@ -471,7 +471,18 @@ namespace TransferUI {
           \param resultUri uri of the result file. If provided, transfer-ui
           launches the application associated with the given uri. If the Uri is
           not valid, default dialog is displayed when the user taps on the
-          transfers. resultUri represents an object stored in Tracker. 
+          transfers. 
+          resultUri can be of type 
+            i) tracker object uri
+                Uri represents a resource with nie:url and nie:mimeType
+                properties. If there is a default action provided for the given
+                mimeType, default action will be triggered.
+            ii) file uri object
+                Default action for the given file will be triggered
+            iii) uri with some scheme
+                Default action for the given scheme will be triggered
+            iv) relative file path
+                Default action for the given file will be triggered.
 		  \return true if request was sent successfully
 		*/
 		bool markCompleted(bool showInHistory=false, 
