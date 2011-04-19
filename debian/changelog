@@ -1,3 +1,9 @@
+transfer-ui (0.3.16.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 19 Apr 2011 16:47:28 +0530
+
 transfer-ui (0.3.16.1) unstable; urgency=low
 
   * Extended Open completed transfer functionality to handle file uri and other schemes
