@@ -1090,19 +1090,27 @@ void TUIServicePrivate::repairTransfer(const QModelIndex &index) {
 }
 
 void TUIServicePrivate::showCustomDialog(const TUIData *data,
-	const QString& serviceName) {
+	const QString& serviceName, bool chained) {
 	qDebug() << __FUNCTION__ << serviceName;
 	QDBusInterface iface(serviceName, "/",
 		"", QDBusConnection::sessionBus());
-    QDBusPendingCall asyncCall =
-        iface.asyncCall(QLatin1String("showDetailsDialog"),
-        QVariant(proxyModel->transferId(data)));
 
-     QDBusPendingCallWatcher *watcher = 
-        new QDBusPendingCallWatcher(asyncCall, this);
-
-     connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this,
-         SLOT(customDialogCallFinished(QDBusPendingCallWatcher*)));	
+    QVariant transferId = QVariant(proxyModel->transferId(data));
+    QDBusPendingCallWatcher *watcher = 0;
+    if( chained == false) {
+        QDBusPendingCall asyncCall =
+            iface.asyncCall(QLatin1String("showDetailsDialog"), transferId);
+        watcher = new QDBusPendingCallWatcher(asyncCall, this);
+    } else {
+        WId windowId = interface->windowId();
+        qDebug() << __FUNCTION__ << "Show in window id" << windowId;
+        QDBusPendingCall asyncCall =
+            iface.asyncCall(QLatin1String("showDetailsDialog"), (int)windowId,
+            transferId);
+        watcher = new QDBusPendingCallWatcher(asyncCall, this);
+    }
+    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this,
+     SLOT(customDialogCallFinished(QDBusPendingCallWatcher*)));	
 
 }
 
@@ -1111,7 +1119,8 @@ void TUIServicePrivate::elementClicked(const QModelIndex &index) {
     QVariant data = index.data();
     TUIData *tuiData = data.value<TUIData*>();
     if(tuiData != 0) {
-        if (tuiData->clientId.isEmpty() == false) {
+        if ((tuiData->clientId.isEmpty() == false) && 
+            (TransferStatusDone != tuiData->status)) {
             qDebug() << __FUNCTION__ << "Check for service Name";
 		    QString attributeFilePath;
 		    attributeFilePath.append(
@@ -1120,7 +1129,16 @@ void TUIServicePrivate::elementClicked(const QModelIndex &index) {
 		    QSettings settings(attributeFilePath,
 			    QSettings::IniFormat);
 		    settings.sync();
-		    if(settings.contains(QLatin1String("DetailsDBusInterface"))) {
+
+            /*If both DetailsDBusInterface and DBusLaunchDialogChained are
+            defined, then DetailsDBusInterface is ignored*/
+
+            if(settings.contains(QLatin1String("DBusLaunchDialogChained"))) {
+			    QString serviceName = settings.value(
+				    QLatin1String("DBusLaunchDialogChained")).toString();
+			    showCustomDialog(tuiData, serviceName, true);
+                
+            } else if(settings.contains(QLatin1String("DetailsDBusInterface"))) {
 			    QString serviceName = settings.value(
 				    QLatin1String("DetailsDBusInterface")).toString();
 			    showCustomDialog(tuiData, serviceName);

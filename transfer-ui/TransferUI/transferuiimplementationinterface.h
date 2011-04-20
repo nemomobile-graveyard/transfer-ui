@@ -125,6 +125,11 @@ public:
     */
     virtual QApplication* applicationInstance(int &argc, char **argv) = 0;
 
+    /*!
+        \brief return the window id associated with the application.
+    */
+    virtual WId windowId() = 0;
+
 protected:
     /*!
         \brief When user pauses the transfer, paused signal is emitted.

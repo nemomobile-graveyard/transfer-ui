@@ -167,7 +167,9 @@ public Q_SLOTS:
         \param serviceName service interface name.
     */
 
-	void showCustomDialog(const TUIData *data, const QString& serviceName);
+	void showCustomDialog(const TUIData *data, const QString& serviceName, 
+        bool chained = false);
+
 
     /*!
         \brief user clicked the transfer element
