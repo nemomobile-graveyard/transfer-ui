@@ -67,12 +67,17 @@ namespace TransferUI {
 
         /*!
             \brief show custom dialog.
+            \param transferId transfer id for which details dialog should be
+            displayed.
             \param windowId window id of the transfer-ui, which will be used
             chain tasking
             \param transferId transfer id for which details dialog should be
             displayed.
         */
-        virtual void showDetailsDialog(WId windowId, const QString& transferId);
+        virtual void showDetailsDialog(const QString& transferId, int windowId){
+            Q_UNUSED (transferId)
+            Q_UNUSED (windowId)
+        }
 	};
 }
 #endif

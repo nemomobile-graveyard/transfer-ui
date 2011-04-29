@@ -223,6 +223,19 @@ bool TUIService::init() {
     d_ptr->isUIShown = false;
 
     d_ptr->readHistory();
+
+    //listen to date / time format change signal
+    QmTime *qmTime = new QmTime(this);
+
+    connect(qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
+        SLOT(timeOrSettingsChanged (MeeGo::QmTime::WhatChanged)));
+
+    //listen to shutdown signal, gracefully exit tui
+    QmSystemState *qmState = new QmSystemState(this);
+    connect(qmState, 
+        SIGNAL(systemStateChanged(	MeeGo::QmSystemState::StateIndication)),
+        SLOT(systemStateChanged(MeeGo::QmSystemState::StateIndication)));
+
     Q_EMIT(launched());
     return true;
 }
@@ -1105,8 +1118,8 @@ void TUIServicePrivate::showCustomDialog(const TUIData *data,
         WId windowId = interface->windowId();
         qDebug() << __FUNCTION__ << "Show in window id" << windowId;
         QDBusPendingCall asyncCall =
-            iface.asyncCall(QLatin1String("showDetailsDialog"), (int)windowId,
-            transferId);
+            iface.asyncCall(QLatin1String("showDetailsDialog"), 
+            transferId, (int)windowId);
         watcher = new QDBusPendingCallWatcher(asyncCall, this);
     }
     connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this,
@@ -1133,9 +1146,9 @@ void TUIServicePrivate::elementClicked(const QModelIndex &index) {
             /*If both DetailsDBusInterface and DBusLaunchDialogChained are
             defined, then DetailsDBusInterface is ignored*/
 
-            if(settings.contains(QLatin1String("DBusLaunchDialogChained"))) {
+            if(settings.contains(QLatin1String("DetailsDBusInterfaceChained"))) {
 			    QString serviceName = settings.value(
-				    QLatin1String("DBusLaunchDialogChained")).toString();
+				    QLatin1String("DetailsDBusInterfaceChained")).toString();
 			    showCustomDialog(tuiData, serviceName, true);
                 
             } else if(settings.contains(QLatin1String("DetailsDBusInterface"))) {

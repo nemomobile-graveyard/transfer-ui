@@ -1,8 +1,8 @@
-transfer-ui (0.3.16.2) unstable; urgency=low
+transfer-ui (0.3.17.1) unstable; urgency=low
 
-  * After tagging
+  * Implementation to support custom dialog to display in transfer-ui window
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 19 Apr 2011 16:47:28 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 28 Apr 2011 13:16:42 +0530
 
 transfer-ui (0.3.16.1) unstable; urgency=low
 
