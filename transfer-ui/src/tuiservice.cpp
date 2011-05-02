@@ -101,19 +101,6 @@ TUIService::TUIService(QObject *parent)
     d_ptr->clientDataModel = new TUIClientDataModel(this);
 
 
-    //listen to date / time format change signal
-    QmTime *qmTime = new QmTime(this);
-
-    connect(qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
-        SLOT(timeOrSettingsChanged (MeeGo::QmTime::WhatChanged)));
-
-    //listen to shutdown signal, gracefully exit tui
-    QmSystemState *qmState = new QmSystemState(this);
-    connect(qmState, 
-        SIGNAL(systemStateChanged(	MeeGo::QmSystemState::StateIndication)),
-        SLOT(systemStateChanged(MeeGo::QmSystemState::StateIndication)));
-
-
     stringEnumFunctionMap.insert("setName",Name);
     stringEnumFunctionMap.insert("setSize",Size);
     stringEnumFunctionMap.insert("setEstimate",Estimate);
