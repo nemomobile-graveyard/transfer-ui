@@ -1189,7 +1189,10 @@ void TUIServicePrivate::threadCompleted() {
             interface->setNoTransfersVisibility(false);
         }
     }
-    TUIService::instance()->sendSummary();
+    // There might some cases where in which registerTransfer call migth happen
+    // after sendsummary. So wait for 30000 sec, before updating total transfers
+    // count
+    QTimer::singleShot(30000, TUIService::instance(), SLOT(sendSummary()));
 }
 
 
