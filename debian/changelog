@@ -1,3 +1,9 @@
+transfer-ui (0.3.18.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 05 May 2011 14:11:38 +0300
+
 transfer-ui (0.3.18.1) unstable; urgency=low
 
   * Simplified thumbnail handling in the model
