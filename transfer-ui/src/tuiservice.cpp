@@ -181,7 +181,6 @@ QApplication *TUIService::applicationInstance(int &argc, char **argv) {
     QApplication *app = 0;
     if(d_ptr->interface != 0) {
         app = d_ptr->interface->applicationInstance(argc,argv);
-        qDebug() << __FUNCTION__ << app;
     } else {
         qDebug() << "Interface is not ready";
     }
@@ -495,7 +494,7 @@ TUIService::sendSummary() {
 
     Q_EMIT(summaryReport(errorCount,activeCount,inactiveCount,completedCount));
 
-    qDebug() << __FUNCTION__ << completedCount;
+    qDebug() << __FUNCTION__ << "Completed Count" << completedCount;
 
     //emit state changed signal if the TUI state is changed.
     //if there are more than one error transfers , set the state to fail
@@ -525,7 +524,8 @@ TUIService::sendSummary() {
 
     //if no transfers are there close transfer-ui
     int totalTransfer = activeCount + inactiveCount + errorCount;
-    qDebug() << "Total Transfers" << totalTransfer << d_ptr->isUIShown;
+    qDebug() << "Total Transfers" << totalTransfer << "Is UI Shown " 
+        << d_ptr->isUIShown;
 
     if(completedCount > 0) {
         d_ptr->interface->setHistoryVisibility(true);
@@ -567,7 +567,7 @@ TUIService::sendSummary() {
 void TUIService::setRepairableError(const QString &id, const QString &headerMsg,
     const QString &detailMsg, const QString &actionName) {
 
-    qDebug() << __FUNCTION__ <<id << headerMsg <<
+    qDebug() << __FUNCTION__ << id << headerMsg <<
         detailMsg << actionName;
 
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
@@ -657,7 +657,7 @@ void TUIService::setImageFromFilePath(const QString& id, const QString& fileName
 }
 
 void TUIService::showUI() {
-    qDebug() << __FUNCTION__ << d_ptr->isUIShown;
+    qDebug() << __FUNCTION__ << "Is UI Shown " << d_ptr->isUIShown;
     //check if plugin is already loaded
     if(d_ptr->interface != 0) {
         d_ptr->interface->loadUI();
@@ -923,7 +923,6 @@ TUIServicePrivate::TUIServicePrivate() : proxyModel(0),
     historySetting = new QSettings(historyFilePath,QSettings::IniFormat,this);
 
     //create read thread
-    qDebug() << __FUNCTION__ << "Creating Thread";
 	readThread = new
 		TUIReadHistoryThread(historySetting);
 
@@ -981,7 +980,7 @@ void TUIServicePrivate::visibilityChanged(bool value) {
 }
 
 void TUIServicePrivate::histroyModelEmpty(bool value) {
-    qDebug() << __FUNCTION__ << value << isUIShown;
+    qDebug() << __FUNCTION__ << value << "Is UI Shown" << isUIShown;
     if (interface != 0) {
         if (isUIShown == true) {
             interface->setHistoryVisibility(!value);
@@ -991,7 +990,7 @@ void TUIServicePrivate::histroyModelEmpty(bool value) {
 
 
 void TUIServicePrivate::displayInfoBanner(BannerEvent event, const QString& msg) {
-    qDebug () << "Display Infobanner" << event << msg;
+    qDebug () << "Display Infobanner" << "Event" << event << "Message" << msg;
     if(interface != 0) {
         if(isUIShown == true) {
             interface->displayBanner(event,msg);
@@ -1212,7 +1211,6 @@ void TUIServicePrivate::writeToHistory(const QString& id, const TUIData *data,
 
 void TUIServicePrivate::readHistory() {
 	readReplaceHistoryIds();
-    qDebug() << __FUNCTION__ << "Starting the thread";
     readThread->start();
 }
 
@@ -1228,7 +1226,7 @@ void TUIServicePrivate::readReplaceHistoryIds() {
 	QSettings settings(replaceIdPath,QSettings::IniFormat);
 
 	int count = settings.beginReadArray("ReplaceIds");
-	qDebug() << __FUNCTION__ << count;
+	qDebug() << __FUNCTION__ << "History Count" << count;
 	for (int counter = 0; counter < count ; counter++) {
 		settings.setArrayIndex(counter);
 		QString replaceId = settings.value("replaceId").toString();

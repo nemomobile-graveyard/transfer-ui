@@ -74,8 +74,8 @@ struct TUIData
     QString replaceId; //!< replace id for the given transfer
     QString clientId; //!< clinet interface information for custom dialogs
     QString resultUri; //!< Uri to launch application of the completed transfers
+    QString thumbnailImagePath; //!< transfer image path
     QDateTime completedTime; //!< completed time of the transfer
     QDateTime startTime; //!< time when transfer started
-    QImage *transferImage; //!< transfer image
 };
 #endif

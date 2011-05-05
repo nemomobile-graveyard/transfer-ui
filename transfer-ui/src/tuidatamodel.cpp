@@ -130,7 +130,7 @@ QVariant TUIDataModel::data(const QModelIndex &index, int role) const {
                 retVar = qVariantFromValue(data->transferTitle);
             break;
             case TransferUI::ImageRole:
-                retVar = qVariantFromValue(data->transferImage);
+                retVar = qVariantFromValue(data->thumbnailImagePath);
             break;
             case TransferUI::StartTimeRole:
                 retVar = qVariantFromValue(data->startTime);
@@ -175,10 +175,7 @@ bool TUIDataModel::setData(const QModelIndex &index,
                     data->fileTypeIcon = value.toString();
                     data->thumbnailFile.clear();
                     data->thumbnailMimeType.clear();
-                    if(data->transferImage != 0) {
-                        delete data->transferImage;
-                        data->transferImage = 0;
-                    }
+                    data->thumbnailImagePath.clear();
                 }
             break;
             case Size:
@@ -189,11 +186,7 @@ bool TUIDataModel::setData(const QModelIndex &index,
                     QStringList param = value.toStringList();
                     data->thumbnailFile = param.at(0);
                     data->thumbnailMimeType = param.at(1);
-                    if(data->transferImage != 0) {
-                        delete data->transferImage;
-                        data->transferImage = 0;
-
-                    }
+                    data->thumbnailImagePath.clear();
                 }
             break;
             case CanPause:
@@ -232,9 +225,9 @@ bool TUIDataModel::setData(const QModelIndex &index,
 					QFileInfo fInfo(fileName);
 					if(fInfo.exists() == true) {
 
-						data->transferImage = new QImage(fileName);
+						data->thumbnailImagePath = fileName;
 						data->thumbnailMimeType.clear();
-						data->thumbnailFile = fileName;
+						data->thumbnailFile.clear();
 					}
 				}
 			break;
@@ -262,10 +255,6 @@ bool TUIDataModel::removeRows(int position, int rows, const QModelIndex &index) 
     beginRemoveRows(index, position, position+rows-1);
     for (int row=0; row < rows; ++row) {
         TUIData *data = dataList.value(position);
-        if (data->transferImage != 0) {
-            delete data->transferImage;
-            data->transferImage = 0;
-        }
         delete data;
         dataList.removeAt(position);
         data = 0;
@@ -352,13 +341,10 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
                         if(thumbnailDetails.isEmpty() == false) {
                             dataOriginal->thumbnailFile = thumbnailDetails[0];
                             dataOriginal->thumbnailMimeType = thumbnailDetails[1];
+                            dataOriginal->thumbnailImagePath.clear();
                         } else {
                             dataOriginal->thumbnailFile.clear();
                             dataOriginal->thumbnailMimeType.clear();
-                        }
-                        if(dataOriginal->transferImage != 0) {
-                            delete dataOriginal->transferImage;
-                            dataOriginal->transferImage = 0;
                         }
                     }
                 break;
@@ -376,14 +362,7 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
                 break;
                 case TransferUI::ImageRole:
                     {
-						if(dataOriginal->transferImage != 0) {
-							delete dataOriginal->transferImage;
-							dataOriginal->transferImage = 0;
-						}
-                        dataOriginal->transferImage = 
-                            iter.value().value<QImage*>();
-                        qDebug() << __FUNCTION__ << "Updating Image " <<
-                            dataOriginal->transferImage << "For Index" << index;
+                        dataOriginal->thumbnailImagePath = iter.value().toString();
                     }
                 break;
                 case TransferUI::StartTimeRole:
@@ -393,7 +372,6 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
                     dataOriginal->completedTime = iter.value().toDateTime();
                 break;
                 default:
-                    qDebug() << iter.key() << "Updating for default Role";
                     QVariant dataVariant = roles.value(Qt::EditRole);
                     TUIData *data = dataVariant.value<TUIData *>();
                     replaceData = false;
@@ -470,9 +448,9 @@ QMap<int, QVariant> TUIDataModel::itemData ( const QModelIndex & index ) const {
                 qVariantFromValue(data->transferTitle));
         }
         
-        if(data->transferImage != 0) {
+        if(data->thumbnailImagePath.isEmpty() == false) {
             varMap.insert(TransferUI::ImageRole, 
-                qVariantFromValue(data->transferImage));
+                qVariantFromValue(data->thumbnailImagePath));
         } else if(data->thumbnailMimeType.isEmpty() == false) {
             QStringList thumbnailDetails;
             thumbnailDetails << data->thumbnailMimeType << data->thumbnailFile;
