@@ -221,7 +221,7 @@ void TransferUTTests::testFileTypeIcon() {
     if (transferId.isEmpty() == false) {
         const TUIData *data = service->model()->tuiData(transferId);
         QString fileTypeIcon = "m-icon";
-        service->setFileTypeIcon(transferId, fileTypeIcon);
+        service->setIcon(transferId, fileTypeIcon);
         QCOMPARE(fileTypeIcon, data->fileTypeIcon);
     } else {
         testAddTransfer();

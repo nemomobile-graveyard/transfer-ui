@@ -350,14 +350,6 @@ public Q_SLOTS: // METHODS
     void showErrorDetails(const QString &id);
 
     /*!
-        \brief set the icon of the file type.If there are no thumbnails for the
-        transfer, this method can be used to set the icon of the file type.
-        \param id transfer identifier
-        \param iconId for the given transfer
-    */
-    void setFileTypeIcon(const QString& id, const QString& iconId);
-
-    /*!
           \brief set thumbnail file for the transfer
           \param fileName file name for which transfer-ui will fetch thumbnail
           from the thumbnailer

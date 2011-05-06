@@ -256,35 +256,6 @@
             <arg name="fileIndex" type="i" direction="in"/>
         </method>
 
-        <!--
-        Method "setThumbnailPath":
-        Define the thumbnail image path, this method will be usefull when the
-        transfer is non tracker based transfer.
-        Parameters:
-        IN:
-            id: Transfer UI id of transfer.
-            path: Absolute path of the thumbnail image.
-        -->
-        <method name="setThumbnailPath">
-            <arg name="id" type="s" direction="in"/>
-            <arg name="path" type="s" direction="in"/>
-        </method>
-
-        <!--
-        Deprecated use setIcon
-        Method "setFileTypeIcon":
-        Define the icon of the file type. Icon will be displayed for the given
-        icon id for the transfer. If there are no thumbnails for the transfer,
-        this method can be used to set the icon of the file type.
-        Parameters:
-        IN:
-            id: Transfer UI id of transfer
-            iconId: Icon Id for the given transfer
-        -->
-        <method name="setFileTypeIcon">
-            <arg name="id" type="s" direction="in"/>
-            <arg name="iconId" type="s" direction="in"/>
-        </method>
 
         <!--
         Method "setIcon":

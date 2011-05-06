@@ -309,7 +309,7 @@ void TUIService::paused(const QString &id) {
     sendSummary();
 }
 
-//TODO remove this function once we have deprecated macro for done
+
 void TUIService::done(const QString &id) {
 
     qDebug() << "TUIService--> transfer done" << id;
@@ -326,7 +326,7 @@ void TUIService::done(const QString &id) {
     }
 }
 
-//TODO remove this function once we have deprecated macro for done
+
 void TUIService::done(const QString& id, const QString& msg) {
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
@@ -776,13 +776,6 @@ void TUIService::checkServiceRegister(const QString& clientServiceName) {
     }
 }
 
-
-void TUIService::setFileTypeIcon(const QString& id, const QString& iconId) {
-    qDebug() << "Deprecated function set file type icon for the transfer " << id << iconId;
-
-    //mime type is set to null for file icons
-    setIcon(id, iconId);
-}
 
 void TUIService::emitVisibilityState(const QString& serviceName) {
     qDebug() << "visibility state for service" << serviceName;
