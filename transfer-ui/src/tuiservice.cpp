@@ -67,6 +67,7 @@ using namespace TransferUI;
 using namespace MeeGo;
 TUIService *TUIService::selfInstance = 0;
 
+static const int SHUTDOWN_INTERVAL = 1500;
 
 #define CHECKDONESTATUS(status) \
 if(TransferStatusDone == status) { \
@@ -477,8 +478,7 @@ void TUIService::setCanPause(const QString &id, bool canPause) {
     d_ptr->proxyModel->setCanPause(id, canPause);
 }
 
-void
-TUIService::sendSummary() {
+void TUIService::sendSummary() {
     qDebug() << "TUIService --> update the summary of transfers ";
 
     //compute summary
@@ -533,33 +533,9 @@ TUIService::sendSummary() {
 
     if(totalTransfer==0) {
         Q_EMIT(stateChanged("idle")); //fail safe
-        if(d_ptr->isUIShown == false) {
-            //check if there are any unattended transfers which are canceled
-            qDebug() << "Total Data in Model" << d_ptr->proxyModel->count();
-            if((d_ptr->proxyModel->count() == 0) && (completedCount == 0)) {
-                qDebug() << "UI not visible and transfers count is 0 ";
-                if(d_ptr->interface != 0) {
-                    d_ptr->interface->unloadUI();
-                }
-                QCoreApplication::exit();
-            }
-        } else {
-            if(d_ptr->interface != 0) {
-                if(d_ptr->isUIShown == true) {
-                    if(completedCount == 0) {
-                        d_ptr->interface->setNoTransfersVisibility(true);
-                    } 
-                }
-            }
-            if(d_ptr->isInSwitcher == true) {
-                if((d_ptr->proxyModel->count() == 0) && (completedCount == 0)) {
-                    qDebug() << "App in switcher and transfers count is 0 ";
-                    if(d_ptr->interface != 0) {
-                        d_ptr->interface->unloadUI();
-                    }
-                    QCoreApplication::exit();
-                }
-            }
+        if(d_ptr->shutdownTimer->isActive() == false) {
+            qDebug() << __FUNCTION__ << "Start shutdown process";
+            d_ptr->shutdownTimer->start();
         }
     }
 }
@@ -915,6 +891,11 @@ TUIServicePrivate::TUIServicePrivate() : proxyModel(0),
     historyFilePath.append(QLatin1String("completedlist"));
     historySetting = new QSettings(historyFilePath,QSettings::IniFormat,this);
 
+    shutdownTimer = new QTimer(this);
+    connect(shutdownTimer, SIGNAL(timeout()), this, SLOT(shutdownApplication()));
+    shutdownTimer->setSingleShot(true);
+    shutdownTimer->setInterval(SHUTDOWN_INTERVAL);
+
     //create read thread
 	readThread = new
 		TUIReadHistoryThread(historySetting);
@@ -1022,6 +1003,11 @@ void TUIServicePrivate::registerTransferData(const QString& id,
 
     proxyModel->registerTransfer(id, type, title, serviceName);
 
+    if(shutdownTimer->isActive() == true) {
+        qDebug() << __FUNCTION__ << "Shutdown has been triggered," 
+            << "stop the shutdown process.";
+        shutdownTimer->stop();
+    }
 
     if(clientServiceName.isEmpty() == false) { //might not be from dbus
         //for now autoCleanUp is always enabled
@@ -1185,9 +1171,9 @@ void TUIServicePrivate::threadCompleted() {
 
 //        There might  be some cases where in which registerTransfer call might
 //        happen after sendsummary, this will make tui to close down. So wait for
-//        30000 sec, before updating total transfers count
+//        3000 sec, before updating total transfers count
 
-        QTimer::singleShot(30000, TUIService::instance(), SLOT(sendSummary()));
+        QTimer::singleShot(SHUTDOWN_INTERVAL, TUIService::instance(), SLOT(sendSummary()));
     }
 }
 
@@ -1376,4 +1362,37 @@ void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
             interface->showDetails(index);
         }
     }    
+}
+
+
+void TUIServicePrivate::shutdownApplication() {
+    int completedCount = proxyModel->completedCount();
+    if(isUIShown == false) {
+        //check if there are any unattended transfers which are canceled
+        qDebug() << "Total Data in Model" << proxyModel->count();
+        if((proxyModel->count() == 0) && (completedCount == 0)) {
+            qDebug() << "UI not visible and transfers count is 0 ";
+            if(interface != 0) {
+                interface->unloadUI();
+            }
+            QCoreApplication::exit();
+        }
+    } else {
+        if(interface != 0) {
+            if(isUIShown == true) {
+                if(completedCount == 0) {
+                    interface->setNoTransfersVisibility(true);
+                } 
+            }
+        }
+        if(isInSwitcher == true) {
+            if((proxyModel->count() == 0) && (completedCount == 0)) {
+                qDebug() << "App in switcher and transfers count is 0 ";
+                if(interface != 0) {
+                    interface->unloadUI();
+                }
+                QCoreApplication::exit();
+            }
+        }
+    }
 }

@@ -79,6 +79,8 @@ public:
 
     bool isInSwitcher; //!< variable to track if the application is switcher
 
+    QTimer *shutdownTimer; //!< wait for 3000ms before closing tui
+
 public:
     TUIServicePrivate();
 
@@ -118,6 +120,8 @@ public:
     void readHistory();
 
     void writeHistoryData(const TUIData *data);
+
+    
 Q_SIGNALS:
     /*
         Signals
@@ -181,6 +185,8 @@ public Q_SLOTS:
         \brief custom dialog invocation status handler
     */
     void customDialogCallFinished(QDBusPendingCallWatcher *call);
+
+    void shutdownApplication();
 
 private:
     /*!
