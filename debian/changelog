@@ -1,8 +1,9 @@
-transfer-ui (0.3.18.2) unstable; urgency=low
+transfer-ui (0.3.19.1) unstable; urgency=low
 
   * Fixes: NB#252670 - Failed synchronization indicator shows only in alternative sync attempts
+  * Fixes: NB#253557 - Extra spaces in the file name of downloaded item in the Transfer UI
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 06 May 2011 16:16:06 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 09 May 2011 13:04:43 +0530
 
 transfer-ui (0.3.18.1) unstable; urgency=low
 

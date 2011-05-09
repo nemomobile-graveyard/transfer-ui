@@ -407,10 +407,10 @@ void TUIService::pending(const QString &id, const QString &message) {
 
         if (TransferStatusInactive == data->status) {
             qDebug() << "Transfer is already in pending state";
-            d_ptr->proxyModel->setMessage(id, message);
+            d_ptr->proxyModel->setMessage(id, message.trimmed());
         }
     }
-    d_ptr->proxyModel->pending(id, message);
+    d_ptr->proxyModel->pending(id, message.trimmed());
 
     sendSummary();
 }
@@ -586,7 +586,7 @@ void TUIService::setMessage(const QString &id, const QString &message) {
     const TUIData *data = d_ptr->proxyModel->tuiData(id);
     if (data != 0) {
         if(TransferStatusInactive == data->status) {
-            d_ptr->proxyModel->setMessage(id, message);
+            d_ptr->proxyModel->setMessage(id, message.trimmed());
         } else {
             qDebug() << __FUNCTION__ << "Message can only be set "
                 "for Inactive Transfers";
@@ -597,7 +597,7 @@ void TUIService::setMessage(const QString &id, const QString &message) {
 void TUIService::setName(const QString &id, const QString &name) {
     qDebug() << __FUNCTION__ << id << "Name Set to " << name;
     if(name.isEmpty() == false) {
-        d_ptr->proxyModel->setName(id, name);
+        d_ptr->proxyModel->setName(id, name.trimmed());
     }
 }
 
@@ -1173,7 +1173,8 @@ void TUIServicePrivate::threadCompleted() {
 //        happen after sendsummary, this will make tui to close down. So wait for
 //        3000 sec, before updating total transfers count
 
-        QTimer::singleShot(SHUTDOWN_INTERVAL, TUIService::instance(), SLOT(sendSummary()));
+        QTimer::singleShot(SHUTDOWN_INTERVAL, TUIService::instance(), 
+            SLOT(sendSummary()));
     }
 }
 
