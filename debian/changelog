@@ -1,8 +1,8 @@
 transfer-ui (0.3.19.2) unstable; urgency=low
 
-  * After tagging
+  * Submitted missing fix for bug 253557
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 09 May 2011 10:54:45 +0300
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 09 May 2011 15:06:19 +0530
 
 transfer-ui (0.3.19.1) unstable; urgency=low
 

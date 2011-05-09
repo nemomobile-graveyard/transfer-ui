@@ -693,7 +693,7 @@ void TUIService::setCurrentFileIndex(const QString &id, int fileIndex) {
 
 void TUIService::setTargetName(const QString &id, const QString &targetName) {
     qDebug() << __FUNCTION__ << id << "Set Target Name to " << targetName;
-    d_ptr->proxyModel->setTargetName(id, targetName);
+    d_ptr->proxyModel->setTargetName(id, targetName.trimmed());
 }
 
 void TUIService::setThumbnailForFile(const QString& id, const QString& fileName,
@@ -1001,7 +1001,7 @@ void TUIServicePrivate::registerTransferData(const QString& id,
     const QString& clientServiceName, const QString&
         serviceName) {
 
-    proxyModel->registerTransfer(id, type, title, serviceName);
+    proxyModel->registerTransfer(id, type, title.trimmed(), serviceName);
 
     if(shutdownTimer->isActive() == true) {
         qDebug() << __FUNCTION__ << "Shutdown has been triggered," 
