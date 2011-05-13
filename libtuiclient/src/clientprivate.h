@@ -53,6 +53,12 @@ namespace TransferUI {
 
             bool tuiOpen; //!< tui visibility state
 
+    
+            /*!
+                \brief initialize dbus interface and connect to the signals from
+                tui.
+                \return true if initialization was sucessfull else false
+            */
             bool initDbusInterface();
 
         Q_SIGNALS:
