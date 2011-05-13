@@ -54,13 +54,16 @@ bool Client::init() {
 
 Transfer * Client::registerTransfer (const QString& name, TransferType type,
 	const QString& clientId) {
-	qDebug() << __FUNCTION__ << clientId;
-    if (d_ptr->interface == 0) {
-        qCritical() << "Client not initialized";
-        return 0;
-    }
 
     Transfer * transfer = 0;
+
+    if (d_ptr->interface == 0) {
+        if (d_ptr->initDbusInterface() == false) {
+            qCritical() << "Failed to create dbus interface";
+            return transfer;
+        }
+    }
+
 
     QDBusReply<QString> reply =
         d_ptr->interface->registerTransientTransfer(name, type, clientId);
@@ -166,35 +169,6 @@ ClientPrivate::~ClientPrivate() {
 }
 
 bool ClientPrivate::init () {
-
-    interface = new ComMeegoTransferuiInterface ("com.meego.transferui",
-        "/com/meego/transferui", QDBusConnection::sessionBus(), this);
-
-    if (interface != 0) {
-        QObject::connect(interface, SIGNAL(cancel(QString)),
-            this, SLOT(cancelSlot(QString)));
-        QObject::connect(interface, SIGNAL(start(QString)),
-            this, SLOT(startSlot(QString)));
-        QObject::connect(interface, SIGNAL(pause(QString)),
-            this, SLOT(pauseSlot(QString)));
-
-        QObject::connect(interface, SIGNAL(pause(QString)),
-            this, SLOT(pauseSlot(QString)));
-
-        QObject::connect(interface, SIGNAL(errorRepairRequested(QString)),
-            this, SLOT(errorRepairSlot(QString)));
-
-        QObject::connect(interface, SIGNAL(launched()), this,
-                SLOT(tuiLaunched()));
-
-        QObject::connect(interface,SIGNAL(tuiOpened()),this,SLOT(tuiOpened()));
-
-        QObject::connect(interface,SIGNAL(tuiClosed()),this,SLOT(tuiClosed()));
-
-    } else {
-        qCritical() << "Coundn't open dbus connection";
-        return false;
-    }
 
     return true;
 }
@@ -304,4 +278,40 @@ void ClientPrivate::tuiOpened() {
 void ClientPrivate::tuiClosed() {
     qDebug() << "Enter tuiClosed";
     tuiOpen = false;
+}
+
+bool ClientPrivate::initDbusInterface() {
+    bool retVal = false;
+    interface = new ComMeegoTransferuiInterface ("com.meego.transferui",
+        "/com/meego/transferui", QDBusConnection::sessionBus(), this);
+
+    if (interface != 0) {
+        QObject::connect(interface, SIGNAL(cancel(QString)),
+            this, SLOT(cancelSlot(QString)));
+        QObject::connect(interface, SIGNAL(start(QString)),
+            this, SLOT(startSlot(QString)));
+        QObject::connect(interface, SIGNAL(pause(QString)),
+            this, SLOT(pauseSlot(QString)));
+
+        QObject::connect(interface, SIGNAL(pause(QString)),
+            this, SLOT(pauseSlot(QString)));
+
+        QObject::connect(interface, SIGNAL(errorRepairRequested(QString)),
+            this, SLOT(errorRepairSlot(QString)));
+
+        QObject::connect(interface, SIGNAL(launched()), this,
+                SLOT(tuiLaunched()));
+
+        QObject::connect(interface,SIGNAL(tuiOpened()),this,SLOT(tuiOpened()));
+
+        QObject::connect(interface,SIGNAL(tuiClosed()),this,SLOT(tuiClosed()));
+        
+        retVal = true;
+
+    } else {
+        qCritical() << "Coundn't open dbus connection";
+        retVal = false;
+    }
+
+    return retVal;    
 }

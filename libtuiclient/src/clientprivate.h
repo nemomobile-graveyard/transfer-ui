@@ -53,6 +53,8 @@ namespace TransferUI {
 
             bool tuiOpen; //!< tui visibility state
 
+            bool initDbusInterface();
+
         Q_SIGNALS:
 
             void cancelTransfer (Transfer * transfer);

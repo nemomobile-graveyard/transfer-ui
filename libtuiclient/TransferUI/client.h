@@ -82,8 +82,7 @@ namespace TransferUI {
         virtual ~Client ();
 
         /*!
-          \brief function to establish DBUS connection with TransferUI and
-          connect the signals from TUI to the slots.
+          \brief function to initialize the client library.
           \return true if initialization was success, other wise false
           \n
           \dontinclude tuiexample.cpp
