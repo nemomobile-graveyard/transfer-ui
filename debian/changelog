@@ -1,8 +1,8 @@
 transfer-ui (0.3.19.3) unstable; urgency=low
 
-  * New version after tagging
+  * Fixes: NB#255231 - transfer-ui process causing wakeups in idle mode
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 09 May 2011 15:08:30 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 13 May 2011 14:58:43 +0530
 
 transfer-ui (0.3.19.2) unstable; urgency=low
 

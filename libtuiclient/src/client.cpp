@@ -168,6 +168,13 @@ ClientPrivate::ClientPrivate(QObject * parent) : QObject (parent) , interface(0)
 ClientPrivate::~ClientPrivate() {
 }
 
+/* Note: Init function is empty and return true. The initalization of dbus
+interface will casue tui to start. Client applications using this function will
+start transfer-ui even if it is not needed. Since the entry point is the
+registerTransfer for any communication to happen with transfer-ui, initalization
+of dbus is moved to registerTransfer function.
+
+*/
 bool ClientPrivate::init () {
 
     return true;

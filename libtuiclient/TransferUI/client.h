@@ -82,7 +82,7 @@ namespace TransferUI {
         virtual ~Client ();
 
         /*!
-          \brief function to initialize the client library.
+          \brief function to initialize the client library instance.
           \return true if initialization was success, other wise false
           \n
           \dontinclude tuiexample.cpp
