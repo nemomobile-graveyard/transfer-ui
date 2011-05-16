@@ -56,90 +56,97 @@ int TUIDataModel::rowCount(const QModelIndex &parent) const {
 
 QVariant TUIDataModel::data(const QModelIndex &index, int role) const {
     QVariant retVar;
-    TUIData *data = static_cast<TUIData*>(index.internalPointer());
-    if(data != 0) {
-        
-        switch(role) {
-            case TransferUI::ProgressRole:
-                retVar = qVariantFromValue(data->progressData);
-            break;
-            case TransferUI::SizeRole:
-                retVar = qVariantFromValue(data->bytes);
-            break;
-            case TransferUI::EstimateRole:
-                retVar = qVariantFromValue(data->estimateTime);
-            break;
-            case TransferUI::CurrentFileIndexRole:
-                retVar = qVariantFromValue(data->currentFileIndex);
-            break;
-            case TransferUI::TotalFileCountRole:
-                retVar = qVariantFromValue((int)data->filesCount);
-            break;
-            case TransferUI::StatusRole:
-                retVar = qVariantFromValue((int)data->status);
-            break;
-            case TransferUI::MethodRole:
-                retVar = qVariantFromValue((int)data->method);
-            break;
-            case TransferUI::CanRepairRole:
-                retVar = qVariantFromValue(data->canRepair);
-            break;
-            case TransferUI::CanPauseRole:
-                retVar = qVariantFromValue(data->canPause);
-            break;
-            case TransferUI::CanSendImdltRole: 
-                retVar = qVariantFromValue(data->canSendImdtly);
-            break;
-            case TransferUI::ShowInHistoryRole:
-                retVar = qVariantFromValue(data->showInHistory);
-            break;
-            case TransferUI::NameRole:
-                retVar = qVariantFromValue(data->name);
-            break;
-            case TransferUI::MessageRole:
-                retVar = qVariantFromValue(data->message);
-            break;
-            case TransferUI::ErrorRole:
-                {
-                    QStringList errorDetails;
-                    errorDetails << data->headerMsg << data->detailMsg;
-                    if(data->canRepair == true) {
-                        errorDetails << data->actionName;
-                    }
-                    retVar = qVariantFromValue(errorDetails);
+    if(index.isValid() == true) {
+        TUIData *data = static_cast<TUIData*>(index.internalPointer());
+        if(data != 0) {
+            if(dataList.contains(data) == true) {     
+                switch(role) {
+                    case TransferUI::ProgressRole:
+                        retVar = qVariantFromValue(data->progressData);
+                    break;
+                    case TransferUI::SizeRole:
+                        retVar = qVariantFromValue(data->bytes);
+                    break;
+                    case TransferUI::EstimateRole:
+                        retVar = qVariantFromValue(data->estimateTime);
+                    break;
+                    case TransferUI::CurrentFileIndexRole:
+                        retVar = qVariantFromValue(data->currentFileIndex);
+                    break;
+                    case TransferUI::TotalFileCountRole:
+                        retVar = qVariantFromValue((int)data->filesCount);
+                    break;
+                    case TransferUI::StatusRole:
+                        retVar = qVariantFromValue((int)data->status);
+                    break;
+                    case TransferUI::MethodRole:
+                        retVar = qVariantFromValue((int)data->method);
+                    break;
+                    case TransferUI::CanRepairRole:
+                        retVar = qVariantFromValue(data->canRepair);
+                    break;
+                    case TransferUI::CanPauseRole:
+                        retVar = qVariantFromValue(data->canPause);
+                    break;
+                    case TransferUI::CanSendImdltRole: 
+                        retVar = qVariantFromValue(data->canSendImdtly);
+                    break;
+                    case TransferUI::ShowInHistoryRole:
+                        retVar = qVariantFromValue(data->showInHistory);
+                    break;
+                    case TransferUI::NameRole:
+                        retVar = qVariantFromValue(data->name);
+                    break;
+                    case TransferUI::MessageRole:
+                        retVar = qVariantFromValue(data->message);
+                    break;
+                    case TransferUI::ErrorRole:
+                        {
+                            QStringList errorDetails;
+                            errorDetails << data->headerMsg << data->detailMsg;
+                            if(data->canRepair == true) {
+                                errorDetails << data->actionName;
+                            }
+                            retVar = qVariantFromValue(errorDetails);
+                        }
+                    break;
+                    case TransferUI::ThumbnailRole:
+                        {
+                            QStringList thumbnailDetails;
+                            thumbnailDetails << data->thumbnailFile;
+                            thumbnailDetails << data->thumbnailMimeType;
+                            retVar = qVariantFromValue(thumbnailDetails);
+                        }
+                    break;
+                    case TransferUI::FileIconRole:
+                        retVar = qVariantFromValue(data->fileTypeIcon);
+                    break;
+                    case TransferUI::TargetRole: 
+                        retVar = qVariantFromValue(data->targetName);
+                    break;
+                    case TransferUI::CancelTextRole:
+                        retVar = qVariantFromValue(data->cancelButtonText);
+                    break;
+                    case TransferUI::TransferTitleRole:
+                        retVar = qVariantFromValue(data->transferTitle);
+                    break;
+                    case TransferUI::ImageRole:
+                        retVar = qVariantFromValue(data->thumbnailImagePath);
+                    break;
+                    case TransferUI::StartTimeRole:
+                        retVar = qVariantFromValue(data->startTime);
+                    break;
+                    case TransferUI::CompletedTimeRole:
+                        retVar = qVariantFromValue(data->completedTime);
+                    break;
+                    default:
+                        retVar = qVariantFromValue(data);
                 }
-            break;
-            case TransferUI::ThumbnailRole:
-                {
-                    QStringList thumbnailDetails;
-                    thumbnailDetails << data->thumbnailFile;
-                    thumbnailDetails << data->thumbnailMimeType;
-                    retVar = qVariantFromValue(thumbnailDetails);
-                }
-            break;
-            case TransferUI::FileIconRole:
-                retVar = qVariantFromValue(data->fileTypeIcon);
-            break;
-            case TransferUI::TargetRole: 
-                retVar = qVariantFromValue(data->targetName);
-            break;
-            case TransferUI::CancelTextRole:
-                retVar = qVariantFromValue(data->cancelButtonText);
-            break;
-            case TransferUI::TransferTitleRole:
-                retVar = qVariantFromValue(data->transferTitle);
-            break;
-            case TransferUI::ImageRole:
-                retVar = qVariantFromValue(data->thumbnailImagePath);
-            break;
-            case TransferUI::StartTimeRole:
-                retVar = qVariantFromValue(data->startTime);
-            break;
-            case TransferUI::CompletedTimeRole:
-                retVar = qVariantFromValue(data->completedTime);
-            break;
-            default:
-                retVar = qVariantFromValue(data);
+            } else {
+                qWarning() << Q_FUNC_INFO << "Index not found in the list";
+            }
+        } else {
+            qWarning() << Q_FUNC_INFO << "Internal data is empty";
         }
     }
     return retVar;
@@ -389,97 +396,104 @@ bool TUIDataModel::setItemData ( const QModelIndex & index,
 
 QMap<int, QVariant> TUIDataModel::itemData ( const QModelIndex & index ) const {
     QMap<int, QVariant> varMap;
-    void *internalPointerData = index.internalPointer();
-    
-    TUIData *data = static_cast<TUIData*>(internalPointerData);
-
-    if(data != 0) {
+    if(index.isValid() == true) {
+        void *internalPointerData = index.internalPointer();
         
-        varMap.insert(TransferUI::ProgressRole,
-            qVariantFromValue(data->progressData));
+        TUIData *data = static_cast<TUIData*>(internalPointerData);
 
-        varMap.insert(TransferUI::SizeRole, 
-            qVariantFromValue(data->bytes));
+        if(data != 0) {
+            if(dataList.contains(data) == true) {
+                varMap.insert(TransferUI::ProgressRole,
+                    qVariantFromValue(data->progressData));
 
-        varMap.insert(TransferUI::EstimateRole,
-            qVariantFromValue(data->estimateTime));
+                varMap.insert(TransferUI::SizeRole, 
+                    qVariantFromValue(data->bytes));
 
-        varMap.insert(TransferUI::CurrentFileIndexRole,
-            qVariantFromValue(data->currentFileIndex));
+                varMap.insert(TransferUI::EstimateRole,
+                    qVariantFromValue(data->estimateTime));
 
-        varMap.insert(TransferUI::TotalFileCountRole,
-            qVariantFromValue(data->filesCount));
+                varMap.insert(TransferUI::CurrentFileIndexRole,
+                    qVariantFromValue(data->currentFileIndex));
 
-        varMap.insert(TransferUI::StatusRole,
-            qVariantFromValue((int)data->status));
+                varMap.insert(TransferUI::TotalFileCountRole,
+                    qVariantFromValue(data->filesCount));
 
-        varMap.insert(TransferUI::CanRepairRole,
-            qVariantFromValue(data->canRepair));
+                varMap.insert(TransferUI::StatusRole,
+                    qVariantFromValue((int)data->status));
 
-        varMap.insert(TransferUI::CanPauseRole,
-            qVariantFromValue(data->canPause));
+                varMap.insert(TransferUI::CanRepairRole,
+                    qVariantFromValue(data->canRepair));
 
-        varMap.insert(TransferUI::CanSendImdltRole,
-            qVariantFromValue(data->canSendImdtly));
+                varMap.insert(TransferUI::CanPauseRole,
+                    qVariantFromValue(data->canPause));
 
-        varMap.insert(TransferUI::ShowInHistoryRole,
-            qVariantFromValue(data->showInHistory));
+                varMap.insert(TransferUI::CanSendImdltRole,
+                    qVariantFromValue(data->canSendImdtly));
 
-        varMap.insert(TransferUI::NameRole,
-            qVariantFromValue(data->name));
+                varMap.insert(TransferUI::ShowInHistoryRole,
+                    qVariantFromValue(data->showInHistory));
 
-        if(data->message.isEmpty() == false) {
-            varMap.insert(TransferUI::MessageRole,
-                qVariantFromValue(data->message));
-        }
+                varMap.insert(TransferUI::NameRole,
+                    qVariantFromValue(data->name));
 
-        if(data->targetName.isEmpty() == false) {
-            varMap.insert(TransferUI::TargetRole,
-                qVariantFromValue(data->targetName));
-        }
+                if(data->message.isEmpty() == false) {
+                    varMap.insert(TransferUI::MessageRole,
+                        qVariantFromValue(data->message));
+                }
 
-        if(data->cancelButtonText.isEmpty() == false) {
-            varMap.insert(TransferUI::CancelTextRole,
-                qVariantFromValue(data->cancelButtonText));
-        }
-    
-        if(data->transferTitle.isEmpty() == false) {
-            varMap.insert(TransferUI::TransferTitleRole,
-                qVariantFromValue(data->transferTitle));
-        }
-        
-        if(data->thumbnailImagePath.isEmpty() == false) {
-            varMap.insert(TransferUI::ImageRole, 
-                qVariantFromValue(data->thumbnailImagePath));
-        } else if(data->thumbnailMimeType.isEmpty() == false) {
-            QStringList thumbnailDetails;
-            thumbnailDetails << data->thumbnailMimeType << data->thumbnailFile;
-            varMap.insert(TransferUI::ThumbnailRole, 
-                qVariantFromValue(thumbnailDetails));
-        } else {
-            varMap.insert(TransferUI::FileIconRole,
-                qVariantFromValue(data->fileTypeIcon));
-        }
-        if(TransferUI::TransferStatusError == data->status) {
-            QStringList errorDetails;
-            errorDetails << data->headerMsg << data->detailMsg;
-            if(data->canRepair == true) {
-                errorDetails << data->actionName;
+                if(data->targetName.isEmpty() == false) {
+                    varMap.insert(TransferUI::TargetRole,
+                        qVariantFromValue(data->targetName));
+                }
+
+                if(data->cancelButtonText.isEmpty() == false) {
+                    varMap.insert(TransferUI::CancelTextRole,
+                        qVariantFromValue(data->cancelButtonText));
+                }
+            
+                if(data->transferTitle.isEmpty() == false) {
+                    varMap.insert(TransferUI::TransferTitleRole,
+                        qVariantFromValue(data->transferTitle));
+                }
+                
+                if(data->thumbnailImagePath.isEmpty() == false) {
+                    varMap.insert(TransferUI::ImageRole, 
+                        qVariantFromValue(data->thumbnailImagePath));
+                } else if(data->thumbnailMimeType.isEmpty() == false) {
+                    QStringList thumbnailDetails;
+                    thumbnailDetails << data->thumbnailMimeType << data->thumbnailFile;
+                    varMap.insert(TransferUI::ThumbnailRole, 
+                        qVariantFromValue(thumbnailDetails));
+                } else {
+                    varMap.insert(TransferUI::FileIconRole,
+                        qVariantFromValue(data->fileTypeIcon));
+                }
+                if(TransferUI::TransferStatusError == data->status) {
+                    QStringList errorDetails;
+                    errorDetails << data->headerMsg << data->detailMsg;
+                    if(data->canRepair == true) {
+                        errorDetails << data->actionName;
+                    }
+                    varMap.insert(TransferUI::ErrorRole ,
+                        qVariantFromValue(errorDetails));
+                }
+
+                varMap.insert(TransferUI::StartTimeRole,
+                    qVariantFromValue(data->startTime));
+
+                varMap.insert(TransferUI::CompletedTimeRole,
+                    qVariantFromValue(data->completedTime));
+
+                varMap.insert(TransferUI::MethodRole,
+                    qVariantFromValue((int)data->method));
+                
+                varMap.insert(Qt::EditRole, qVariantFromValue(data));
+            } else {
+                qWarning() << Q_FUNC_INFO << "Index is not found in the list";
             }
-            varMap.insert(TransferUI::ErrorRole ,
-                qVariantFromValue(errorDetails));
+        } else {
+            qWarning() << Q_FUNC_INFO << "Internal Data is empty";
         }
-
-        varMap.insert(TransferUI::StartTimeRole,
-            qVariantFromValue(data->startTime));
-
-        varMap.insert(TransferUI::CompletedTimeRole,
-            qVariantFromValue(data->completedTime));
-
-        varMap.insert(TransferUI::MethodRole,
-            qVariantFromValue((int)data->method));
-        
-        varMap.insert(Qt::EditRole, qVariantFromValue(data));
     }
     return varMap;
 }
