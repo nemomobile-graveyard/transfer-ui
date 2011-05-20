@@ -1,8 +1,8 @@
 transfer-ui (0.3.20.2) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#257951 - Copyright text in Transfer UI API documentation has outdated year
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 17 May 2011 10:40:46 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 20 May 2011 15:11:07 +0530
 
 transfer-ui (0.3.20.1) unstable; urgency=low
 

@@ -2,7 +2,7 @@
 /*
  * This file is part of Handset UX Transfer user interface
  *
- * Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
+ * Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  * Contact: Jukka Tiihonen <jukka.tiihonen@nokia.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,7 +27,7 @@
   \file transferuiimplementationinterface.h
   \brief Transfer UI implementation inteface
   \author  Jukka Tiihonen <jukka.t.tiihonen@nokia.com>
-  \copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
+  \copyright (c) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
   \license GNU Lesser General Public License, version 2.1
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to 
@@ -60,7 +60,7 @@
     \brief Interface to manage UI. This class provides methods and signal to
     manage UI.
     \author  Jukka Tiihonen <jukka.t.tiihonen@nokia.com>
-    \copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
+    \copyright (c) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
     \license GNU Lesser General Public License, version 2.1
 */
 

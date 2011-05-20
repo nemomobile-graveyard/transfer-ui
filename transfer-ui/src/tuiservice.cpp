@@ -2,7 +2,7 @@
 /*
  * This file is part of Handset UX Transfer user interface
  *
- * Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
+ * Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  * Contact: Jukka Tiihonen <jukka.tiihonen@nokia.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -67,7 +67,9 @@ using namespace TransferUI;
 using namespace MeeGo;
 TUIService *TUIService::selfInstance = 0;
 
-static const int SHUTDOWN_INTERVAL = 1500;
+static const QString 
+    TransferUISettingFile = "/usr/share/transfer-ui/settings/tuisettings";
+
 
 #define CHECKDONESTATUS(status) \
 if(TransferStatusDone == status) { \
@@ -222,6 +224,19 @@ bool TUIService::init() {
     connect(qmState, 
         SIGNAL(systemStateChanged(	MeeGo::QmSystemState::StateIndication)),
         SLOT(systemStateChanged(MeeGo::QmSystemState::StateIndication)));
+
+    QSettings tuiSettings(TransferUISettingFile, QSettings::IniFormat);
+    tuiSettings.sync();
+    if(tuiSettings.contains("ShutdownTimerInterval")) {
+        d_ptr->shutdownTimerInterval = 
+            tuiSettings.value("ShutdownTimerInterval").toInt();
+        qDebug() << __FUNCTION__ << "Shutdown Timer Interval has a new value" <<
+            d_ptr->shutdownTimerInterval;
+    } else {
+        d_ptr->shutdownTimerInterval = 100;
+    }
+    
+    d_ptr->shutdownTimer->setInterval(d_ptr->shutdownTimerInterval);
 
     Q_EMIT(launched());
     return true;
@@ -891,10 +906,12 @@ TUIServicePrivate::TUIServicePrivate() : proxyModel(0),
     historyFilePath.append(QLatin1String("completedlist"));
     historySetting = new QSettings(historyFilePath,QSettings::IniFormat,this);
 
+    shutdownTimerInterval = 100;
+
     shutdownTimer = new QTimer(this);
     connect(shutdownTimer, SIGNAL(timeout()), this, SLOT(shutdownApplication()));
     shutdownTimer->setSingleShot(true);
-    shutdownTimer->setInterval(SHUTDOWN_INTERVAL);
+    shutdownTimer->setInterval(shutdownTimerInterval);
 
     //create read thread
 	readThread = new
@@ -1169,11 +1186,12 @@ void TUIServicePrivate::threadCompleted() {
         TUIService::instance()->sendSummary();
     } else {
 
-//        There might  be some cases where in which registerTransfer call might
-//        happen after sendsummary, this will make tui to close down. So wait for
-//        3000 sec, before updating total transfers count
+//There might be some cases where in which registerTransfer call might happen
+//after sendsummary, this will make tui to close down. So wait for 100 sec (read
+//it from settings file, by default is 100 sec), before updating total transfers
+//count
 
-        QTimer::singleShot(SHUTDOWN_INTERVAL, TUIService::instance(), 
+        QTimer::singleShot(shutdownTimerInterval, TUIService::instance(), 
             SLOT(sendSummary()));
     }
 }

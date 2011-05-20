@@ -41,8 +41,12 @@ prf.files           = transfer-ui.prf
 tui_service_entry.path = /usr/share/dbus-1/services/
 tui_service_entry.files = com.meego.transferui.service
 
+tui_settings_file.path = /usr/share/transfer-ui/settings/
+tui_settings_file.files = tuisettings
+
 INSTALLS           +=   target      \
                         prf         \
                         pubheaders  \
-                        tui_service_entry
+                        tui_service_entry   \
+                        tui_settings_file
 

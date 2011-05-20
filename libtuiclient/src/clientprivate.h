@@ -1,7 +1,7 @@
 
 /*
  * transfer-ui -- Handset UX Transfer user interface
- * Copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ * Copyright (c) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
  * Contact: Jukka Tiihonen <jukka.tiihonen@nokia.com>
  *
  * This program is free software; you can redistribute it and/or modify it

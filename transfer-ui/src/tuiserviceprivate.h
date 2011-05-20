@@ -2,7 +2,7 @@
 /*
  * This file is part of Handset UX Transfer user interface
  *
- * Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
+ * Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  * Contact: Jukka Tiihonen <jukka.tiihonen@nokia.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -80,6 +80,8 @@ public:
     bool isInSwitcher; //!< variable to track if the application is switcher
 
     QTimer *shutdownTimer; //!< wait for 3000ms before closing tui
+
+    int shutdownTimerInterval;
 
 public:
     TUIServicePrivate();
