@@ -1275,17 +1275,18 @@ void TUIServicePrivate::writeHistoryData(const TUIData *data) {
     if(data->fileTypeIcon.isEmpty() == false) {
         historySetting->setValue("iconId", data->fileTypeIcon);
     }
-    if(data->thumbnailMimeType.isEmpty() == false) {
+    
+    if((data->thumbnailMimeType.isEmpty() == false) && 
+        (data->thumbnailFile.isEmpty() == false)) {
         historySetting->setValue("thumbnailfile", data->thumbnailFile );
         historySetting->setValue("mimetype", data->thumbnailMimeType);
     } else {
-		if (data->fileTypeIcon.isEmpty() == true) {
-            if(data->thumbnailFile.isEmpty() == false) {
-    			historySetting->setValue("imagePath", data->thumbnailFile);
-            }
-		}
+        if(data->thumbnailImagePath.isEmpty() == false) {
+			historySetting->setValue("imagePath", data->thumbnailImagePath);
+        }
     }
-    historySetting->setValue("resulturi", QString(QUrl::toPercentEncoding(data->resultUri.toUtf8())));
+    historySetting->setValue("resulturi", 
+        QString(QUrl::toPercentEncoding(data->resultUri.toUtf8())));
 }
 
 void TUIServicePrivate::writeHistoryDB(const QString& id, const TUIData *data) {

@@ -502,6 +502,7 @@ void TUIDataModelProxy::addTransfer(const QString& id, QSharedPointer<TUIData> d
         tuiData->method = data->method;
         tuiData->thumbnailFile = data->thumbnailFile;
         tuiData->thumbnailMimeType = data->thumbnailMimeType;
+        tuiData->thumbnailImagePath = data->thumbnailImagePath;
         tuiData->completedTime = data->completedTime;
         tuiData->fileTypeIcon = data->fileTypeIcon;
         tuiData->resultUri = data->resultUri;
