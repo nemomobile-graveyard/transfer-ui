@@ -1,3 +1,9 @@
+transfer-ui (0.3.21.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 24 May 2011 15:01:26 +0300
+
 transfer-ui (0.3.21.1) unstable; urgency=low
 
   * Updated Unit test cases
