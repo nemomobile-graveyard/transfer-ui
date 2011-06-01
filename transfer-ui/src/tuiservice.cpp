@@ -538,8 +538,10 @@ void TUIService::sendSummary() {
     qDebug() << __FUNCTION__ << "Transfer UI State" << tuiState;
 
     //if no transfers are there close transfer-ui
-    int totalTransfer = activeCount + inactiveCount 
-        + errorCount + completedCount;
+    int totalActiveTransfers = activeCount + inactiveCount 
+        + errorCount;
+
+    int totalTransfer = totalActiveTransfers + completedCount;
     qDebug() << "Total Transfers" << totalTransfer << "Is UI Shown " 
         << d_ptr->isUIShown;
 
@@ -547,8 +549,11 @@ void TUIService::sendSummary() {
         d_ptr->interface->setHistoryVisibility(true);
     }
 
-    if(totalTransfer==0) {
+    if(totalActiveTransfers == 0) {
         Q_EMIT(stateChanged("idle")); //fail safe
+    }
+
+    if(totalTransfer==0) {
         if(d_ptr->shutdownTimer->isActive() == false) {
             qDebug() << __FUNCTION__ << "Start shutdown process";
             d_ptr->shutdownTimer->start();
