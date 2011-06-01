@@ -1,8 +1,8 @@
 transfer-ui (0.3.21.2) unstable; urgency=low
 
-  * Fix to Display Completed for transfers which are not tracked in completed list
+  * Fixes: NB#260543 - Even when display is off, transfer-ui starts in the background when mails are synced
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 01 Jun 2011 13:22:34 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 01 Jun 2011 15:04:27 +0530
 
 transfer-ui (0.3.21.1) unstable; urgency=low
 

@@ -556,6 +556,9 @@ void TUIService::sendSummary() {
     if(totalTransfer==0) {
         if(d_ptr->shutdownTimer->isActive() == false) {
             qDebug() << __FUNCTION__ << "Start shutdown process";
+            if(d_ptr->interface != 0) {
+                d_ptr->interface->unloadUI();
+            }
             d_ptr->shutdownTimer->start();
         }
     }
@@ -1398,9 +1401,6 @@ void TUIServicePrivate::shutdownApplication() {
         qDebug() << "Total Data in Model" << proxyModel->count();
         if((proxyModel->count() == 0) && (completedCount == 0)) {
             qDebug() << "UI not visible and transfers count is 0 ";
-            if(interface != 0) {
-                interface->unloadUI();
-            }
             QCoreApplication::exit();
         }
     } else {
