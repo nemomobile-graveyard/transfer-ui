@@ -1,3 +1,9 @@
+transfer-ui (0.3.21.3) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 01 Jun 2011 12:50:08 +0300
+
 transfer-ui (0.3.21.2) unstable; urgency=low
 
   * Fixes: NB#260543 - Even when display is off, transfer-ui starts in the background when mails are synced
