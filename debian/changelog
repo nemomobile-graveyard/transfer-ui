@@ -1,8 +1,8 @@
 transfer-ui (0.3.21.2) unstable; urgency=low
 
-  * After tagging
+  * Fix to Display Completed for transfers which are not tracked in completed list
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 24 May 2011 15:01:26 +0300
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 01 Jun 2011 13:22:34 +0530
 
 transfer-ui (0.3.21.1) unstable; urgency=low
 

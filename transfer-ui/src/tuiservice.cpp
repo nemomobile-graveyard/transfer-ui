@@ -385,8 +385,8 @@ void TUIService::markCompleted(const QString& id, bool showInHistory, const QStr
             d_ptr->displayInfoBanner(TransferAlreadyCompleted);
         }
 
+        d_ptr->proxyModel->done(id,resultUri);
 	    if (showInHistory == true) {
-            d_ptr->proxyModel->done(id,resultUri);
 		    d_ptr->writeToHistory(id, data, showInHistory, replaceId);
             qDebug() << __FUNCTION__ << "Completed Date" << data->completedTime; 
 	    } else {
@@ -538,7 +538,8 @@ void TUIService::sendSummary() {
     qDebug() << __FUNCTION__ << "Transfer UI State" << tuiState;
 
     //if no transfers are there close transfer-ui
-    int totalTransfer = activeCount + inactiveCount + errorCount;
+    int totalTransfer = activeCount + inactiveCount 
+        + errorCount + completedCount;
     qDebug() << "Total Transfers" << totalTransfer << "Is UI Shown " 
         << d_ptr->isUIShown;
 
