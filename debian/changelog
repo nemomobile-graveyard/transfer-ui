@@ -1,8 +1,8 @@
 transfer-ui (0.3.22.1) unstable; urgency=low
 
-  * After tagging
+  * Fixed No Transfers visibility issue
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 01 Jun 2011 12:50:08 +0300
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 02 Jun 2011 12:15:10 +0530
 
 transfer-ui (0.3.21.2) unstable; urgency=low
 

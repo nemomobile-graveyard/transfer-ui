@@ -555,11 +555,34 @@ void TUIService::sendSummary() {
 
     if(totalTransfer==0) {
         if(d_ptr->shutdownTimer->isActive() == false) {
-            qDebug() << __FUNCTION__ << "Start shutdown process";
-            if(d_ptr->interface != 0) {
-                d_ptr->interface->unloadUI();
+            qDebug() << __FUNCTION__ << "Total Transfers is Zero";            
+            //case UI shown
+            if(d_ptr->isUIShown == true) {
+                //if the ui is in switcher -- start shutdown process
+                if(d_ptr->isInSwitcher == true) {
+                    // unload the ui and start shutdown
+                    qDebug() << __FUNCTION__ 
+                        << "UI is in switcher, unload UI and start shutdown";
+
+                    if(d_ptr->interface != 0) {
+                        d_ptr->interface->unloadUI();
+                    }
+                    d_ptr->shutdownTimer->start();
+                } else {
+                    qDebug() << __FUNCTION__ << "UI is in foreground " <<
+                        "Display No transfers Text";
+                    // UI is in foreground -- show no transfers
+                    if(d_ptr->interface != 0) {
+                        d_ptr->interface->setNoTransfersVisibility(true);
+                    }
+                }
+            } else { //case UI not shown
+                qDebug() << __FUNCTION__ << "UI is not shown" <<
+                    "Start shutdown" ;
+                d_ptr->shutdownTimer->start();
             }
-            d_ptr->shutdownTimer->start();
+            
+            
         }
     }
 }
