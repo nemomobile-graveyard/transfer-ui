@@ -263,7 +263,7 @@ namespace TransferUI {
         /*!
           \brief set the transfer type string. This string will be displayed in
           title of transfer details dialog in transfer-ui. 
-          e.g. for bluethooth, if the transfer is from device , then the title
+          e.g. for bluetooth, if the transfer is from device , then the title
           can be "Send" , if the transfer is to device, then the title can be
           "Receive".
           \param title localized title which will be displayed in the transfer
@@ -285,7 +285,7 @@ namespace TransferUI {
           queued. After recieving commit() call, these set functions will be
           forwarded to transfer-ui. \n These are the functions which are
           commitable \n
-              <table border="1">
+              <table>
                   <tr>
                         <td> <b> Commitable functions </b> </td>
                   </tr>
@@ -328,7 +328,7 @@ namespace TransferUI {
             a commitable functions. </b> \n
             <b> <i> Note on auto commit </i> </b> \n
             When the state change functions \n
-            <table border="1">
+            <table>
                 <tr>
                     <td> <b> Auto Commit functions </b> </td>
                 </tr>
@@ -471,18 +471,18 @@ namespace TransferUI {
           \param resultUri uri of the result file. If provided, transfer-ui
           launches the application associated with the given uri. If the Uri is
           not valid, default dialog is displayed when the user taps on the
-          transfers. 
-          resultUri can be of type 
-            i) tracker object uri
-                Uri represents a resource with nie:url and nie:mimeType
+          transfers.\n
+          resultUri can be of type \n
+            i) <b> Tracker object uri </b>\n
+                   Uri represents a resource with nie:url and nie:mimeType
                 properties. If there is a default action provided for the given
-                mimeType, default action will be triggered.
-            ii) file uri object
-                Default action for the given file will be triggered
-            iii) uri with some scheme
-                Default action for the given scheme will be triggered
-            iv) relative file path
-                Default action for the given file will be triggered.
+                mimeType, default action will be triggered. \n
+            ii) <b> File uri object </b>\n
+                   Default action for the given file will be triggered \n
+            iii)<b> Uri with some scheme </b>\n 
+                   Default action for the given scheme will be triggered \n
+            iv) <b> Relative file path </b>\n 
+                   Default action for the given file will be triggered.
 		  \return true if request was sent successfully
 		*/
 		bool markCompleted(bool showInHistory=false, 

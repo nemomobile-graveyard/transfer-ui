@@ -1,15 +1,21 @@
-interface: Tranfer UI Qt Client API
+interface: Transfer UI Qt Client API
 type: library 
 scope: Nokia MeeGo
 state: stable
 libs-pkg: transfer-ui
 dev-pkg: transfer-ui-dev
 doc: transfer-ui-doc
+doc-type: doxygen
+doxygen-conf: doxygen.cfg
 
-interface: Tranfer UI DBUS API
+
+interface: Transfer UI DBUS API
 type: dbus
 scope: Platform
 state: stable
 libs-pkg: transfer-ui
 dev-pkg: transfer-ui-dev
 doc: transfer-ui-doc
+doc-type: doxygen
+doxygen-conf: doxygen.cfg
+
