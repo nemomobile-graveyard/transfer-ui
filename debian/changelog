@@ -2,7 +2,7 @@ transfer-ui (0.3.23.1) unstable; urgency=low
 
   * Fixes: NB#261841 - transfer-ui doxygen config in debian/api missing + table style improvement
 
- -- Ravi Kumar S <ravi@ravi-laptop>  Mon, 06 Jun 2011 16:15:15 +0530
+ -- Ravi Kumar S <ravi@ravi-laptop>  Mon, 06 Jun 2011 16:16:34 +0530
 
 transfer-ui (0.3.22.1) unstable; urgency=low
 
