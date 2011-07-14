@@ -57,35 +57,35 @@ namespace TransferUI {
 
     /*!
         \enum  TransferType
-        \brief This is an enumeration for the type of transfer
+        \brief This is an enumeration for the type of transfer.
     */
     enum TransferType {
-        TransferTypeUpload, //!< Transfer is upload
-        TransferTypeDownload, //!< Transfer is download
-        TransferTypeSync //!< Transfer is sync
+        TransferTypeUpload, //!< Transfer is upload.
+        TransferTypeDownload, //!< Transfer is download.
+        TransferTypeSync //!< Transfer is sync.
     };
 
     /*!
         \enum  TransferStatus
-        \brief This is an enumeration for the status of transfers
+        \brief This is an enumeration for the status of transfers.
     */
     enum TransferStatus {
-        TransferStatusActive, //!< The transfer is active
-        //!< The transfer is not active (paused or not started yet)
+        TransferStatusActive, //!< The transfer is active.
+        //!< The transfer is not active (paused or not started yet).
         TransferStatusInactive,
 
-        TransferStatusDone, //!< The transfer has been completed
-        TransferStatusPaused, //!< The transfer is paused
-        TransferStatusResume, //!< The transfer is Resumed
-        //! The transfer is cancelled by the user, yet to get ack from the client
+        TransferStatusDone, //!< The transfer has been completed.
+        TransferStatusPaused, //!< The transfer is paused.
+        TransferStatusResume, //!< The transfer is resumed.
+        //! The transfer is cancelled by the user, yet to get back from the client.
         TransferStatusCancel,
-        TransferStatusCanceled, //!< Transfer is actually canceled
+        TransferStatusCanceled, //!< Transfer is actually canceled.
         TransferStatusError //!< Error State
     };
 
     /*!
         \enum  TransferAtributes
-        \brief This is an enumeration for the attribute changes of transfers
+        \brief This is an enumeration for the attribute changes of transfers.
     */
     enum TransferAtributes {
         Init, //!< Init all attributes
@@ -94,106 +94,106 @@ namespace TransferUI {
         Progress, //!< Transfer progress
         Size, //!< Transfer size
         Thumbnail, //!< Transfer thumbnail
-        Icon, //!< Transfer Icon
-        CanPause, //!< Can Pause
-        SendNow, //!< Can Send Now
+        Icon, //!< Transfer icon
+        CanPause, //!< transfer can be paused
+        SendNow, //!< Can send now
         Estimate, //!< Estimate
-        TotalCount, //!< Total Files count in transfer
+        TotalCount, //!< Total files count in transfer
         CurrentFile, //!< Current file index
-        Message, //!< Transfer Message
+        Message, //!< Transfer message
         Type, //!< Transfer type
         Target, //!< Transfer target
-        CancelText, //!< Transfer Cancel text
+        CancelText, //!< Transfer cancel text
         TransferTitle, //!< Transfer title
-        TransferImage, //!< Transfer Image
-        NewTransferAdded, //! < A new Tranfer is added
+        TransferImage, //!< Transfer image
+        NewTransferAdded, //! < A new transfer is added
         TotalAttribute
     };
 
     /*!
         \enum  TransferStateChanges
-        \brief This is an enumeration for the state changes of transfers
+        \brief This is an enumeration for the state changes of transfers.
     */
     enum TransferStateChanges {
         // State Changes
         Active = TotalAttribute + 1, //!< Transfer active state
         Inactive, //!< Transfer inactive state
-        Paused, //!< Transfer Paused state
+        Paused, //!< Transfer paused state
         Resumed, //!< Transfer resume state
-        Error, //!< Transfer Error state
-        Cancel, //!< Transfer Cancel state
-        Done, //!< Transfer Done
-        Canceled, //!< Transfer canceled but not ackld from the client
-        CleanUp, //!< Client Crashed  clean up the transfer
+        Error, //!< Transfer error state
+        Cancel, //!< Transfer cancel state
+        Done, //!< Transfer done state
+        Canceled, //!< Transfer canceled but not acknowledged from the client
+        CleanUp, //!< Client crashed clean-up the transfer
         TotalStateChanges
     };
 
     /*!
         \enum BannerEvents
-        \brief enumeration to represent what type of events to display in the
+        \brief This is an enumeration to represent what type of events to display in the
         banner.
     */
     enum BannerEvent {
-        ParitalDoneTransfer, //!< Paritally Completed Transfers
+        ParitalDoneTransfer, //!< Paritally completed transfers
         TransferAlreadyCompleted, //!< Transfer completed
-        ClientEvent, //!< Generic event for which clients provides the message
+        ClientEvent, //!< Generic event for which clients provide the message
         TotalBannerEvent
     };
 
     /*!
         \enum TransferDataRole
-        \brief enumeration to represent the data roles in the tui data model.
-        This Roles will be used to get /set data from / to the model.
+        \brief This is an enumeration to represent the data roles in the tui data model.
+        This role is used to get or set data from/to the model.
     */
     enum TransferDataRole {
-        //! progress data of the transfer, progress data is of type double
+        //! Progress data of the transfer, the variable type is double.
         ProgressRole = Qt::UserRole + 1, 
-        //! size of the transfer, size is of type qlonglong
+        //! Size of the transfer, the variable type is qlonglong.
         SizeRole,
-        //! estimate of the transfer, estimate is of type int
+        //! Estimates of the transfer, the variable type is int.
         EstimateRole,
-        //! current file index of the transfer, file index is of type int
+        //! Current file index of the transfer, the variable type is int.
         CurrentFileIndexRole,
-        //! total files in the transfer, total files is of type int
+        //! Total files in the transfer, the variable type is int.
         TotalFileCountRole,
-        //! current status of the transfer, status is of type int
+        //! Current status of the transfer, the variable type is int.
         StatusRole,
-        //! check if the error transfer is repariable, this is of type bool
+        //! Checks if the error transfer is repariable, the variable is bool.
         CanRepairRole,
-        //! check if transfer can pause, this is of type bool
+        //! Checks if transfer can pause, the variable type is bool.
         CanPauseRole,
-        //! check if transfer can be sent immdiately, this is of type bool
+        //! Checks if transfer can be sent immdiately, the variable type is bool.
         CanSendImdltRole,
-        //! should transfer be shown in the history, this is of type bool
+        //! Should transfer be shown in the history or not, the variable type is bool.
         ShowInHistoryRole,
-        //! name of the transfer, name is of type QString
+        //! Name of the transfer, the variable type is QString.
         NameRole,
-        //! message of the transfer, if any, message is of type QString
+        //! Message of the transfer, if any, the variable type is QString.
         MessageRole,
-        //! transfer error status. error is of QStringList, first String in the
-        //list represents Error Header, second represents Error Detailsa and the
-        //last represents action name ,if the error is repairable.
+        //! Transfer error status. The error is of QStringList, first String in the
+        //list represents Error Header, second represents Error Details and the
+        //last represents action name, if the error is repairable.
         ErrorRole,
-        //! thumbnail information of the transfer. thumbnail is of QStringList,
+        //! Thumbnail information of the transfer. Thumbnail is of QStringList,
         //first provides the thumbnail file uri and the next provides the
         //mimetype.
         ThumbnailRole,
-        //! file icon information of the transfer, file icon is of type QString
+        //! File icon information of the transfer, the variable type is QString.
         FileIconRole,
-        //! target of the transfer, target is of type QString
+        //! Target of the transfer, the variable type is QString.
         TargetRole,
-        //! customized cancel text, if provided. cancel text is of type QString
+        //! Customized cancel text, if provided. The variable type is QString.
         CancelTextRole,
-        //! customized transfer title, if provided. transfer title is of type
-        //QString
+        //! Customized transfer title, if provided. The variable type is 
+        //QString.
         TransferTitleRole,
-        //! image for the give transfer, image is of type QImage pointer
+        //! Image for the give transfer, the variable type is QImage pointer.
         ImageRole,
-        //! start time of the transfer, time is of type QDateTime
+        //! Start time of the transfer, the variable type is QDateTime.
         StartTimeRole,
-        //! completed time of the transfer, time is of type QDateTime
+        //! Completed time of the transfer, the variable type is QDateTime.
         CompletedTimeRole,
-        //! transfer method, method is of type int
+        //! Transfer method, the variable type is int.
         MethodRole,
         TotalDataRoles
     };
