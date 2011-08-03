@@ -1,14 +1,20 @@
+transfer-ui (1.1.31.2) unstable; urgency=low
+
+  * New version after tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 03 Aug 2011 14:20:33 +0530
+
 transfer-ui (1.1.31.1) unstable; urgency=low
 
   * Bumping the version
 
- -- Ravi Kumar S <ravi@ravi-laptop>  Wed, 03 Aug 2011 14:17:27 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 03 Aug 2011 14:17:27 +0530
 
 transfer-ui (0.3.23.1) unstable; urgency=low
 
   * Fixes: NB#261841 - transfer-ui doxygen config in debian/api missing + table style improvement
 
- -- Ravi Kumar S <ravi@ravi-laptop>  Mon, 06 Jun 2011 16:16:34 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 06 Jun 2011 16:16:34 +0530
 
 transfer-ui (0.3.22.1) unstable; urgency=low
 
