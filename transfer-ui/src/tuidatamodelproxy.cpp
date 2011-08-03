@@ -507,6 +507,7 @@ void TUIDataModelProxy::addTransfer(const QString& id, QSharedPointer<TUIData> d
         tuiData->fileTypeIcon = data->fileTypeIcon;
         tuiData->resultUri = data->resultUri;
         tuiData->startTime = data->startTime;
+        tuiData->transferTitle = data->transferTitle;
         QVariant variantData = qVariantFromValue(tuiData);
         QMap<int,QVariant> rolesVariant;
         rolesVariant.insert(Qt::EditRole, variantData);

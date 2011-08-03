@@ -98,19 +98,20 @@ void TUIReadHistoryThread::readNonReplaceHistory() {
 void TUIReadHistoryThread::readHistoryFromDB(int arrayIndex) {
     historySettings->setArrayIndex(arrayIndex);
 
-	TUIData *data = new TUIData;
-	data->name = historySettings->value("name").toString();
-	data->bytes = historySettings->value("size").toLongLong();
-	data->targetName = historySettings->value("target").toString();
-	data->method = (TransferType)historySettings->value("type").toInt();
-	data->filesCount = historySettings->value("count").toInt();
-	data->completedTime = historySettings->value("time").toDateTime();
+    TUIData *data = new TUIData;
+    data->name = historySettings->value("name").toString();
+    data->bytes = historySettings->value("size").toLongLong();
+    data->targetName = historySettings->value("target").toString();
+    data->method = (TransferType)historySettings->value("type").toInt();
+    data->filesCount = historySettings->value("count").toInt();
+    data->completedTime = historySettings->value("time").toDateTime();
     data->startTime = historySettings->value("starttime").toDateTime();
-	data->thumbnailFile = historySettings->value("thumbnailfile").toString();
-	data->thumbnailMimeType = historySettings->value("mimetype").toString();
-	data->fileTypeIcon = historySettings->value("iconId").toString();
+    data->thumbnailFile = historySettings->value("thumbnailfile").toString();
+    data->thumbnailMimeType = historySettings->value("mimetype").toString();
+    data->fileTypeIcon = historySettings->value("iconId").toString();
     data->resultUri = historySettings->value("resulturi").toString();
-	data->thumbnailImagePath = historySettings->value("imagePath").toString();
+    data->thumbnailImagePath = historySettings->value("imagePath").toString();
+    data->transferTitle = historySettings->value("titlestring").toString();
     QString id = historySettings->value("transferid").toString();
     Q_EMIT(addCompletedData(id, QSharedPointer<TUIData>(data)));
 }

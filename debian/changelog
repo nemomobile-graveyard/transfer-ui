@@ -1,8 +1,8 @@
-transfer-ui (0.3.23.2) unstable; urgency=low
+transfer-ui (1.1.31.1) unstable; urgency=low
 
-  * After tagging
+  * Bumping the version
 
- -- Ravi Kumar S <ravi@ravi-laptop>  Mon, 06 Jun 2011 16:18:11 +0530
+ -- Ravi Kumar S <ravi@ravi-laptop>  Wed, 03 Aug 2011 14:17:27 +0530
 
 transfer-ui (0.3.23.1) unstable; urgency=low
 

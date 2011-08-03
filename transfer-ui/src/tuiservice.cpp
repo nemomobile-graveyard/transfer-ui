@@ -1319,6 +1319,10 @@ void TUIServicePrivate::writeHistoryData(const TUIData *data) {
     }
     historySetting->setValue("resulturi", 
         QString(QUrl::toPercentEncoding(data->resultUri.toUtf8())));
+
+    if(data->transferTitle.isEmpty() == false) {
+        historySetting->setValue("titlestring", data->transferTitle);
+    }
 }
 
 void TUIServicePrivate::writeHistoryDB(const QString& id, const TUIData *data) {
