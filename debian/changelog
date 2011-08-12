@@ -1,6 +1,6 @@
-transfer-ui (1.1.31.2) unstable; urgency=low
+transfer-ui (1.1.32.1) unstable; urgency=low
 
-  * New version after tagging
+  * Bump version
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 03 Aug 2011 14:20:33 +0530
 
