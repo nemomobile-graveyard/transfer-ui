@@ -1,6 +1,6 @@
-transfer-ui (1.1.33.1) unstable; urgency=low
+transfer-ui (1.2.38.1) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#282524 - transfer-ui updates its UI even when it's not visible or screen is blanked
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 12 Aug 2011 11:46:00 +0300
 

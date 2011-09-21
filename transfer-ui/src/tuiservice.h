@@ -45,6 +45,7 @@ class QDBusServiceWatcher;
 
 #include <qmsystem2/qmtime.h>
 #include <qmsystem2/qmsystemstate.h>
+#include <qmsystem2/qmdisplaystate.h>
 
 #ifdef _UNIT_TESTING_
 #include <QAbstractItemModel>
@@ -416,6 +417,13 @@ public Q_SLOTS: // METHODS
         \param what what changed
     */
     void systemStateChanged (MeeGo::QmSystemState::StateIndication what);
+
+    /*!
+        \brief listen to idle mode changed signal. Don't paint when device is in
+        idle mode.
+        \param state state of the device
+    */
+    void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
 
 Q_SIGNALS: // SIGNALS
 

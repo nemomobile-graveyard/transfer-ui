@@ -61,6 +61,7 @@
 #include <contentaction/contentaction.h>
 #include <qmsystem2/qmtime.h>
 #include <qmsystem2/qmsystemstate.h>
+#include <qmsystem2/qmdisplaystate.h>
 
 using namespace ContentAction;
 using namespace TransferUI;
@@ -224,6 +225,13 @@ bool TUIService::init() {
     connect(qmState, 
         SIGNAL(systemStateChanged(	MeeGo::QmSystemState::StateIndication)),
         SLOT(systemStateChanged(MeeGo::QmSystemState::StateIndication)));
+
+
+    QmDisplayState *qmDisplayState = new QmDisplayState(this);
+    connect(qmDisplayState,
+        SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),
+        SLOT(displayStateChanged(MeeGo::QmDisplayState::DisplayState)));
+
 
     QSettings tuiSettings(TransferUISettingFile, QSettings::IniFormat);
     tuiSettings.sync();
@@ -916,6 +924,19 @@ void TUIService::systemStateChanged (MeeGo::QmSystemState::StateIndication 	what
     if(MeeGo::QmSystemState::Shutdown == what) {
         qDebug() << __FUNCTION__ << "Device State" << what << "Shutdown transferui";
         QCoreApplication::exit();
+    }
+}
+
+void TUIService::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
+    // if the ui is open .. then stop sending signals to tui for update
+    qDebug() << __FUNCTION__ << "Display State" << state;
+    if(d_ptr->isUIShown == true) {
+        if ((MeeGo::QmDisplayState::Off == state) ||
+            (MeeGo::QmDisplayState::Dimmed == state)) {
+            Q_EMIT(tuiClosed());
+        } else {
+            Q_EMIT(tuiOpened());
+        }
     }
 }
 
