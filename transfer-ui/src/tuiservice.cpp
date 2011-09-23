@@ -393,7 +393,12 @@ void TUIService::markCompleted(const QString& id, bool showInHistory, const QStr
             d_ptr->displayInfoBanner(TransferAlreadyCompleted);
         }
 
-        d_ptr->proxyModel->done(id,resultUri);
+        QString resultString = resultUri;
+        if(resultUri.contains("file://") == true) {
+            resultString.remove("file://");
+        }
+
+        d_ptr->proxyModel->done(id,resultString);
 	    if (showInHistory == true) {
 		    d_ptr->writeToHistory(id, data, showInHistory, replaceId);
             qDebug() << __FUNCTION__ << "Completed Date" << data->completedTime; 
@@ -1338,8 +1343,7 @@ void TUIServicePrivate::writeHistoryData(const TUIData *data) {
 			historySetting->setValue("imagePath", data->thumbnailImagePath);
         }
     }
-    historySetting->setValue("resulturi", 
-        QString(QUrl::toPercentEncoding(data->resultUri.toUtf8())));
+    historySetting->setValue("resulturi", data->resultUri);
 
     if(data->transferTitle.isEmpty() == false) {
         historySetting->setValue("titlestring", data->transferTitle);
@@ -1401,31 +1405,24 @@ void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
         if (tuiData->resultUri.isEmpty() == false) {
             qDebug() << __FUNCTION__ << "Trying to launch application";
             Action action;
-            QUrl resultUrl(QUrl::fromEncoded    
-                    (tuiData->resultUri.toUtf8()).toString());
+            QUrl resultUrl(tuiData->resultUri);
             qDebug() << __FUNCTION__ << resultUrl << resultUrl.scheme();
-            // Handle fileuri
-            if (resultUrl.scheme() == QLatin1String("file")) {
-                qDebug() << __FUNCTION__ << "Given result is of type file";
-                action = Action::defaultActionForFile(resultUrl.toString());
-            } else if (resultUrl.scheme() == QLatin1String("urn")) {
+            if (resultUrl.scheme() == QLatin1String("urn")) {
                  //Handle tracker uri
                 qDebug() << __FUNCTION__ 
                     << "Given result is of type tracker object" << resultUrl;
-                action = Action::defaultAction(resultUrl.toString());
-            } else if (resultUrl.scheme().isEmpty() == false) { 
-                // Handle Other type scheme
-                qDebug() << __FUNCTION__ << "Handle scheme data";
-                action = Action::defaultActionForScheme(resultUrl.toString());
+                action = Action::defaultAction(tuiData->resultUri);
             } else if (resultUrl.isRelative() == true) {
                 if (QFile::exists(tuiData->resultUri) == true) {
-                    qDebug() << __FUNCTION__ << "Handle local file" 
-                        << "set file scheme";
-                    resultUrl.setScheme(QLatin1String("file"));
-                    action = Action::defaultActionForFile(resultUrl.toString());
+                    qDebug() << __FUNCTION__ << "Handle local file";
+                    action =  Action::defaultActionForFile
+                        (QUrl::fromLocalFile(tuiData->resultUri));
                 }
+            } else if (resultUrl.scheme().isEmpty() == false) {
+                // Handle Other type scheme
+                qDebug() << __FUNCTION__ << "Handle scheme data";
+                action = Action::defaultActionForScheme(tuiData->resultUri);
             }
-
             
             if (action.isValid() == true) {
                 action.triggerAndWait();

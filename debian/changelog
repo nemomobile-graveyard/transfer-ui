@@ -1,6 +1,6 @@
 transfer-ui (1.2.38.2) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#282289 - Received file can't be opened from TUI if file name contains URL escape codes
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 21 Sep 2011 11:58:00 +0300
 
