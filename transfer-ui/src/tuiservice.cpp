@@ -394,8 +394,9 @@ void TUIService::markCompleted(const QString& id, bool showInHistory, const QStr
         }
 
         QString resultString = resultUri;
-        if(resultUri.contains("file://") == true) {
-            resultString.remove("file://");
+        if(resultString.startsWith("file://") == true) {
+            resultString = QUrl::fromEncoded(
+                resultString.toUtf8(), QUrl::StrictMode).toLocalFile();
         }
 
         d_ptr->proxyModel->done(id,resultString);
@@ -689,7 +690,11 @@ void TUIService::setTransferType(const QString &id, int transferType) {
 
 void TUIService::setImageFromFilePath(const QString& id, const QString& fileName) {
     qDebug() << __FUNCTION__ << id << "Transfer Image Set to " << fileName;
-	d_ptr->proxyModel->setImageFromFile(id, fileName);
+    QString file = fileName;
+    if (file.startsWith("file://")) {
+        file = QUrl::fromEncoded(file.toUtf8(), QUrl::StrictMode).toLocalFile();
+    }
+    d_ptr->proxyModel->setImageFromFile(id, file);
 }
 
 void TUIService::showUI() {
@@ -759,7 +764,11 @@ void TUIService::setTargetName(const QString &id, const QString &targetName) {
 void TUIService::setThumbnailForFile(const QString& id, const QString& fileName,
     const QString& mimeType) {
     qDebug() << __FUNCTION__ << id << "Set Thumbnail " << fileName << mimeType;
-    d_ptr->proxyModel->setThumbnailForFile(id, fileName, mimeType);
+    QString file = fileName;
+    if (file.startsWith("file://")) {
+        file = QUrl::fromEncoded(file.toUtf8(), QUrl::StrictMode).toLocalFile();
+    }
+    d_ptr->proxyModel->setThumbnailForFile(id, file, mimeType);
 }
 
 void TUIService::setIcon(const QString& id, const QString& iconId) {
