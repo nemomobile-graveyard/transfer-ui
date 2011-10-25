@@ -197,7 +197,8 @@ public:
     /*!
         handle transfer done
     */
-    void done(const QString &id, const QString& resultUri);
+    void done(const QString &id, const QString& resultUri, 
+        const QString& resultMimeType=QString(), bool removeWhenCleared = false);
 
     /*!
         handle crashed client transfers

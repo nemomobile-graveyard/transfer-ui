@@ -490,6 +490,23 @@ namespace TransferUI {
 
 
         /*!
+            \brief mark transfer completed, and provide temporary file details
+            This assumes the transfers is shown in history. When this function
+            is used to mark the transfer as completed, Transfer UI will try to
+            launch the result file from the system provided quick viewers, for
+            the given mimetype of the result uri. If removeWhenCleared is set,
+            Transfer UI takes the responsibility to clean up the temp files,
+            when the transfers are cleared from the transfer-ui using "clear"
+            button. 
+            \param resultUri local file path of the file 
+            \param resultMimeType mime type of the result file. This used to get
+            the appropriate quick viewer from the content action.
+            \param removeWhenCleared set to clear the temp files from the system
+        */
+        bool markCompletedTemporary(const QString& resultUri, 
+            const QString& resultMimeType, bool removeWhenCleared);
+
+        /*!
           \brief Marks the transfer as failed. This error can't be repaired. The
           messages are not localized in TransferUI, it should be done in the
           applications.

@@ -40,6 +40,7 @@
 #include <QStringList>
 #include <QDateTime>
 #include <QDebug>
+#include <QFile>
 
 TUIDataModelProxy::TUIDataModelProxy(QObject *parent) : QObject(parent) {
     model = new TUIDataModel(this);
@@ -328,7 +329,8 @@ void TUIDataModelProxy::cancelled(const QString &id) {
     }
 }
 
-void TUIDataModelProxy::done(const QString &id, const QString& resultUri) {
+void TUIDataModelProxy::done(const QString &id, const QString& resultUri, 
+    const QString& resultMimeType, bool removeWhenCleared) {
     if (tuiDataMap.contains(id) == true) {
         int rowNo = model->rowIndex(tuiDataMap.value(id));
         QModelIndex index = model->index(rowNo,Done);
@@ -337,6 +339,8 @@ void TUIDataModelProxy::done(const QString &id, const QString& resultUri) {
             tuiData->status = TransferStatusDone;
             tuiData->resultUri = resultUri;
             tuiData->completedTime = QDateTime::currentDateTime();
+            tuiData->resultMimeType = resultMimeType;
+            tuiData->removeWhenCleared = removeWhenCleared;
             tuiData->message.clear();
             setModelData(index, tuiData);
         }
@@ -478,8 +482,25 @@ void TUIDataModelProxy::clearCompletedTransfers() {
                 = tuiDataMap.constBegin();
     TransferStatus status;
     while (iter != tuiDataMap.constEnd()) {    
-        status = iter.value()->status;
+        const TUIData *data = iter.value();
+        status = data->status;
+
         if(TransferStatusDone==status) {
+//TODO Decision is not yet made on how to handle the temp files. This part
+//deletes the file from the system when user clears the transfers from TUI
+
+            bool tempInfoProvided = data->removeWhenCleared;
+            qDebug() << __FUNCTION__ << "Clear when completed" << tempInfoProvided;
+            if(tempInfoProvided == true) {
+                if(QFile::remove(data->resultUri) == true) {
+                    qDebug() << __FUNCTION__ << "File Removed from the system"
+                        << data->resultUri;
+                } else {
+                    qWarning() << __FUNCTION__ << "File could not be removed" <<
+                        data->resultUri;
+                }
+            }
+            
             removeTransfer(iter.key());          
         }
         ++iter;
@@ -506,6 +527,8 @@ void TUIDataModelProxy::addTransfer(const QString& id, QSharedPointer<TUIData> d
         tuiData->completedTime = data->completedTime;
         tuiData->fileTypeIcon = data->fileTypeIcon;
         tuiData->resultUri = data->resultUri;
+        tuiData->resultMimeType = data->resultMimeType;
+        tuiData->removeWhenCleared = data->removeWhenCleared;
         tuiData->startTime = data->startTime;
         tuiData->transferTitle = data->transferTitle;
         QVariant variantData = qVariantFromValue(tuiData);

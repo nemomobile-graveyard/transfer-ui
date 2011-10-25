@@ -372,6 +372,7 @@
 			transfer with the given replaceId, then the transfer is added to
 			history list view. Default value is empty, transfers will be added
 			into history list and not replaced.
+            
 		-->
 		<method name="markCompleted">
 			<arg name="id" type="s"/>
@@ -386,6 +387,32 @@
 			<arg name="replaceId" type="s"/>
             <arg name="resultUri" type="s"/>
 		</method>
+
+		<!--
+		Method "markCompleted":
+		mark the transfer as completed. This function removes transfer from the
+		transfer-ui. Completed transfers are shown in the history list. When
+		transfer is clicked,Transfer UI will try to launch the result file from
+		the system provided quick viewers, for the given mimetype of the result
+		uri. If removeWhenCleared is set, Transfer UI takes the responsibility
+		to clean up the temp files, when the transfers are cleared from the
+		transfer-ui using "clear" button. 
+		Parameters:
+		IN:
+			id: Transfer UI if of transfer
+            resultMimeType: If this parameter is provided, then the result file
+            is a temp file, which will opened by the default viewers.
+            tempMimeType parameter is used to get the viewer for the result file
+            using contentAction.
+            removeWhenCleared: removes temp file from the system, if this param
+            is set.
+        --> 
+        <method name="markCompletedTemporary">
+            <arg name="id" type="s"/>
+            <arg name="resultUri" type="s"/>
+            <arg name="resultMimeType" type="s"/>
+            <arg name="removeWhenCleared" type="b"/>
+        </method>     
 
         <!--
         Method "cancelled":

@@ -190,6 +190,13 @@ public Q_SLOTS:
 
     void shutdownApplication();
 
+    /*!
+        \brief handle completed transfers
+    */
+    void markCompleted(const QString& id, bool showInHistory, const QString&
+        replaceId, const QString& resultUri, const QString& resultMimeType, bool
+        removeWhenCleared);
+
 private:
     /*!
         \brief write replace history transfers to the data base
@@ -217,6 +224,8 @@ private:
         \brief handle completed item click
     */
     void completedItemClicked(const QModelIndex& index);
+
+
 };
 
 Q_DECLARE_METATYPE(QSharedPointer<TUIData>)

@@ -112,6 +112,9 @@ void TUIReadHistoryThread::readHistoryFromDB(int arrayIndex) {
     data->resultUri = historySettings->value("resulturi").toString();
     data->thumbnailImagePath = historySettings->value("imagePath").toString();
     data->transferTitle = historySettings->value("titlestring").toString();
+    data->resultMimeType = historySettings->value("resultMimeType").toString();
+    data->removeWhenCleared = 
+        historySettings->value("removeWhenCleared").toBool();
     QString id = historySettings->value("transferid").toString();
     Q_EMIT(addCompletedData(id, QSharedPointer<TUIData>(data)));
 }

@@ -60,6 +60,7 @@ struct TUIData
     bool canRepair; //!< true if error can be reparied else false
     bool canSendImdtly; //!< Applicable only for uploads
     bool showInHistory; //!< show this transfer in history
+    bool removeWhenCleared; //!< flag set when the tui should clear the temp file
     QString name; //!< Name which will be displayed
     QString message; //!< Message displayed for non-active transfers.
     QString headerMsg; //!< Header Description of the Error
@@ -75,6 +76,7 @@ struct TUIData
     QString clientId; //!< clinet interface information for custom dialogs
     QString resultUri; //!< Uri to launch application of the completed transfers
     QString thumbnailImagePath; //!< transfer image path
+    QString resultMimeType; //!< Mime Type for the result file.
     QDateTime completedTime; //!< completed time of the transfer
     QDateTime startTime; //!< time when transfer started
 };

@@ -59,6 +59,7 @@
 #include <QListIterator>
 
 #include <contentaction/contentaction.h>
+#include <contentaction/contentinfo.h>
 #include <qmsystem2/qmtime.h>
 #include <qmsystem2/qmsystemstate.h>
 #include <qmsystem2/qmdisplaystate.h>
@@ -382,43 +383,20 @@ void TUIService::done(const QString& id, const QString& msg) {
 
 void TUIService::markCompleted(const QString& id, bool showInHistory, const QString&
 		replaceId, const QString& resultUri) {
-	qDebug() << __FUNCTION__ << "Transfer set to done " << id << showInHistory
-	<< replaceId << resultUri;
-	const TUIData *data = d_ptr->proxyModel->tuiData(id);
-    if (data != 0) {
+    d_ptr->markCompleted(id, showInHistory, replaceId, resultUri, QString(),
+        false);
 
-        CHECKDONESTATUS (data->status)
+    //remove the transfer from the client data model
+    //check if the method call is from from the dbus
+    if(calledFromDBus()) {
+        qDebug() << "Method call is from dbus";
+        QString serviceName = message().service();
+        d_ptr->clientDataModel->removeTransfer(serviceName, id);
+        checkServiceRegister(serviceName);
+    }
 
-	    if(TransferStatusCancel == data->status) {
-            d_ptr->displayInfoBanner(TransferAlreadyCompleted);
-        }
-
-        QString resultString = resultUri;
-        if(resultString.startsWith("file://") == true) {
-            resultString = QUrl::fromEncoded(
-                resultString.toUtf8(), QUrl::StrictMode).toLocalFile();
-        }
-
-        d_ptr->proxyModel->done(id,resultString);
-	    if (showInHistory == true) {
-		    d_ptr->writeToHistory(id, data, showInHistory, replaceId);
-            qDebug() << __FUNCTION__ << "Completed Date" << data->completedTime; 
-	    } else {
-            d_ptr->proxyModel->cleanUpTransfer(id);
-            d_ptr->proxyModel->removeTransfer(id);
-        }
-
-	    //remove the transfer from the client data model
-	    //check if the method call is from from the dbus
-	    if(calledFromDBus()) {
-	        qDebug() << "Method call is from dbus";
-	        QString serviceName = message().service();
-	        d_ptr->clientDataModel->removeTransfer(serviceName, id);
-	        checkServiceRegister(serviceName);
-	    }
-	    //update the summary
-        sendSummary();
-	}
+    //update the summary
+    sendSummary();
 
 }
 
@@ -426,6 +404,24 @@ void TUIService::markCompleted(const QString& id, bool showInHistory, const
 	QString& replaceId) {
     markCompleted(id, showInHistory, replaceId, QString());
 }
+
+void TUIService::markCompletedTemporary(const QString& id, const QString&
+    resultUri, const QString& resultMimeType, bool removeWhenCleared ) {
+
+    qDebug() << __FUNCTION__ << "Temp result file" << resultUri 
+        << "With Mimetype " << resultMimeType;
+    d_ptr->markCompleted(id, true, QString(), resultUri, resultMimeType,
+        removeWhenCleared);
+    //remove the transfer from the client data model
+    //check if the method call is from from the dbus
+    if(calledFromDBus()) {
+        qDebug() << "Method call is from dbus";
+        QString serviceName = message().service();
+        d_ptr->clientDataModel->removeTransfer(serviceName, id);
+        checkServiceRegister(serviceName);
+    }
+}
+
 
 void TUIService::pending(const QString &id, const QString &message) {
     qDebug() << __FUNCTION__ << "Transfer set to pending " << message;
@@ -1353,7 +1349,8 @@ void TUIServicePrivate::writeHistoryData(const TUIData *data) {
         }
     }
     historySetting->setValue("resulturi", data->resultUri);
-
+    historySetting->setValue("resultMimeType", data->resultMimeType);
+    historySetting->setValue("removeWhenCleared", data->removeWhenCleared);
     if(data->transferTitle.isEmpty() == false) {
         historySetting->setValue("titlestring", data->transferTitle);
     }
@@ -1410,29 +1407,53 @@ void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
     QVariant data = index.data();
     TUIData *tuiData = data.value<TUIData*>();
     if(tuiData != 0) {
-        qDebug() << __FUNCTION__ << tuiData->resultUri;
+        qDebug() << __FUNCTION__ << tuiData->resultUri << tuiData->resultMimeType;
         if (tuiData->resultUri.isEmpty() == false) {
             qDebug() << __FUNCTION__ << "Trying to launch application";
             Action action;
-            QUrl resultUrl(tuiData->resultUri);
-            qDebug() << __FUNCTION__ << resultUrl << resultUrl.scheme();
-            if (resultUrl.scheme() == QLatin1String("urn")) {
-                 //Handle tracker uri
-                qDebug() << __FUNCTION__ 
-                    << "Given result is of type tracker object" << resultUrl;
-                action = Action::defaultAction(tuiData->resultUri);
-            } else if (resultUrl.isRelative() == true) {
+            if(tuiData->resultMimeType.isEmpty() == false) {
                 if (QFile::exists(tuiData->resultUri) == true) {
-                    qDebug() << __FUNCTION__ << "Handle local file";
-                    action =  Action::defaultActionForFile
-                        (QUrl::fromLocalFile(tuiData->resultUri));
+                    QString mimeType;
+                    if(tuiData->resultMimeType.contains("X-TEMP-") == false) {
+                        mimeType = "X-TEMP-" + tuiData->resultMimeType;
+                    } else {
+                        mimeType = tuiData->resultMimeType;
+                    }
+                    action = Action::defaultActionForFile(QUrl::
+                            fromLocalFile(tuiData->resultUri), mimeType);
+
+                    // If there are no quick viewers associated with the given
+                    //mime type, try default action for the file
+                    if(action.isValid() == false) {
+                        qDebug() << __FUNCTION__ << 
+                            "No default quick viewer found for mimetype" 
+                            << tuiData->resultMimeType  
+                            << " Trying to get action for local file " 
+                            << tuiData->resultUri;
+                        action =  Action::defaultActionForFile
+                                (QUrl::fromLocalFile(tuiData->resultUri));
+                    }
                 }
-            } else if (resultUrl.scheme().isEmpty() == false) {
-                // Handle Other type scheme
-                qDebug() << __FUNCTION__ << "Handle scheme data";
-                action = Action::defaultActionForScheme(tuiData->resultUri);
-            }
-            
+            } else {
+                QUrl resultUrl(tuiData->resultUri);
+                qDebug() << __FUNCTION__ << resultUrl << resultUrl.scheme();
+                if (resultUrl.scheme() == QLatin1String("urn")) {
+                     //Handle tracker uri
+                    qDebug() << __FUNCTION__ 
+                        << "Given result is of type tracker object" << resultUrl;
+                    action = Action::defaultAction(tuiData->resultUri);
+                } else if (resultUrl.isRelative() == true) {
+                    if (QFile::exists(tuiData->resultUri) == true) {
+                        qDebug() << __FUNCTION__ << "Handle local file";
+                        action =  Action::defaultActionForFile
+                            (QUrl::fromLocalFile(tuiData->resultUri));
+                    }
+                } else if (resultUrl.scheme().isEmpty() == false) {
+                    // Handle Other type scheme
+                    qDebug() << __FUNCTION__ << "Handle scheme data";
+                    action = Action::defaultActionForScheme(tuiData->resultUri);
+                }
+            }            
             if (action.isValid() == true) {
                 action.triggerAndWait();
             } else {
@@ -1476,3 +1497,47 @@ void TUIServicePrivate::shutdownApplication() {
         }
     }
 }
+
+void TUIServicePrivate::markCompleted(const QString& id, bool showInHistory,
+    const QString& replaceId, const QString& resultUri, const QString&
+    resultMimeType, bool removeWhenCleared) {
+
+    QString mimeType = resultMimeType;
+    //check if the mime type is empty, if empty .. get the mimetype from the
+    //contentinfo and store it 
+    if(resultMimeType.isEmpty() == true) {
+        ContentInfo contentInfo = ContentInfo::forFile(QUrl::fromLocalFile(resultUri));
+        if(contentInfo.isValid() == true) {
+            mimeType = contentInfo.mimeType();  
+        }
+    }
+
+	qDebug() << __FUNCTION__ << "Transfer set to done " << id << showInHistory
+	<< replaceId << resultUri;
+	const TUIData *data = proxyModel->tuiData(id);
+    if (data != 0) {
+
+        CHECKDONESTATUS (data->status)
+
+	    if(TransferStatusCancel == data->status) {
+            displayInfoBanner(TransferAlreadyCompleted);
+        }
+
+        QString resultString = resultUri;
+        if(resultString.startsWith("file://") == true) {
+            resultString = QUrl::fromEncoded(
+                resultString.toUtf8(), QUrl::StrictMode).toLocalFile();
+        }
+
+        proxyModel->done(id,resultString,mimeType,removeWhenCleared);
+	    if (showInHistory == true) {
+		    writeToHistory(id, data, showInHistory, replaceId);
+            qDebug() << __FUNCTION__ << "Completed Date" << data->completedTime; 
+	    } else {
+            proxyModel->cleanUpTransfer(id);
+            proxyModel->removeTransfer(id);
+        }
+	}    
+
+}
+

@@ -310,6 +310,20 @@ bool Transfer::markCompleted(bool showInHistory
 	return true;
 }
 
+bool Transfer::markCompletedTemporary(const QString& resultUri,
+            const QString& resultMimeType,  bool removeWhenCleared) {
+	checkInterface()
+	commit();
+	d_ptr->data.status = TransferStatusDone;
+	d_ptr->data.showInHistory = true;
+	d_ptr->data.replaceId = QString();
+    d_ptr->data.resultUri = resultUri;
+	d_ptr->interface->markCompletedTemporary(transferId(), resultUri,
+    	resultMimeType, removeWhenCleared);
+	return true;
+
+}
+
 bool Transfer::setCancelButtonText(const QString& text) {
     d_ptr->data.cancelButtonText = text;
     addToCommit("setCancelButtonText", text)
@@ -354,7 +368,7 @@ void Transfer::tuiLaunched() {
         setSize (d_ptr->data.bytes);
     }
 
-    //set method 
+    //set method
     setTransferType((Client::TransferType)d_ptr->data.method);
 
     //set Targetname
@@ -374,7 +388,7 @@ void Transfer::tuiLaunched() {
 		if ( d_ptr->data.thumbnailFile.isEmpty() == false) {
 	        setThumbnailForFile(d_ptr->data.thumbnailFile,
 		        d_ptr->data.thumbnailMimeType);
-		} 
+		}
     } else {
         if(d_ptr->data.thumbnailFile.isEmpty() == false) {
             setImageFromFilePath(d_ptr->data.thumbnailFile);
