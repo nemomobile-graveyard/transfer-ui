@@ -500,8 +500,11 @@ namespace TransferUI {
             button. 
             \param resultUri local file path of the file 
             \param resultMimeType mime type of the result file. This used to get
-            the appropriate quick viewer from the content action.
-            \param removeWhenCleared set to clear the temp files from the system
+            the appropriate quick viewer from the content action. If the mime
+            type does not have a x-temp- prefix, it is added by Transfer UI.
+            \param removeWhenCleared If true, the file referred to by the
+            resultUri is deleted by Transfer UI when the transfer is cleared
+            from the list of completed transfers.
         */
         bool markCompletedTemporary(const QString& resultUri, 
             const QString& resultMimeType, bool removeWhenCleared);

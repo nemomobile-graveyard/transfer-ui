@@ -420,6 +420,9 @@ void TUIService::markCompletedTemporary(const QString& id, const QString&
         d_ptr->clientDataModel->removeTransfer(serviceName, id);
         checkServiceRegister(serviceName);
     }
+
+    //update the summary
+    sendSummary();
 }
 
 
@@ -1414,7 +1417,7 @@ void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
             if(tuiData->resultMimeType.isEmpty() == false) {
                 if (QFile::exists(tuiData->resultUri) == true) {
                     QString mimeType;
-                    if(tuiData->resultMimeType.contains("X-TEMP-") == false) {
+                    if(tuiData->resultMimeType.contains("X-TEMP-", Qt::CaseInsensitive) == false) {
                         mimeType = "X-TEMP-" + tuiData->resultMimeType;
                     } else {
                         mimeType = tuiData->resultMimeType;
@@ -1430,8 +1433,8 @@ void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
                             << tuiData->resultMimeType  
                             << " Trying to get action for local file " 
                             << tuiData->resultUri;
-                        action =  Action::defaultActionForFile
-                                (QUrl::fromLocalFile(tuiData->resultUri));
+                        action =  Action::defaultActionForFile(
+                            QUrl::fromLocalFile(tuiData->resultUri));
                     }
                 }
             } else {

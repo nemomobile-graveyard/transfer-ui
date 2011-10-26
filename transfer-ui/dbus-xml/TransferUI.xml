@@ -389,23 +389,24 @@
 		</method>
 
 		<!--
-		Method "markCompleted":
+		Method "markCompletedTemporary":
 		mark the transfer as completed. This function removes transfer from the
-		transfer-ui. Completed transfers are shown in the history list. When
-		transfer is clicked,Transfer UI will try to launch the result file from
-		the system provided quick viewers, for the given mimetype of the result
-		uri. If removeWhenCleared is set, Transfer UI takes the responsibility
+		transfer-ui and is an alternative for markCompleted . Completed
+		transfers are shown in the history list. When transfer is clicked,
+		Transfer UI will try to launch the result file from the system provided
+		quick viewers, for the given mimetype of the result uri. If
+		removeWhenCleared is set, Transfer UI takes the responsibility
 		to clean up the temp files, when the transfers are cleared from the
 		transfer-ui using "clear" button. 
 		Parameters:
 		IN:
 			id: Transfer UI if of transfer
-            resultMimeType: If this parameter is provided, then the result file
-            is a temp file, which will opened by the default viewers.
-            tempMimeType parameter is used to get the viewer for the result file
-            using contentAction.
-            removeWhenCleared: removes temp file from the system, if this param
-            is set.
+			resultMimeType: If this parameter is provided, then the result file
+			is a temp file, which will opened by the default viewers.
+			tempMimeType parameter is used to get the viewer for the result file
+			using contentAction.
+			removeWhenCleared: removes temp file from the system, if this param
+			is set.
         --> 
         <method name="markCompletedTemporary">
             <arg name="id" type="s"/>

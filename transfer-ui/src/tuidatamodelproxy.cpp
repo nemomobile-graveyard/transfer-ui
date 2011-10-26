@@ -486,14 +486,12 @@ void TUIDataModelProxy::clearCompletedTransfers() {
         status = data->status;
 
         if(TransferStatusDone==status) {
-//TODO Decision is not yet made on how to handle the temp files. This part
-//deletes the file from the system when user clears the transfers from TUI
 
-            bool tempInfoProvided = data->removeWhenCleared;
-            qDebug() << __FUNCTION__ << "Clear when completed" << tempInfoProvided;
-            if(tempInfoProvided == true) {
+            bool removeFile = data->removeWhenCleared;
+            qDebug() << __FUNCTION__ << "Remove file when cleared:" << removeFile;
+            if(removeFile == true) {
                 if(QFile::remove(data->resultUri) == true) {
-                    qDebug() << __FUNCTION__ << "File Removed from the system"
+                    qDebug() << __FUNCTION__ << "File removed from the system"
                         << data->resultUri;
                 } else {
                     qWarning() << __FUNCTION__ << "File could not be removed" <<
