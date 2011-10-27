@@ -1,3 +1,9 @@
+transfer-ui (1.2.44.1) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 27 Oct 2011 12:16:00 +0300
+
 transfer-ui (1.2.43.1) unstable; urgency=low
 
   * Added markCompletedTemporary function for handling temporary downloads
