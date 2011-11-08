@@ -195,7 +195,7 @@ public Q_SLOTS:
     */
     void markCompleted(const QString& id, bool showInHistory, const QString&
         replaceId, const QString& resultUri, const QString& resultMimeType, bool
-        removeWhenCleared);
+        removeWhenCleared, bool temporary);
 
 private:
     /*!

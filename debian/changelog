@@ -1,6 +1,6 @@
-transfer-ui (1.2.44.1) unstable; urgency=low
+transfer-ui (1.2.45.1) unstable; urgency=low
 
-  * After tagging
+  * Fixed temporary file handling
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 27 Oct 2011 12:16:00 +0300
 
