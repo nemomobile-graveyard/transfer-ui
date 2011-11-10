@@ -1426,14 +1426,20 @@ void TUIServicePrivate::completedItemClicked(const QModelIndex& index) {
             } else if (resultUrl.isRelative() == true) {
                 if (QFile::exists(tuiData->resultUri) == true) {
                     qDebug() << "Handle local file";
-                    if (tuiData->resultMimeType.isEmpty()) {
-                        action =  Action::defaultActionForFile
-                            (QUrl::fromLocalFile(tuiData->resultUri));
-                    }
-                    else {
+                    if (!tuiData->resultMimeType.isEmpty()) {
                         action = Action::defaultActionForFile(
                             QUrl::fromLocalFile(tuiData->resultUri),
                             tuiData->resultMimeType);
+                        if (!action.isValid()) {
+                            qDebug() << "No valid action found for mime type" <<
+                                tuiData->resultMimeType << ", ignoring mime";
+                            action = Action::defaultActionForFile
+                                (QUrl::fromLocalFile(tuiData->resultUri));
+                        }
+                    }
+                    else {
+                        action = Action::defaultActionForFile
+                            (QUrl::fromLocalFile(tuiData->resultUri));
                     }
                 }
                 else {

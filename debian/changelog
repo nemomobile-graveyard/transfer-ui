@@ -1,6 +1,6 @@
 transfer-ui (1.2.45.2) unstable; urgency=low
 
-  * After tagging
+  * Ignore mime type if no default action is found for the mime
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 9 Nov 2011 18:47:00 +0200
 
