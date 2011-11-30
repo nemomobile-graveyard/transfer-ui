@@ -60,7 +60,7 @@ TUIAbstractModel * TUIDataModelProxy::dataModel() const {
 void TUIDataModelProxy::registerTransfer(const QString& id, TransferType type,
     const QString& title, const QString& clientId, const QString& target, double
     bytes) {
-    int rowNo = model->rowCount(QModelIndex());
+    int rowNo = 0;
     model->insertRows(rowNo,1);
     QModelIndex index = model->index(rowNo,Init);
     QMap<int, QVariant> mapVariant = model->itemData(index);
@@ -506,7 +506,7 @@ void TUIDataModelProxy::clearCompletedTransfers() {
 }
 
 void TUIDataModelProxy::addTransfer(const QString& id, QSharedPointer<TUIData> data) {
-    int rowNo = model->rowCount(QModelIndex());
+    int rowNo = 0;
     model->insertRows(rowNo,1);
     QModelIndex index = model->index(rowNo,Init);
     QMap<int, QVariant> mapVariant = model->itemData(index);
