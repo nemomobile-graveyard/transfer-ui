@@ -1,3 +1,9 @@
+transfer-ui (1.2.48.1) unstable; urgency=low
+
+  * Fix: Recent most transfer appears below the previous transfer items for a second, after which it changes to correct orer.
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 30 Nov 2011 12:54:00 +0200
+
 transfer-ui (1.2.45.3) unstable; urgency=low
 
   * After tagging

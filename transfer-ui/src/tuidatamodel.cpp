@@ -252,7 +252,7 @@ bool TUIDataModel::insertRows(int position, int rows,
     beginInsertRows(parent, position, position+rows-1);
     for (int row=0; row < rows; row++) {
         TUIData *data = new TUIData();
-        dataList.append(data);
+        dataList.insert(position, data);
     }
     endInsertRows();
     return true;
