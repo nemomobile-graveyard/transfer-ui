@@ -68,10 +68,10 @@ public:
         int role=Qt::EditRole);
 
     bool insertRows(int position, int rows,
-        const QModelIndex &index=QModelIndex());
+        const QModelIndex &parent=QModelIndex());
 
     bool removeRows(int position, int rows,
-        const QModelIndex &index=QModelIndex());
+        const QModelIndex &parent=QModelIndex());
 
     bool setItemData ( const QModelIndex & index,
         const QMap<int, QVariant> & roles );

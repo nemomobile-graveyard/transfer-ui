@@ -969,6 +969,7 @@ TUIServicePrivate::TUIServicePrivate() : proxyModel(0),
     clientDataModel = 0;
 
     isUIShown = false;
+    isInSwitcher = false;
     QString historyFilePath = QDir::homePath();
     historyFilePath.append(QLatin1String("/.transferui/"));
     historyFilePath.append(QLatin1String("completedlist"));
@@ -1236,7 +1237,7 @@ void TUIServicePrivate::clearCompletedList() {
     historySetting->clear();
     historySetting->sync();
     if(isUIShown == true) {
-        if(proxyModel->count() < 0) {
+        if(proxyModel->count() <= 0) {
             interface->setNoTransfersVisibility(true);
         } else {
             interface->setNoTransfersVisibility(false);

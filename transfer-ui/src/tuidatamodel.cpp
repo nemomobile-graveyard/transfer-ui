@@ -247,9 +247,9 @@ bool TUIDataModel::setData(const QModelIndex &index,
 }
 
 bool TUIDataModel::insertRows(int position, int rows,
-    const QModelIndex &index) {
+    const QModelIndex &parent) {
 
-    beginInsertRows(index, position, position+rows-1);
+    beginInsertRows(parent, position, position+rows-1);
     for (int row=0; row < rows; row++) {
         TUIData *data = new TUIData();
         dataList.append(data);
@@ -258,8 +258,8 @@ bool TUIDataModel::insertRows(int position, int rows,
     return true;
 }
 
-bool TUIDataModel::removeRows(int position, int rows, const QModelIndex &index) {
-    beginRemoveRows(index, position, position+rows-1);
+bool TUIDataModel::removeRows(int position, int rows, const QModelIndex &parent) {
+    beginRemoveRows(parent, position, position+rows-1);
     for (int row=0; row < rows; ++row) {
         TUIData *data = dataList.value(position);
         delete data;
@@ -506,7 +506,7 @@ QModelIndex TUIDataModel::index ( int row, int column,
     const QModelIndex & parent) const {
     Q_UNUSED(parent)
     QModelIndex retIndex;
-    if (row <= dataList.count()) {
+    if (row < dataList.count()) {
         retIndex =  createIndex(row,column, dataList.at(row));
     } else {
         retIndex = createIndex(row,column);

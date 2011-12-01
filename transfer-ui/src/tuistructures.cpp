@@ -38,7 +38,7 @@ TUIData::TUIData(): progressData(0), bytes(0), estimateTime(0),
            status(TransferStatusInactive),
            method(TransferTypeUpload), canPause(0),
            canRepair(0),canSendImdtly(0) , showInHistory(false),
-           completedTime() , startTime() {
+           removeWhenCleared(false), completedTime() , startTime() {
 }
 
 TUIData::~TUIData() {
