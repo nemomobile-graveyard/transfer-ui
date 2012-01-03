@@ -1,8 +1,9 @@
-transfer-ui (1.2.48.1) unstable; urgency=low
+transfer-ui (1.3.53.1) unstable; urgency=low
 
   * Fix: Recent most transfer appears below the previous transfer items for a second, after which it changes to correct orer.
+  * Fixes: NB#293939 TransferUI : Sometimes on tasking away Empty TransferUI, it does not get removed from recents view
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 30 Nov 2011 12:54:00 +0200
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 04 Jan 2012 09:17:00 +0200
 
 transfer-ui (1.2.45.3) unstable; urgency=low
 
