@@ -32,10 +32,10 @@ CONFIG(profiling) {
 
 DEFINES     += QT_NO_WARNING_OUTPUT QT_NO_DEBUG_OUTPUT
 
-target.path = /usr/bin
+target.path = /opt/tests/transfer-ui/
 
 INSTALLS += target
 
-testfiles.path = /usr/share/transfer-ui-tests
+testfiles.path = /opt/tests/transfer-ui/test-definition/
 testfiles.files = tests.xml
 INSTALLS += testfiles
